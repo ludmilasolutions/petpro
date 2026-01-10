@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Mascota Online - Infraestructura solidaria de salud animal</title>
+    <title>Tu Mascota Online - Historial médico único para mascotas</title>
+    <meta name="description" content="Centraliza la salud de tu mascota, autoriza veterinarias y ayuda a refugios animales con cada uso. Una infraestructura solidaria de salud animal.">
+    <meta name="theme-color" content="#4f46e5">
+    
+    <!-- Favicon y PWA -->
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Estilos optimizados para producción -->
     <style>
         :root {
             --primary: #4f46e5;
@@ -68,6 +75,11 @@
             font-weight: 700;
             font-size: 1.5rem;
             color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo:hover {
+            opacity: 0.9;
         }
         
         .logo-icon {
@@ -248,6 +260,16 @@
             border-color: var(--primary);
         }
         
+        .google-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .google-btn:disabled:hover {
+            background-color: white;
+            border-color: var(--gray-light);
+        }
+        
         .google-icon {
             width: 20px;
             height: 20px;
@@ -328,6 +350,10 @@
             
             .user-type-selector {
                 flex-direction: column;
+            }
+            
+            .login-container {
+                padding: 2rem;
             }
         }
         
@@ -414,6 +440,7 @@
             padding: 1rem;
             margin: 1rem 0;
             text-align: left;
+            display: none;
         }
         
         .warning-box h4 {
@@ -421,20 +448,82 @@
             margin-bottom: 0.5rem;
         }
         
-        .setup-link {
-            display: inline-block;
-            background-color: var(--primary);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 1rem;
-            transition: background-color 0.3s;
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
         
-        .setup-link:hover {
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
             background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                padding: 1rem 0;
+            }
+            
+            nav ul.active {
+                display: flex;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Animaciones de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
@@ -442,12 +531,15 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <a href="#" class="logo">
                     <span class="logo-icon">🐾</span>
                     <span>Tu Mascota Online</span>
-                </div>
-                <nav>
-                    <ul>
+                </a>
+                
+                <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+                
+                <nav id="main-nav">
+                    <ul id="nav-menu">
                         <li><a href="#features">Funcionalidades</a></li>
                         <li><a href="#about">Cómo funciona</a></li>
                         <li><a href="#impact">Impacto social</a></li>
@@ -459,14 +551,15 @@
     </header>
 
     <main>
-        <section class="hero">
+        <section class="hero fade-in">
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-text">
                         <h1>Historial médico único para tu <span>mascota</span></h1>
                         <p>Centraliza la salud de tu mascota, autoriza veterinarias y ayuda a refugios animales con cada uso. Una infraestructura solidaria de salud animal.</p>
                         <div class="cta-buttons">
-                            <!-- Botones se llenarán dinámicamente -->
+                            <a href="#login" class="btn btn-primary">Comenzar gratis</a>
+                            <a href="#features" class="btn btn-secondary">Conocer más</a>
                         </div>
                     </div>
                     <div class="hero-image">
@@ -480,24 +573,24 @@
 
         <section id="features" class="features">
             <div class="container">
-                <h2 class="section-title">Todo en un solo lugar</h2>
+                <h2 class="section-title fade-in">Todo en un solo lugar</h2>
                 <div class="features-grid">
-                    <div class="feature-card">
+                    <div class="feature-card fade-in">
                         <div class="feature-icon">📋</div>
                         <h3>Historial médico único</h3>
                         <p>Todas las visitas, vacunas y tratamientos de tu mascota centralizados y accesibles desde cualquier dispositivo.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card fade-in">
                         <div class="feature-icon">🏥</div>
                         <h3>Múltiples veterinarias</h3>
                         <p>Autoriza a las veterinarias que elijas para que accedan al historial completo cuando lo necesiten.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card fade-in">
                         <div class="feature-icon">📅</div>
                         <h3>Turnos inteligentes</h3>
                         <p>Agenda turnos con veterinarias autorizadas y recibe recordatorios automáticos por email y WhatsApp.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card fade-in">
                         <div class="feature-icon">❤️</div>
                         <h3>Impacto social</h3>
                         <p>Una parte de cada suscripción de veterinaria se destina a refugios de animales. Cada uso ayuda a otros animales.</p>
@@ -506,15 +599,15 @@
             </div>
         </section>
 
-        <section class="login-section">
+        <section class="login-section" id="login">
             <div class="container">
-                <div class="login-container">
+                <div class="login-container fade-in">
                     <h2 class="login-title">Acceso seguro a la plataforma</h2>
                     <p class="login-subtitle">Inicia sesión con tu cuenta de Google para continuar</p>
                     
                     <div class="user-type-selector">
-                        <button class="user-type-btn active" data-type="owner">Dueño de mascota</button>
-                        <button class="user-type-btn" data-type="vet">Veterinaria</button>
+                        <button class="user-type-btn active" data-type="owner" id="owner-btn">Dueño de mascota</button>
+                        <button class="user-type-btn" data-type="vet" id="vet-btn">Veterinaria</button>
                     </div>
                     
                     <div id="login-description">
@@ -526,22 +619,6 @@
                             <li>Agendar turnos</li>
                             <li>Ver impacto social generado</li>
                         </ul>
-                    </div>
-                    
-                    <!-- Mensaje de configuración -->
-                    <div id="domain-config-warning" class="warning-box" style="display: none;">
-                        <h4>⚠️ Configuración pendiente</h4>
-                        <p>Para poder iniciar sesión, necesitas agregar este dominio a Firebase:</p>
-                        <p><strong>tumascotaonline.netlify.app</strong></p>
-                        <p>Sigue estos pasos:</p>
-                        <ol>
-                            <li>Ve a <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
-                            <li>Selecciona tu proyecto <strong>petpro-19db3</strong></li>
-                            <li>Ve a <strong>Authentication → Settings</strong></li>
-                            <li>Agrega el dominio a <strong>Authorized domains</strong></li>
-                            <li>Espera unos minutos y recarga esta página</li>
-                        </ol>
-                        <p><em>Mientras tanto, puedes probar en localhost (dominio ya autorizado)</em></p>
                     </div>
                     
                     <button id="google-login-btn" class="google-btn">
@@ -569,31 +646,25 @@
                     <p class="login-note">
                         ¿Eres veterinaria? <a href="#" id="switch-to-vet">Solicita acceso profesional</a>
                     </p>
-                    
-                    <div class="warning-box">
-                        <h4>🔧 Modo de desarrollo</h4>
-                        <p>Si estás desarrollando localmente, usa <strong>localhost</strong> o <strong>127.0.0.1</strong>. Estos dominios ya están autorizados en Firebase.</p>
-                        <p><a href="http://localhost:8080" class="setup-link">Probar en localhost</a></p>
-                    </div>
                 </div>
             </div>
         </section>
 
         <section id="impact" class="features" style="background-color: #f0f9ff;">
             <div class="container">
-                <h2 class="section-title">Nuestro impacto social</h2>
+                <h2 class="section-title fade-in">Nuestro impacto social</h2>
                 <div class="features-grid">
-                    <div class="feature-card" style="text-align: center;">
+                    <div class="feature-card fade-in" style="text-align: center;">
                         <div class="feature-icon">💰</div>
                         <h3>Financiamiento a refugios</h3>
                         <p>El 20% de cada suscripción de veterinaria se destina directamente a refugios de animales asociados.</p>
                     </div>
-                    <div class="feature-card" style="text-align: center;">
+                    <div class="feature-card fade-in" style="text-align: center;">
                         <div class="feature-icon">📈</div>
                         <h3>Crecimiento medible</h3>
                         <p>Cada veterinaria que se une permite ayudar a más animales en situación de calle o abandono.</p>
                     </div>
-                    <div class="feature-card" style="text-align: center;">
+                    <div class="feature-card fade-in" style="text-align: center;">
                         <div class="feature-icon">🤝</div>
                         <h3>Comunidad solidaria</h3>
                         <p>Dueños, veterinarias y refugios trabajando juntos por el bienestar animal integral.</p>
@@ -614,11 +685,11 @@
                 <div class="footer-section">
                     <h3>Enlaces</h3>
                     <ul>
-                        <li><a href="/setup.html">Configuración inicial</a></li>
                         <li><a href="#features">Funcionalidades</a></li>
                         <li><a href="#impact">Impacto social</a></li>
-                        <li><a href="#">Términos de uso</a></li>
-                        <li><a href="#">Política de privacidad</a></li>
+                        <li><a href="#login">Iniciar sesión</a></li>
+                        <li><a href="#" id="terms-link">Términos de uso</a></li>
+                        <li><a href="#" id="privacy-link">Política de privacidad</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -631,8 +702,7 @@
                 </div>
             </div>
             <div class="copyright">
-                <p>© 2023 Tu Mascota Online. Todos los derechos reservados. 🐾</p>
-                <p>Dominio actual: <strong id="current-domain"></strong></p>
+                <p>© <span id="current-year">2023</span> Tu Mascota Online. Todos los derechos reservados. 🐾</p>
             </div>
         </div>
     </footer>
@@ -643,7 +713,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Configuración de Firebase
+        // Configuración de Firebase para producción
         const firebaseConfig = {
             apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
             authDomain: "petpro-19db3.firebaseapp.com",
@@ -656,7 +726,6 @@
         // Variables globales
         let auth, db;
         let firebaseInitialized = false;
-        let domainCheckCompleted = false;
         
         // Elementos DOM
         const userTypeBtns = document.querySelectorAll('.user-type-btn');
@@ -666,26 +735,44 @@
         const loginError = document.getElementById('login-error');
         const loginSuccess = document.getElementById('login-success');
         const switchToVetLink = document.getElementById('switch-to-vet');
-        const domainConfigWarning = document.getElementById('domain-config-warning');
-        const currentDomainElement = document.getElementById('current-domain');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        const currentYearElement = document.getElementById('current-year');
+        const termsLink = document.getElementById('terms-link');
+        const privacyLink = document.getElementById('privacy-link');
+        const ownerBtn = document.getElementById('owner-btn');
+        const vetBtn = document.getElementById('vet-btn');
         
         // Variables de estado
         let userType = 'owner';
         
-        // Mostrar dominio actual
-        currentDomainElement.textContent = window.location.hostname;
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer año actual
+            currentYearElement.textContent = new Date().getFullYear();
+            
+            // Inicializar Firebase
+            initializeFirebase();
+            
+            // Configurar menú móvil
+            setupMobileMenu();
+            
+            // Configurar enlaces de términos y privacidad
+            setupLegalLinks();
+            
+            // Observador para animaciones de entrada
+            setupAnimations();
+            
+            // Verificar sesión activa
+            checkActiveSession();
+        });
         
         // Función para inicializar Firebase
         function initializeFirebase() {
             try {
-                if (typeof firebase === 'undefined') {
-                    throw new Error('Firebase SDK no se cargó correctamente. Verifica tu conexión a internet.');
-                }
-                
-                // Inicializar Firebase solo si no está inicializado
+                // Inicializar Firebase
                 if (!firebase.apps.length) {
                     firebase.initializeApp(firebaseConfig);
-                    console.log('Firebase inicializado correctamente');
                 }
                 
                 auth = firebase.auth();
@@ -696,60 +783,10 @@
                 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                     .catch(error => console.error('Error en persistencia:', error));
                 
-                return true;
             } catch (error) {
                 console.error('Error al inicializar Firebase:', error);
                 showError('Error al inicializar la aplicación. Recarga la página.');
-                return false;
             }
-        }
-        
-        // Verificar si el dominio está autorizado
-        function checkDomainAuthorization() {
-            const currentDomain = window.location.hostname;
-            const authorizedDomains = [
-                'localhost',
-                '127.0.0.1',
-                'petpro-19db3.firebaseapp.com'
-                // 'tumascotaonline.netlify.app' <-- Necesitas agregar este
-            ];
-            
-            // Si el dominio actual no está en la lista autorizada
-            if (!authorizedDomains.includes(currentDomain)) {
-                domainConfigWarning.style.display = 'block';
-                googleLoginBtn.disabled = true;
-                googleLoginBtn.innerHTML = '⚠️ Dominio no autorizado';
-                googleLoginBtn.style.backgroundColor = '#fffbeb';
-                googleLoginBtn.style.borderColor = '#f59e0b';
-                googleLoginBtn.style.color = '#92400e';
-                
-                // Mostrar instrucciones específicas
-                if (currentDomain.includes('netlify.app')) {
-                    showError(`⚠️ El dominio "${currentDomain}" no está autorizado en Firebase.<br><br>
-                    <strong>Solución:</strong><br>
-                    1. Ve a <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a><br>
-                    2. Proyecto: <strong>petpro-19db3</strong><br>
-                    3. Authentication → Settings → Authorized domains<br>
-                    4. Agrega: <strong>${currentDomain}</strong><br>
-                    5. Espera 5 minutos y recarga`);
-                }
-                
-                return false;
-            }
-            
-            domainConfigWarning.style.display = 'none';
-            googleLoginBtn.disabled = false;
-            googleLoginBtn.innerHTML = `<svg class="google-icon" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg> Iniciar sesión con Google`;
-            googleLoginBtn.style.backgroundColor = '';
-            googleLoginBtn.style.borderColor = '';
-            googleLoginBtn.style.color = '';
-            
-            return true;
         }
         
         // Mostrar error
@@ -774,7 +811,6 @@
             if (userType === 'owner') {
                 loginDescription.innerHTML = `
                     <p><strong>Dueño de mascota:</strong> Acceso gratuito para registrar mascotas, gestionar historiales y autorizar veterinarias.</p>
-                    <p>Podrás:</p>
                     <ul class="custom-list">
                         <li>Registrar tus mascotas</li>
                         <li>Ver historial médico completo</li>
@@ -786,7 +822,6 @@
             } else {
                 loginDescription.innerHTML = `
                     <p><strong>Veterinaria:</strong> Acceso profesional con suscripción mensual. Primer mes gratis.</p>
-                    <p>Podrás:</p>
                     <ul class="custom-list">
                         <li>Gestionar turnos de tu consultorio</li>
                         <li>Cargar historial médico</li>
@@ -801,12 +836,6 @@
         // Manejar login con Google
         async function handleGoogleLogin() {
             try {
-                // Verificar dominio primero
-                if (!checkDomainAuthorization()) {
-                    showError('El dominio actual no está autorizado. Sigue las instrucciones arriba.');
-                    return;
-                }
-                
                 // Mostrar loading
                 loginLoading.classList.add('active');
                 loginError.classList.remove('active');
@@ -929,13 +958,7 @@
                 let errorMessage = 'Error al iniciar sesión. Intenta nuevamente.';
                 
                 if (error.code === 'auth/unauthorized-domain') {
-                    errorMessage = `Dominio no autorizado: ${window.location.hostname}<br><br>
-                    <strong>Solución:</strong><br>
-                    1. Ve a <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a><br>
-                    2. Proyecto: <strong>petpro-19db3</strong><br>
-                    3. Authentication → Settings → Authorized domains<br>
-                    4. Agrega: <strong>${window.location.hostname}</strong><br>
-                    5. Espera 5 minutos y recarga`;
+                    errorMessage = 'Error de configuración del dominio. Contacta al administrador.';
                 } else if (error.code === 'auth/popup-blocked') {
                     errorMessage = 'El popup de inicio de sesión fue bloqueado. Permite popups para este sitio.';
                 } else if (error.code === 'auth/popup-closed-by-user') {
@@ -950,6 +973,90 @@
                 
                 showError(errorMessage);
                 googleLoginBtn.disabled = false;
+            }
+        }
+        
+        // Configurar menú móvil
+        function setupMobileMenu() {
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Cerrar menú al hacer clic en un enlace
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                });
+            });
+        }
+        
+        // Configurar enlaces legales
+        function setupLegalLinks() {
+            termsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Términos de uso: Esta es una plataforma de demostración. Para términos completos, contacta a soporte@tumascotaonline.com');
+            });
+            
+            privacyLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Política de privacidad: Tus datos están protegidos. Esta es una demo. Para la política completa, contacta a soporte@tumascotaonline.com');
+            });
+        }
+        
+        // Configurar animaciones
+        function setupAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observar elementos con clase fade-in
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // Verificar sesión activa
+        function checkActiveSession() {
+            if (firebaseInitialized) {
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        // Usuario ya logueado, redirigir a app después de un breve delay
+                        setTimeout(() => {
+                            showSuccess('Sesión activa detectada. Redirigiendo...');
+                            
+                            // Intentar obtener tipo de usuario
+                            if (db) {
+                                db.collection('users').doc(user.uid).get()
+                                    .then(userDoc => {
+                                        if (userDoc.exists) {
+                                            const userData = userDoc.data();
+                                            if (userData.userType === 'vet') {
+                                                window.location.href = 'app.html?type=vet';
+                                            } else {
+                                                window.location.href = 'app.html';
+                                            }
+                                        } else {
+                                            window.location.href = 'app.html';
+                                        }
+                                    })
+                                    .catch(() => {
+                                        window.location.href = 'app.html';
+                                    });
+                            } else {
+                                window.location.href = 'app.html';
+                            }
+                        }, 1000);
+                    }
+                });
             }
         }
         
@@ -978,57 +1085,23 @@
             });
         });
         
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                // Verificar dominio primero
-                checkDomainAuthorization();
+        // Actualizar descripción inicial
+        updateLoginDescription();
+        
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
                 
-                // Actualizar descripción inicial
-                updateLoginDescription();
-                
-                // Inicializar Firebase (para verificar sesión activa)
-                if (checkDomainAuthorization()) {
-                    initializeFirebase();
-                    
-                    // Verificar si ya hay una sesión activa
-                    if (firebaseInitialized) {
-                        auth.onAuthStateChanged(async (user) => {
-                            if (user) {
-                                // Usuario ya logueado, redirigir a app después de un breve delay
-                                setTimeout(() => {
-                                    showSuccess('Sesión activa detectada. Redirigiendo...');
-                                    
-                                    // Intentar obtener tipo de usuario
-                                    if (db) {
-                                        db.collection('users').doc(user.uid).get()
-                                            .then(userDoc => {
-                                                if (userDoc.exists) {
-                                                    const userData = userDoc.data();
-                                                    if (userData.userType === 'vet') {
-                                                        window.location.href = 'app.html?type=vet';
-                                                    } else {
-                                                        window.location.href = 'app.html';
-                                                    }
-                                                } else {
-                                                    window.location.href = 'app.html';
-                                                }
-                                            })
-                                            .catch(() => {
-                                                window.location.href = 'app.html';
-                                            });
-                                    } else {
-                                        window.location.href = 'app.html';
-                                    }
-                                }, 1000);
-                            }
-                        });
-                    }
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 }
-            } catch (error) {
-                console.error('Error al inicializar:', error);
-                showError('Error al cargar la aplicación: ' + error.message);
-            }
+            });
         });
     </script>
 </body>
