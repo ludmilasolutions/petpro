@@ -1,117 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetApp - Setup Base de Datos</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .setup-step {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-left: 4px solid #3498db;
+            background: white;
+            border-radius: var(--border-radius);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step-status {
+            margin-left: auto;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .status-pending { background: #f8f9fa; color: #6c757d; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        
+        .collection-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logs {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 1rem 0;
+        }
+        
+        .log-success { color: #00ff00; }
+        .log-error { color: #ff4444; }
+        .log-info { color: #44aaff; }
+        
+        .setup-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container setup-container">
+        <header class="header">
+            <h1>🏗️ VetApp - Setup Base de Datos</h1>
+            <p>Inicialización completa de la estructura de datos</p>
+        </header>
+
+        <main class="main-content">
+            <div class="card">
+                <h3>🔧 Configuración Inicial</h3>
+                <p>Este proceso creará toda la estructura necesaria en Firebase Firestore.</p>
+                
+                <div class="setup-steps">
+                    <!-- Paso 1: Verificar Firebase -->
+                    <div class="setup-step" id="step1">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h4>Verificar conexión Firebase</h4>
+                            <span id="step1Status" class="step-status status-pending">Pendiente</span>
+                        </div>
+                        <p>Verificando configuración de Firebase...</p>
+                        <div id="firebaseStatus" class="logs"></div>
+                    </div>
+                    
+                    <!-- Paso 2: Crear colecciones -->
+                    <div class="setup-step" id="step2">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h4>Crear estructura de colecciones</h4>
+                            <span id="step2Status" class="step-status status-pending">Pendiente</span>
+                        </div>
+                        
+                        <div id="collectionsList">
+                            <div class="collection-item">
+                                <span>🏥 veterinarias</span>
+                                <span id="colVeterinarias" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>👤 dueños</span>
+                                <span id="colDueños" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>🐶 mascotas</span>
+                                <span id="colMascotas" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>📅 turnos</span>
+                                <span id="colTurnos" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>🏥 historial_medico</span>
+                                <span id="colHistorial" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>🔐 autorizaciones</span>
+                                <span id="colAutorizaciones" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>💰 pagos</span>
+                                <span id="colPagos" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>🐾 refugios</span>
+                                <span id="colRefugios" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>📢 notificaciones</span>
+                                <span id="colNotificaciones" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>⚙️ configuracion</span>
+                                <span id="colConfiguracion" class="status-pending">Pendiente</span>
+                            </div>
+                        </div>
+                        
+                        <div id="step2Logs" class="logs"></div>
+                    </div>
+                    
+                    <!-- Paso 3: Datos iniciales -->
+                    <div class="setup-step" id="step3">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <h4>Cargar datos iniciales</h4>
+                            <span id="step3Status" class="step-status status-pending">Pendiente</span>
+                        </div>
+                        
+                        <div id="initialData">
+                            <div class="collection-item">
+                                <span>🌱 Refugios de ejemplo</span>
+                                <span id="dataRefugios" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>⚙️ Configuración del sistema</span>
+                                <span id="dataConfig" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>🏥 Veterinaria demo</span>
+                                <span id="dataVetDemo" class="status-pending">Pendiente</span>
+                            </div>
+                            <div class="collection-item">
+                                <span>👤 Dueño demo</span>
+                                <span id="dataOwnerDemo" class="status-pending">Pendiente</span>
+                            </div>
+                        </div>
+                        
+                        <div id="step3Logs" class="logs"></div>
+                    </div>
+                    
+                    <!-- Paso 4: Crear índices -->
+                    <div class="setup-step" id="step4">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <h4>Configurar índices de búsqueda</h4>
+                            <span id="step4Status" class="step-status status-pending">Pendiente</span>
+                        </div>
+                        <p>Configurando índices compuestos para búsquedas rápidas...</p>
+                        <div id="step4Logs" class="logs"></div>
+                    </div>
+                    
+                    <!-- Paso 5: Reglas de seguridad -->
+                    <div class="setup-step" id="step5">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <h4>Configurar reglas de seguridad</h4>
+                            <span id="step5Status" class="step-status status-pending">Pendiente</span>
+                        </div>
+                        <p>Generando reglas de seguridad para Firestore...</p>
+                        <div id="step5Logs" class="logs"></div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 2rem;">
+                    <h4>🎯 Acciones</h4>
+                    <div class="grid-3">
+                        <button id="startSetup" class="btn btn-success" onclick="startSetup()">
+                            🚀 Iniciar Setup Completo
+                        </button>
+                        <button id="resetAll" class="btn btn-danger" onclick="resetDatabase()">
+                            🔄 Reiniciar Base de Datos
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.location.href='admin.html'">
+                            📊 Ir a Administración
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="finalLogs" class="logs" style="display: none;"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Clase principal para setup de base de datos
+        class DatabaseSetup {
+            constructor() {
+                this.logs = [];
+                this.steps = {
+                    step1: { status: 'pending', message: '' },
+                    step2: { status: 'pending', message: '' },
+                    step3: { status: 'pending', message: '' },
+                    step4: { status: 'pending', message: '' },
+                    step5: { status: 'pending', message: '' }
+                };
+            }
+            
+            log(message, type = 'info') {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = `<span class="log-${type}">[${timestamp}] ${message}</span><br>`;
+                this.logs.push(logEntry);
+                
+                // Actualizar log visible
+                const logContainer = document.getElementById('finalLogs') || 
+                                   document.createElement('div');
+                logContainer.innerHTML += logEntry;
+                logContainer.scrollTop = logContainer.scrollHeight;
+                
+                console.log(`[${type.toUpperCase()}] ${message}`);
+            }
+            
+            updateStepStatus(stepId, status, message = '') {
+                this.steps[stepId].status = status;
+                this.steps[stepId].message = message;
+                
+                const stepElement = document.getElementById(`${stepId}Status`);
+                if (stepElement) {
+                    stepElement.textContent = status === 'completed' ? 'Completado' : 
+                                            status === 'error' ? 'Error' : 'Pendiente';
+                    stepElement.className = `step-status status-${status}`;
+                }
+                
+                const logElement = document.getElementById(`${stepId}Logs`);
+                if (logElement && message) {
+                    logElement.innerHTML += `<span class="log-${status}">${message}</span><br>`;
+                }
+            }
+            
+            updateCollectionStatus(collectionId, status) {
+                const element = document.getElementById(collectionId);
+                if (element) {
+                    element.textContent = status === 'completed' ? '✓ Creada' :
+                                        status === 'error' ? '✗ Error' : 'Pendiente';
+                    element.className = status === 'completed' ? 'status-completed' :
+                                      status === 'error' ? 'status-error' : 'status-pending';
+                }
+            }
+            
+            async step1_verifyFirebase() {
+                this.log('Verificando conexión con Firebase...');
+                
+                try {
+                    // Verificar que Firebase esté inicializado
+                    if (!firebase || !firebase.apps.length) {
+                        throw new Error('Firebase no está inicializado');
+                    }
+                    
+                    // Intentar una operación simple
+                    await db.collection('test').doc('connection-test').set({
+                        test: true,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Limpiar test
+                    await db.collection('test').doc('connection-test').delete();
+                    
+                    this.log('✓ Conexión Firebase establecida correctamente', 'success');
+                    this.updateStepStatus('step1', 'completed', 'Firebase conectado correctamente');
+                    
+                    // Mostrar info del proyecto
+                    const projectId = firebase.app().options.projectId;
+                    this.log(`Proyecto: ${projectId}`, 'info');
+                    
+                } catch (error) {
+                    this.log(`✗ Error en conexión Firebase: ${error.message}`, 'error');
+                    this.updateStepStatus('step1', 'error', error.message);
+                    throw error;
+                }
+            }
+            
+            async step2_createCollections() {
+                this.log('Creando estructura de colecciones...');
+                
+                const collections = [
+                    { id: 'veterinarias', name: '🏥 veterinarias' },
+                    { id: 'dueños', name: '👤 dueños' },
+                    { id: 'mascotas', name: '🐶 mascotas' },
+                    { id: 'turnos', name: '📅 turnos' },
+                    { id: 'historial_medico', name: '🏥 historial_medico' },
+                    { id: 'autorizaciones', name: '🔐 autorizaciones' },
+                    { id: 'pagos', name: '💰 pagos' },
+                    { id: 'refugios', name: '🐾 refugios' },
+                    { id: 'notificaciones', name: '📢 notificaciones' },
+                    { id: 'configuracion', name: '⚙️ configuracion' }
+                ];
+                
+                for (const collection of collections) {
+                    try {
+                        this.log(`Creando colección: ${collection.name}...`);
+                        
+                        // Crear un documento de prueba para cada colección
+                        await db.collection(collection.id).doc('_setup').set({
+                            created: firebase.firestore.FieldValue.serverTimestamp(),
+                            purpose: 'Collection structure setup',
+                            app: 'VetApp'
+                        });
+                        
+                        this.updateCollectionStatus(`col${collection.id.charAt(0).toUpperCase() + collection.id.slice(1)}`, 'completed');
+                        this.log(`✓ Colección ${collection.name} creada`, 'success');
+                        
+                    } catch (error) {
+                        this.updateCollectionStatus(`col${collection.id.charAt(0).toUpperCase() + collection.id.slice(1)}`, 'error');
+                        this.log(`✗ Error creando ${collection.name}: ${error.message}`, 'error');
+                    }
+                }
+                
+                this.updateStepStatus('step2', 'completed', 'Colecciones creadas');
+            }
+            
+            async step3_initialData() {
+                this.log('Cargando datos iniciales...');
+                
+                try {
+                    // 1. Refugios
+                    this.log('Cargando refugios de ejemplo...');
+                    const refugios = [
+                        {
+                            id: 'refugio_central',
+                            nombre: 'Refugio Central de Animales',
+                            direccion: 'Av. Libertador 1234, CABA',
+                            telefono: '+54 11 4321-5678',
+                            email: 'info@refugiocentral.org',
+                            descripcion: 'Refugio sin fines de lucro dedicado al rescate y adopción de animales abandonados.',
+                            responsable: 'María González',
+                            capacidad: 150,
+                            animalesActuales: 120,
+                            necesidades: ['Alimento balanceado', 'Medicamentos', 'Materiales de limpieza'],
+                            impactoAcumulado: 0,
+                            activo: true,
+                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+                        },
+                        {
+                            id: 'patitas_felices',
+                            nombre: 'Patitas Felices',
+                            direccion: 'Calle Falsa 456, Córdoba',
+                            telefono: '+54 351 987-6543',
+                            email: 'contacto@patitasfelices.org',
+                            descripcion: 'Organización dedicada al rescate y rehabilitación de animales maltratados.',
+                            responsable: 'Carlos Rodríguez',
+                            capacidad: 80,
+                            animalesActuales: 65,
+                            necesidades: ['Jaulas transportadoras', 'Vacunas', 'Pipetas antipulgas'],
+                            impactoAcumulado: 0,
+                            activo: true,
+                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+                        },
+                        {
+                            id: 'huellitas_solidarias',
+                            nombre: 'Huellitas Solidarias',
+                            direccion: 'Belgrano 789, Mendoza',
+                            telefono: '+54 261 456-7890',
+                            email: 'adopciones@huellitassolidarias.org',
+                            descripcion: 'Refugio especializado en perros y gatos de la calle, con programa de adopción responsable.',
+                            responsable: 'Ana Martínez',
+                            capacidad: 100,
+                            animalesActuales: 85,
+                            necesidades: ['Alimento para cachorros', 'Mantas y camas', 'Juguetes'],
+                            impactoAcumulado: 0,
+                            activo: true,
+                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+                        }
+                    ];
+                    
+                    for (const refugio of refugios) {
+                        await db.collection('refugios').doc(refugio.id).set(refugio);
+                    }
+                    document.getElementById('dataRefugios').textContent = '✓ Cargados (3)';
+                    document.getElementById('dataRefugios').className = 'status-completed';
+                    this.log('✓ 3 refugios cargados', 'success');
+                    
+                    // 2. Configuración del sistema
+                    this.log('Configurando sistema...');
+                    const config = {
+                        id: 'system_config',
+                        appName: 'VetApp',
+                        version: '1.0.0',
+                        precioMensualVeterinaria: 50000,
+                        porcentajeImpactoSocial: 20, // 20% a refugios
+                        diasTrialGratis: 30,
+                        emailSoporte: 'soporte@vetapp.com',
+                        telefonoSoporte: '+54 11 1234-5678',
+                        configuracion: {
+                            recordatoriosAutomaticos: true,
+                            whatsappHabilitado: false,
+                            modoMantenimiento: false,
+                            registrosAbiertos: true
+                        },
+                        fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    
+                    await db.collection('configuracion').doc(config.id).set(config);
+                    document.getElementById('dataConfig').textContent = '✓ Configurado';
+                    document.getElementById('dataConfig').className = 'status-completed';
+                    this.log('✓ Configuración del sistema cargada', 'success');
+                    
+                    // 3. Veterinaria demo (si hay usuario autenticado)
+                    const user = auth.currentUser;
+                    if (user) {
+                        this.log('Creando veterinaria demo...');
+                        const vetDemo = {
+                            id: user.uid,
+                            nombre: 'Clínica Veterinaria Demo',
+                            email: user.email,
+                            telefono: '+54 11 8765-4321',
+                            direccion: 'Av. Demo 123, Ciudad Demo',
+                            estado: 'trial',
+                            plan: 'profesional',
+                            fechaRegistro: firebase.firestore.FieldValue.serverTimestamp(),
+                            fechaVencimientoTrial: this.addDays(new Date(), 30),
+                            usuariosInternos: [],
+                            mascotasAutorizadas: [],
+                            configuracion: {
+                                horariosAtencion: 'Lunes a Viernes 9-18, Sábados 9-13',
+                                tiempoConsulta: 30,
+                                recordatoriosAutomaticos: true
+                            },
+                            activa: true
+                        };
+                        
+                        await db.collection('veterinarias').doc(vetDemo.id).set(vetDemo);
+                        document.getElementById('dataVetDemo').textContent = '✓ Creada';
+                        document.getElementById('dataVetDemo').className = 'status-completed';
+                        this.log('✓ Veterinaria demo creada', 'success');
+                    }
+                    
+                    // 4. Dueño demo
+                    this.log('Creando dueño demo...');
+                    const ownerDemo = {
+                        id: 'demo_owner_001',
+                        nombre: 'Juan Pérez',
+                        email: 'juan.perez@demo.com',
+                        telefono: '+54 11 5555-5555',
+                        direccion: 'Calle Demo 456',
+                        mascotas: [],
+                        fechaRegistro: firebase.firestore.FieldValue.serverTimestamp(),
+                        notificacionesHabilitadas: true,
+                        tipo: 'dueño',
+                        activo: true
+                    };
+                    
+                    await db.collection('dueños').doc(ownerDemo.id).set(ownerDemo);
+                    document.getElementById('dataOwnerDemo').textContent = '✓ Creado';
+                    document.getElementById('dataOwnerDemo').className = 'status-completed';
+                    this.log('✓ Dueño demo creado', 'success');
+                    
+                    this.updateStepStatus('step3', 'completed', 'Datos iniciales cargados');
+                    
+                } catch (error) {
+                    this.log(`✗ Error cargando datos iniciales: ${error.message}`, 'error');
+                    this.updateStepStatus('step3', 'error', error.message);
+                }
+            }
+            
+            async step4_createIndexes() {
+                this.log('Configurando índices de búsqueda...');
+                
+                // Nota: Los índices compuestos en Firestore deben crearse desde la consola
+                // Aquí solo documentamos cuáles deberían crearse
+                
+                const indexes = [
+                    'Colección: mascotas | Campos: dueñoId (Asc) | nombre (Asc)',
+                    'Colección: turnos | Campos: veterinariaId (Asc) | fechaHora (Asc)',
+                    'Colección: turnos | Campos: mascotaId (Asc) | fechaHora (Desc)',
+                    'Colección: historial_medico | Campos: mascotaId (Asc) | fecha (Desc)',
+                    'Colección: autorizaciones | Campos: mascotaId (Asc) | veterinariaId (Asc)'
+                ];
+                
+                const logsElement = document.getElementById('step4Logs');
+                if (logsElement) {
+                    logsElement.innerHTML = '<span class="log-info">Índices recomendados para Firestore:</span><br>';
+                    indexes.forEach(idx => {
+                        logsElement.innerHTML += `<span class="log-info">• ${idx}</span><br>`;
+                    });
+                    logsElement.innerHTML += '<span class="log-info"><br>⚠️ Nota: Estos índices deben crearse manualmente en Firebase Console > Firestore > Índices</span>';
+                }
+                
+                this.log('✓ Configuración de índices documentada', 'success');
+                this.updateStepStatus('step4', 'completed', 'Índices configurados');
+            }
+            
+            async step5_securityRules() {
+                this.log('Generando reglas de seguridad...');
+                
+                const securityRules = `
+// Reglas de seguridad Firestore para VetApp
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // FUNCIONES DE AYUDA
-    function isAuthenticated() {
-      return request.auth != null;
-    }
     
-    function isOwner(petId) {
-      return resource.data.dueñoId == request.auth.uid;
-    }
-    
-    function isAuthorizedVet(petId) {
-      return resource.data.veterinariasAutorizadas.hasAny([request.auth.uid]);
-    }
-    
-    function isVeterinary() {
-      return exists(/databases/$(database)/documents/veterinarias/$(request.auth.uid));
-    }
-    
-    function isAdmin() {
-      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
-    }
-    
-    // DUEÑOS
+    // Dueños solo ven/editan sus datos
     match /dueños/{ownerId} {
-      allow create: if isAuthenticated() && request.auth.uid == ownerId;
-      allow read, update, delete: if isAuthenticated() && request.auth.uid == ownerId;
+      allow read, write: if request.auth != null && request.auth.uid == ownerId;
     }
     
-    // VETERINARIAS
+    // Veterinarias
     match /veterinarias/{vetId} {
-      allow create: if isAuthenticated() && request.auth.uid == vetId;
-      allow read, update: if isAuthenticated() && request.auth.uid == vetId;
-      allow delete: if false; // No permitir eliminación por seguridad
+      allow read, write: if request.auth != null && request.auth.uid == vetId;
     }
     
-    // MASCOTAS
+    // Mascotas
     match /mascotas/{petId} {
-      allow create: if isAuthenticated();
-      allow read: if isAuthenticated() && (isOwner(petId) || isAuthorizedVet(petId));
-      allow update: if isAuthenticated() && (isOwner(petId) || isVeterinary());
-      allow delete: if isAuthenticated() && isOwner(petId);
-      
-      // Validaciones
-      allow create: if request.resource.data.keys().hasAll(['nombre', 'especie', 'dueñoId'])
-        && request.resource.data.dueñoId == request.auth.uid;
+      allow read: if request.auth != null && (
+        resource.data.dueñoId == request.auth.uid ||
+        resource.data.veterinariasAutorizadas.hasAny([request.auth.uid])
+      );
+      allow write: if request.auth != null && (
+        request.auth.uid == resource.data.dueñoId ||
+        exists(/databases/$(database)/documents/veterinarias/$(request.auth.uid))
+      );
     }
     
-    // HISTORIAL MÉDICO
+    // Historial médico
     match /historial_medico/{recordId} {
-      allow create: if isAuthenticated() && isVeterinary();
-      allow read: if isAuthenticated();
-      allow update, delete: if isAuthenticated() && isVeterinary();
-      
-      // Auditoría obligatoria
-      allow create: if request.resource.data.keys().hasAll(['mascotaId', 'tipo', 'usuarioId'])
-        && request.resource.data.usuarioId == request.auth.uid;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/veterinarias/$(request.auth.uid));
     }
     
-    // TURNOS
+    // Turnos
     match /turnos/{appointmentId} {
-      allow create: if isAuthenticated();
-      allow read: if isAuthenticated();
-      allow update: if isAuthenticated() && (
-        request.auth.uid == resource.data.veterinariaId ||
-        request.auth.uid == resource.data.dueñoId
-      );
-      allow delete: if isAuthenticated() && (
-        request.auth.uid == resource.data.veterinariaId ||
-        request.auth.uid == resource.data.dueñoId
-      );
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
     }
     
-    // AUTORIZACIONES
-    match /autorizaciones/{authId} {
-      allow create: if isAuthenticated() && isVeterinary();
-      allow read: if isAuthenticated();
-      allow update: if isAuthenticated() && request.auth.uid == resource.data.dueñoId;
-      allow delete: if isAuthenticated() && request.auth.uid == resource.data.dueñoId;
-    }
-    
-    // PAGOS
-    match /pagos/{paymentId} {
-      allow create: if isAuthenticated() && isVeterinary();
-      allow read: if isAuthenticated() && request.auth.uid == resource.data.veterinariaId;
-      allow update: if isAdmin();
-    }
-    
-    // REFUGIOS (públicos)
+    // Refugios (lectura pública, escritura solo admin)
     match /refugios/{shelterId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
-    
-    // NOTIFICACIONES
-    match /notificaciones/{notificationId} {
-      allow create: if isAuthenticated();
-      allow read: if isAuthenticated() && request.auth.uid == resource.data.userId;
-      allow update: if isAuthenticated() && request.auth.uid == resource.data.userId;
-    }
-    
-    // CONFIGURACIÓN
-    match /configuracion/{configId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-    
-    // USUARIOS INTERNOS DE VETERINARIA
-    match /usuarios_internos/{userId} {
-      allow create: if isAuthenticated() && isVeterinary();
-      allow read: if isAuthenticated() && isVeterinary();
-      allow update: if isAuthenticated() && isVeterinary();
-      allow delete: if isAuthenticated() && isVeterinary();
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
   }
-}
+}`;
+                
+                const logsElement = document.getElementById('step5Logs');
+                if (logsElement) {
+                    logsElement.innerHTML = '<span class="log-info">Reglas de seguridad recomendadas:</span><br>';
+                    logsElement.innerHTML += `<pre style="color: #44aaff">${securityRules}</pre>`;
+                    logsElement.innerHTML += '<span class="log-info"><br>⚠️ Copia estas reglas en Firebase Console > Firestore > Reglas</span>';
+                }
+                
+                // Crear documento con las reglas para referencia
+                await db.collection('configuracion').doc('security_rules').set({
+                    reglas: securityRules,
+                    fechaGeneracion: firebase.firestore.FieldValue.serverTimestamp(),
+                    version: '1.0'
+                });
+                
+                this.log('✓ Reglas de seguridad generadas', 'success');
+                this.updateStepStatus('step5', 'completed', 'Reglas generadas');
+            }
+            
+            addDays(date, days) {
+                const result = new Date(date);
+                result.setDate(result.getDate() + days);
+                return result;
+            }
+            
+            async runCompleteSetup() {
+                try {
+                    this.log('🚀 INICIANDO SETUP COMPLETO DE VETAPP', 'info');
+                    
+                    // Paso 1: Verificar Firebase
+                    await this.step1_verifyFirebase();
+                    
+                    // Paso 2: Crear colecciones
+                    await this.step2_createCollections();
+                    
+                    // Paso 3: Cargar datos iniciales
+                    await this.step3_initialData();
+                    
+                    // Paso 4: Configurar índices
+                    await this.step4_createIndexes();
+                    
+                    // Paso 5: Reglas de seguridad
+                    await this.step5_securityRules();
+                    
+                    this.log('🎉 SETUP COMPLETADO EXITOSAMENTE', 'success');
+                    this.log('La base de datos está lista para usar.', 'info');
+                    this.log('Puedes continuar con:');
+                    this.log('1. Configurar las reglas de seguridad en Firebase Console', 'info');
+                    this.log('2. Crear los índices recomendados', 'info');
+                    this.log('3. Iniciar sesión y comenzar a usar VetApp', 'info');
+                    
+                    // Mostrar logs finales
+                    document.getElementById('finalLogs').style.display = 'block';
+                    
+                } catch (error) {
+                    this.log(`❌ ERROR CRÍTICO: ${error.message}`, 'error');
+                    throw error;
+                }
+            }
+            
+            async resetDatabase() {
+                if (!confirm('⚠️ ¿ESTÁS SEGURO?\n\nEsto eliminará TODOS los datos de la aplicación.\nEsta acción no se puede deshacer.')) {
+                    return;
+                }
+                
+                this.log('🔄 INICIANDO RESET DE BASE DE DATOS...', 'info');
+                
+                try {
+                    const collections = [
+                        'veterinarias', 'dueños', 'mascotas', 'turnos',
+                        'historial_medico', 'autorizaciones', 'pagos',
+                        'refugios', 'notificaciones'
+                    ];
+                    
+                    for (const collection of collections) {
+                        this.log(`Eliminando colección: ${collection}...`);
+                        
+                        // Obtener todos los documentos
+                        const snapshot = await db.collection(collection).get();
+                        const batch = db.batch();
+                        
+                        snapshot.docs.forEach(doc => {
+                            batch.delete(doc.ref);
+                        });
+                        
+                        await batch.commit();
+                        this.log(`✓ ${collection} eliminada (${snapshot.size} documentos)`, 'success');
+                    }
+                    
+                    this.log('✅ BASE DE DATOS RESETEADA COMPLETAMENTE', 'success');
+                    alert('Base de datos reseteada. Vuelve a ejecutar el setup.');
+                    
+                } catch (error) {
+                    this.log(`✗ Error en reset: ${error.message}`, 'error');
+                    alert('Error al resetear base de datos');
+                }
+            }
+        }
+        
+        let dbSetup = null;
+        
+        async function startSetup() {
+            const startBtn = document.getElementById('startSetup');
+            startBtn.disabled = true;
+            startBtn.textContent = '⏳ Ejecutando...';
+            
+            // Crear instancia
+            dbSetup = new DatabaseSetup();
+            
+            try {
+                await dbSetup.runCompleteSetup();
+                startBtn.textContent = '✅ Setup Completado';
+                
+                // Mostrar botón para continuar
+                setTimeout(() => {
+                    if (confirm('Setup completado. ¿Deseas ir al panel de administración?')) {
+                        window.location.href = 'admin.html';
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                startBtn.textContent = '❌ Error en Setup';
+                setTimeout(() => {
+                    startBtn.disabled = false;
+                    startBtn.textContent = '🔄 Reintentar Setup';
+                }, 3000);
+            }
+        }
+        
+        function resetDatabase() {
+            if (dbSetup) {
+                dbSetup.resetDatabase();
+            } else {
+                const tempSetup = new DatabaseSetup();
+                tempSetup.resetDatabase();
+            }
+        }
+        
+        // Inicializar verificación de Firebase al cargar
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tempSetup = new DatabaseSetup();
+            try {
+                await tempSetup.step1_verifyFirebase();
+            } catch (error) {
+                document.getElementById('startSetup').disabled = true;
+                document.getElementById('startSetup').textContent = '❌ Firebase no configurado';
+            }
+        });
+    </script>
+</body>
+</html>
