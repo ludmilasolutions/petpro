@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetApp Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="pwa-manifest.json">
+</head>
+<body class="dashboard">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>VetApp 🐾</h2>
+            <p class="user-role" id="userRole">Cargando...</p>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">
+                <span>👤</span>
+            </div>
+            <div>
+                <h4 id="userName">Cargando...</h4>
+                <p id="userEmail" style="font-size: 0.85rem; opacity: 0.8;"></p>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="#dashboard" class="active"><span>📊</span> Dashboard</a></li>
+            <li><a href="#mascotas"><span>🐶</span> Mis Mascotas</a></li>
+            <li><a href="#turnos"><span>📅</span> Turnos</a></li>
+            <li><a href="#historial"><span>🏥</span> Historial Médico</a></li>
+            <li><a href="#veterinarias"><span>🏥</span> Veterinarias</a></li>
+            <li><a href="#recordatorios"><span>⏰</span> Recordatorios</a></li>
+            <li><a href="#impacto"><span>🌱</span> Impacto Social</a></li>
+            <li><a href="#configuracion"><span>⚙️</span> Configuración</a></li>
+        </ul>
+        
+        <div style="margin-top: auto; padding-top: 2rem;">
+            <button onclick="logout()" class="btn btn-secondary">
+                <span>🚪</span> Cerrar Sesión
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Main Panel -->
+    <main class="main-panel">
+        <div class="card fade-in">
+            <div class="card-header">
+                <h3>Bienvenido a VetApp</h3>
+                <div id="statusBadge" class="status-badge status-programado">Activo</div>
+            </div>
+            
+            <div id="dashboardContent">
+                <!-- Contenido dinámico -->
+                <div class="grid-3">
+                    <div class="card">
+                        <h4>📈 Resumen</h4>
+                        <p id="resumenStats">Cargando estadísticas...</p>
+                    </div>
+                    <div class="card">
+                        <h4>⏰ Próximos recordatorios</h4>
+                        <div id="proximosRecordatorios"></div>
+                    </div>
+                    <div class="card">
+                        <h4>🌱 Tu impacto</h4>
+                        <p id="impactoStats">Cargando impacto...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Secciones dinámicas -->
+        <div id="dynamicContent"></div>
+    </main>
+    
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Detectar tipo de usuario y redirigir
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                // Verificar si es veterinaria o dueño
+                checkUserType(user.uid);
+            }
+        });
+        
+        function checkUserType(uid) {
+            // Lógica para determinar tipo de usuario
+            // Por ahora, asumimos dueño
+            document.getElementById('userRole').textContent = 'Dueño de mascota';
+        }
+        
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+    </script>
+</body>
+</html>
