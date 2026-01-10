@@ -1,9 +1,10 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Mascota Online - Salud animal con propósito</title>
+    <title>Tu Mascota Online - Salud animal con impacto social</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,103 +15,137 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary: #4A6FA5;
+            --secondary: #6B8E23;
+            --accent: #FF6B6B;
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --success: #28A745;
+            --warning: #FFC107;
+            --info: #17A2B8;
+        }
+        
         body {
-            background-color: #f5f9ff;
-            color: #333;
+            background-color: var(--light);
+            color: var(--dark);
             line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 1rem;
         }
         
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #4a6fa5 0%, #2d4d7a 100%);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-container {
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 1rem;
         }
         
-        .logo-icon {
+        .logo i {
             font-size: 2.5rem;
-            color: #ffcc00;
         }
         
         .logo-text h1 {
             font-size: 1.8rem;
-            margin-bottom: 5px;
+            margin-bottom: 0.2rem;
         }
         
         .logo-text p {
             font-size: 0.9rem;
-            opacity: 0.8;
+            opacity: 0.9;
         }
         
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s;
-        }
-        
-        nav a:hover {
-            opacity: 0.8;
-        }
-        
-        .mobile-menu-btn {
-            display: none;
-            background: none;
+        .login-btn {
+            background-color: white;
+            color: var(--primary);
             border: none;
-            color: white;
-            font-size: 1.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
         }
         
         /* Hero Section */
         .hero {
-            padding: 80px 0;
-            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%234a6fa5" opacity="0.1" d="M10,10 L90,10 L90,90 L10,90 Z M20,20 L80,20 L80,80 L20,80 Z"/></svg>');
+            padding: 4rem 1rem;
+            background-color: white;
         }
         
         .hero-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 3rem;
             align-items: center;
         }
         
         .hero-text h2 {
             font-size: 2.5rem;
-            color: #2d4d7a;
-            margin-bottom: 20px;
-            line-height: 1.3;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
         
         .hero-text p {
             font-size: 1.1rem;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
             color: #555;
+        }
+        
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .feature i {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-top: 0.3rem;
+        }
+        
+        .feature h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
         }
         
         .hero-image {
@@ -120,146 +155,207 @@
         .hero-image img {
             max-width: 100%;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
         
         .cta-buttons {
             display: flex;
-            gap: 20px;
+            gap: 1rem;
+            margin-top: 2rem;
             flex-wrap: wrap;
         }
         
         .btn {
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
             cursor: pointer;
+            border: none;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: none;
-            text-decoration: none;
+            gap: 0.7rem;
         }
         
         .btn-primary {
-            background-color: #4a6fa5;
+            background-color: var(--primary);
             color: white;
         }
         
-        .btn-primary:hover {
-            background-color: #3a5a8a;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(74, 111, 165, 0.3);
-        }
-        
         .btn-secondary {
-            background-color: #ffcc00;
-            color: #333;
+            background-color: var(--secondary);
+            color: white;
         }
         
-        .btn-secondary:hover {
-            background-color: #e6b800;
+        .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.3);
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 80px 0;
-            background-color: white;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-title h2 {
-            font-size: 2.2rem;
-            color: #2d4d7a;
-            margin-bottom: 15px;
-        }
-        
-        .section-title p {
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-        
-        .feature-card {
-            background-color: #f9fbff;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            color: #4a6fa5;
-            margin-bottom: 20px;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: #2d4d7a;
-        }
-        
-        .feature-card p {
-            color: #666;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         
         /* Impact Section */
         .impact {
-            padding: 80px 0;
-            background-color: #f0f7ff;
+            padding: 4rem 1rem;
+            background-color: #E9F5E9;
         }
         
-        .impact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
+        .impact h2 {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
         }
         
         .impact-stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
         }
         
-        .stat-card {
+        .stat {
             background-color: white;
+            padding: 2rem;
             border-radius: 10px;
-            padding: 25px;
-            text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #4a6fa5;
-            margin-bottom: 10px;
+        .stat i {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
         }
         
-        .stat-text {
-            color: #666;
-            font-weight: 500;
+        .stat h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 1rem;
+            background-color: white;
+        }
+        
+        .how-it-works h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background-color: #F8F9FA;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .step i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .step h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 1rem 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            font-size: 1.3rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #DDD;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #555;
+            color: #AAA;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
         }
         
         /* Login Modal */
@@ -278,381 +374,235 @@
         
         .modal-content {
             background-color: white;
-            border-radius: 15px;
+            padding: 2rem;
+            border-radius: 10px;
             width: 90%;
             max-width: 500px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary);
         }
         
         .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #999;
-        }
-        
-        .close-modal:hover {
-            color: #333;
-        }
-        
-        .modal h3 {
+            background: none;
+            border: none;
             font-size: 1.8rem;
-            color: #2d4d7a;
-            margin-bottom: 10px;
-        }
-        
-        .modal p {
-            color: #666;
-            margin-bottom: 30px;
+            cursor: pointer;
+            color: #777;
         }
         
         .login-options {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1rem;
         }
         
-        .google-login {
-            background-color: white;
-            border: 2px solid #ddd;
-            color: #333;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 600;
+        .login-option {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
-            transition: all 0.3s;
-        }
-        
-        .google-login:hover {
-            background-color: #f8f8f8;
-            border-color: #4a6fa5;
-        }
-        
-        .google-icon {
-            color: #4285F4;
-            font-size: 1.5rem;
-        }
-        
-        .user-type-selector {
-            display: flex;
-            margin: 20px 0;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid #EEE;
             border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #ddd;
-        }
-        
-        .user-type-option {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
             cursor: pointer;
-            background-color: #f8f8f8;
             transition: all 0.3s;
         }
         
-        .user-type-option.active {
-            background-color: #4a6fa5;
-            color: white;
+        .login-option:hover {
+            border-color: var(--primary);
+            background-color: #F0F7FF;
         }
         
-        /* Footer */
-        footer {
-            background-color: #2d4d7a;
-            color: white;
-            padding: 60px 0 30px;
+        .login-option i {
+            font-size: 1.5rem;
+            color: var(--primary);
         }
         
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+        .login-option p {
+            font-weight: bold;
+            color: var(--dark);
         }
         
-        .footer-section h3 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: #ffcc00;
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-links a {
-            color: #ddd;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: #ffcc00;
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #aaa;
+        .login-option span {
             font-size: 0.9rem;
+            color: #666;
         }
         
-        /* Responsive */
-        @media (max-width: 992px) {
-            .hero-content, .impact-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-            
-            .hero-text h2 {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .cta-buttons {
-                justify-content: center;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .impact-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .hero {
-                padding: 50px 0;
-            }
-            
-            .section-title h2 {
-                font-size: 1.8rem;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-            }
-            
-            .modal-content {
-                padding: 30px 20px;
-            }
+        .login-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #F8F9FA;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <div class="container header-container">
-            <div class="logo">
-                <div class="logo-icon">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
                     <i class="fas fa-paw"></i>
+                    <div class="logo-text">
+                        <h1>Tu Mascota Online</h1>
+                        <p>Salud animal con impacto social</p>
+                    </div>
                 </div>
-                <div class="logo-text">
-                    <h1>Tu Mascota Online</h1>
-                    <p>Salud animal con propósito</p>
-                </div>
+                <button class="login-btn" id="openLogin">
+                    <i class="fab fa-google"></i>
+                    Iniciar Sesión
+                </button>
             </div>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <nav id="mainNav">
-                <ul>
-                    <li><a href="#features">Funcionalidades</a></li>
-                    <li><a href="#impact">Impacto Social</a></li>
-                    <li><a href="#about">Cómo Funciona</a></li>
-                    <li><a href="#" id="loginBtn">Iniciar Sesión</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
-    
+
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container hero-content">
-            <div class="hero-text">
-                <h2>Una mascota, un historial médico único, múltiples veterinarias autorizadas</h2>
-                <p>Centraliza el historial médico de tu mascota, gestiona turnos veterinarios y recibe recordatorios automáticos. Cada uso ayuda a financiar refugios de animales.</p>
-                <div class="cta-buttons">
-                    <button class="btn btn-primary" id="registerOwnerBtn">
-                        <i class="fas fa-user-plus"></i> Dueño de Mascota (Gratis)
-                    </button>
-                    <button class="btn btn-secondary" id="registerVetBtn">
-                        <i class="fas fa-clinic-medical"></i> Veterinaria (Prueba 30 días)
-                    </button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='400' viewBox='0 0 500 400'><rect width='500' height='400' fill='%23e6f2ff' rx='15'/><text x='250' y='200' font-family='Arial' font-size='24' fill='%234a6fa5' text-anchor='middle'>Tu Mascota Online</text><text x='250' y='240' font-family='Arial' font-size='18' fill='%23666' text-anchor='middle'>App veterinaria solidaria</text><circle cx='150' cy='120' r='40' fill='%23ffcc00'/><circle cx='350' cy='120' r='40' fill='%234a6fa5'/><path d='M150,120 Q250,180 350,120' stroke='%232d4d7a' stroke-width='3' fill='none'/></svg>" alt="Tu Mascota Online">
-            </div>
-        </div>
-    </section>
-    
-    <!-- Features Section -->
-    <section class="features" id="features">
         <div class="container">
-            <div class="section-title">
-                <h2>Todo lo que necesitas para el cuidado de tu mascota</h2>
-                <p>Una aplicación diseñada para dueños comprometidos y veterinarias modernas</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-medical"></i>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>Historial médico único para tu mascota</h2>
+                    <p>Centraliza el historial de salud de tu mascota, gestiona turnos veterinarios y <span class="highlight">cada uso ayuda a refugios de animales</span>.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-file-medical"></i>
+                            <div>
+                                <h4>Historial Único</h4>
+                                <p>Toda la historia médica en un solo lugar</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-calendar-check"></i>
+                            <div>
+                                <h4>Turnos Fáciles</h4>
+                                <p>Agenda y gestiona citas veterinarias</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Control Total</h4>
+                                <p>Autoriza y revoca acceso a veterinarias</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-heart"></i>
+                            <div>
+                                <h4>Impacto Social</h4>
+                                <p>Parte de tu suscripción ayuda a refugios</p>
+                            </div>
+                        </div>
                     </div>
-                    <h3>Historial Médico Único</h3>
-                    <p>Todas las consultas, vacunas, tratamientos y estudios en un solo lugar. Accesible desde cualquier dispositivo.</p>
+                    
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary" id="ctaRegisterOwner">
+                            <i class="fas fa-dog"></i>
+                            Soy Dueño de Mascota
+                        </button>
+                        <button class="btn btn-secondary" id="ctaRegisterVet">
+                            <i class="fas fa-clinic-medical"></i>
+                            Soy Veterinaria
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <h3>Gestión de Turnos</h3>
-                    <p>Agenda turnos con veterinarias autorizadas. Recibe recordatorios automáticos por app o WhatsApp.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                    <h3>Control Total de Accesos</h3>
-                    <p>Autoriza y revoca el acceso de veterinarias al historial de tu mascota cuando quieras.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-hand-holding-heart"></i>
-                    </div>
-                    <h3>Impacto Social</h3>
-                    <p>Parte de los ingresos financian refugios de animales. Tu uso ayuda a otros animales necesitados.</p>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Dueño con mascota y veterinaria">
                 </div>
             </div>
         </div>
     </section>
-    
+
     <!-- Impact Section -->
-    <section class="impact" id="impact">
-        <div class="container impact-content">
-            <div>
-                <div class="section-title" style="text-align: left;">
-                    <h2>Tu uso tiene propósito</h2>
-                    <p>Por cada veterinaria que se suscribe, destinamos un porcentaje a refugios verificados</p>
-                </div>
-                
-                <p style="margin-bottom: 30px;">Nos comprometemos a que al menos el 20% de los ingresos se destinen al mantenimiento y mejora de refugios de animales. Cada consulta, cada turno, cada mascota registrada genera impacto positivo.</p>
-                
-                <div class="cta-buttons">
-                    <button class="btn btn-primary" id="learnMoreImpact">
-                        <i class="fas fa-heart"></i> Conoce nuestro impacto
-                    </button>
-                </div>
-            </div>
-            
+    <section class="impact">
+        <div class="container">
+            <h2>Nuestro Impacto Social</h2>
             <div class="impact-stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="refugiosCount">12</div>
-                    <div class="stat-text">Refugios beneficiados</div>
+                <div class="stat">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h3 id="refugiosAyudados">12</h3>
+                    <p>Refugios ayudados</p>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-number" id="mascotasCount">1,850</div>
-                    <div class="stat-text">Mascotas registradas</div>
+                <div class="stat">
+                    <i class="fas fa-syringe"></i>
+                    <h3 id="vacunasAplicadas">1,247</h3>
+                    <p>Vacunas registradas</p>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-number" id="veterinariasCount">48</div>
-                    <div class="stat-text">Veterinarias activas</div>
+                <div class="stat">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3 id="turnosGestionados">3,589</h3>
+                    <p>Turnos gestionados</p>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-number" id="donacionesCount">$2.4M</div>
-                    <div class="stat-text">En donaciones</div>
+                <div class="stat">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3 id="fondosRecaudados">$45,200</h3>
+                    <p>Para refugios de animales</p>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h3>Iniciar Sesión</h3>
-            <p>Accede con tu cuenta de Google para continuar</p>
-            
-            <div class="user-type-selector">
-                <div class="user-type-option active" data-type="owner">Dueño de Mascota</div>
-                <div class="user-type-option" data-type="vet">Veterinaria</div>
-            </div>
-            
-            <div class="login-options">
-                <button class="google-login" id="googleLoginBtn">
-                    <i class="fab fa-google google-icon"></i>
-                    <span>Continuar con Google</span>
-                </button>
-                
-                <p style="text-align: center; font-size: 0.9rem; color: #666;">
-                    Al iniciar sesión, aceptas nuestros <a href="#" style="color: #4a6fa5;">Términos de Servicio</a> y <a href="#" style="color: #4a6fa5;">Política de Privacidad</a>
-                </p>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2>¿Cómo Funciona?</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-user-plus"></i>
+                    <h3>Regístrate Gratis</h3>
+                    <p>Dueños de mascotas se registran gratis con Google. Veterinarias tienen 30 días de prueba.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <i class="fas fa-paw"></i>
+                    <h3>Registra tu Mascota</h3>
+                    <p>Crea el perfil de tu mascota con su información médica básica.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <i class="fas fa-user-md"></i>
+                    <h3>Autoriza Veterinarias</h3>
+                    <p>Decide qué veterinarias pueden acceder al historial de tu mascota.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>Centraliza su Salud</h3>
+                    <p>Todas las visitas, vacunas y tratamientos en un solo lugar.</p>
+                </div>
             </div>
         </div>
-    </div>
-    
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Tu Mascota Online</h3>
-                    <p>Infraestructura solidaria de salud animal. Una mascota, un historial médico único.</p>
-                    <div style="margin-top: 20px;">
-                        <a href="#" style="color: #ffcc00; margin-right: 15px;"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#" style="color: #ffcc00; margin-right: 15px;"><i class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#" style="color: #ffcc00;"><i class="fab fa-twitter fa-lg"></i></a>
-                    </div>
+                    <p>Infraestructura solidaria de salud animal. Cada uso ayuda a refugios de animales.</p>
                 </div>
-                
                 <div class="footer-section">
                     <h3>Enlaces Rápidos</h3>
                     <ul class="footer-links">
-                        <li><a href="#features">Funcionalidades</a></li>
-                        <li><a href="#impact">Impacto Social</a></li>
-                        <li><a href="#about">Cómo Funciona</a></li>
-                        <li><a href="#" id="footerLoginBtn">Iniciar Sesión</a></li>
+                        <li><a href="#" id="footerLogin">Iniciar Sesión</a></li>
+                        <li><a href="#" id="footerRegisterOwner">Registrarme como Dueño</a></li>
+                        <li><a href="#" id="footerRegisterVet">Registrar mi Veterinaria</a></li>
+                        <li><a href="app.html">Ir a la App</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-section">
                     <h3>Contacto</h3>
                     <ul class="footer-links">
@@ -662,180 +612,256 @@
                     </ul>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2023 Tu Mascota Online. Todos los derechos reservados. | <a href="#" style="color: #aaa;">Política de Privacidad</a> | <a href="#" style="color: #aaa;">Términos de Uso</a></p>
+            <div class="copyright">
+                <p>&copy; 2023 Tu Mascota Online. Todos los derechos reservados. <a href="admin.html" style="color: #AAA;">Panel Admin</a> | <a href="setup.html" style="color: #AAA;">Setup DB</a></p>
             </div>
         </div>
     </footer>
 
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Iniciar Sesión</h2>
+                <button class="close-modal" id="closeLogin">&times;</button>
+            </div>
+            <div class="login-options">
+                <div class="login-option" id="googleLoginOption">
+                    <i class="fab fa-google"></i>
+                    <div>
+                        <p>Continuar con Google</p>
+                        <span>Recomendado para dueños y veterinarias</span>
+                    </div>
+                </div>
+                <div class="login-option" id="demoOwner">
+                    <i class="fas fa-dog"></i>
+                    <div>
+                        <p>Demo: Dueño de Mascota</p>
+                        <span>Accede como dueño de mascota (demo)</span>
+                    </div>
+                </div>
+                <div class="login-option" id="demoVet">
+                    <i class="fas fa-clinic-medical"></i>
+                    <div>
+                        <p>Demo: Veterinaria</p>
+                        <span>Accede como veterinaria (demo)</span>
+                    </div>
+                </div>
+                <div class="login-option" id="demoAdmin">
+                    <i class="fas fa-user-shield"></i>
+                    <div>
+                        <p>Demo: Administrador</p>
+                        <span>Accede como administrador (demo)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="login-info">
+                <p><strong>Seguridad:</strong> Google Sign-In es obligatorio para uso real. Las cuentas demo son solo para pruebas.</p>
+                <p><strong>Veterinarias:</strong> 30 días gratis, luego $50.000/mes. Parte se destina a refugios de animales.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Elementos del DOM
-        const loginBtn = document.getElementById('loginBtn');
-        const footerLoginBtn = document.getElementById('footerLoginBtn');
-        const registerOwnerBtn = document.getElementById('registerOwnerBtn');
-        const registerVetBtn = document.getElementById('registerVetBtn');
+        const openLoginBtn = document.getElementById('openLogin');
+        const closeLoginBtn = document.getElementById('closeLogin');
         const loginModal = document.getElementById('loginModal');
-        const closeModal = document.getElementById('closeModal');
-        const googleLoginBtn = document.getElementById('googleLoginBtn');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.getElementById('mainNav');
-        const userTypeOptions = document.querySelectorAll('.user-type-option');
-        const learnMoreImpactBtn = document.getElementById('learnMoreImpact');
+        const googleLoginOption = document.getElementById('googleLoginOption');
+        const demoOwner = document.getElementById('demoOwner');
+        const demoVet = document.getElementById('demoVet');
+        const demoAdmin = document.getElementById('demoAdmin');
+        const ctaRegisterOwner = document.getElementById('ctaRegisterOwner');
+        const ctaRegisterVet = document.getElementById('ctaRegisterVet');
+        const footerLogin = document.getElementById('footerLogin');
+        const footerRegisterOwner = document.getElementById('footerRegisterOwner');
+        const footerRegisterVet = document.getElementById('footerRegisterVet');
         
-        // Variables de estado
-        let selectedUserType = 'owner';
-        let isMobileMenuOpen = false;
+        // Estadísticas dinámicas (simuladas)
+        const refugiosAyudados = document.getElementById('refugiosAyudados');
+        const vacunasAplicadas = document.getElementById('vacunasAplicadas');
+        const turnosGestionados = document.getElementById('turnosGestionados');
+        const fondosRecaudados = document.getElementById('fondosRecaudados');
         
-        // Mostrar modal de login
-        function showLoginModal() {
+        // Abrir modal de login
+        openLoginBtn.addEventListener('click', () => {
             loginModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+        });
         
-        // Ocultar modal de login
-        function hideLoginModal() {
+        // Cerrar modal de login
+        closeLoginBtn.addEventListener('click', () => {
             loginModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+        });
         
-        // Cambiar tipo de usuario
-        function selectUserType(type) {
-            selectedUserType = type;
-            
-            userTypeOptions.forEach(option => {
-                if (option.dataset.type === type) {
-                    option.classList.add('active');
-                } else {
-                    option.classList.remove('active');
-                }
-            });
-        }
+        // Cerrar modal al hacer clic fuera
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
         
-        // Simular login con Google
-        function loginWithGoogle() {
-            // En producción, aquí se integraría con Firebase Auth
-            console.log(`Iniciando sesión como: ${selectedUserType}`);
-            
-            // Simulación de autenticación exitosa
-            alert(`Redirigiendo a autenticación de Google para ${selectedUserType === 'owner' ? 'dueño de mascota' : 'veterinaria'}`);
-            
-            // Redirigir a la aplicación
-            setTimeout(() => {
-                hideLoginModal();
-                window.location.href = 'app.html';
-            }, 1000);
-        }
+        // Login con Google (simulado para demo)
+        googleLoginOption.addEventListener('click', () => {
+            alert('Para la versión real, se implementará Google Sign-In. Para la demo, usa una de las opciones demo.');
+        });
         
-        // Actualizar estadísticas (simuladas)
-        function updateStats() {
-            // Estos valores normalmente vendrían de una base de datos
-            const stats = {
-                refugios: 12,
-                mascotas: 1850,
-                veterinarias: 48,
-                donaciones: 2.4
+        // Login como dueño demo
+        demoOwner.addEventListener('click', () => {
+            // Guardar datos de usuario demo en localStorage
+            const userData = {
+                uid: 'demo-owner-001',
+                email: 'dueño@demo.com',
+                displayName: 'Dueño Demo',
+                photoURL: 'https://ui-avatars.com/api/?name=Dueño+Demo&background=4A6FA5&color=fff',
+                role: 'owner',
+                isDemo: true
             };
             
-            document.getElementById('refugiosCount').textContent = stats.refugios;
-            document.getElementById('mascotasCount').textContent = stats.mascotas.toLocaleString();
-            document.getElementById('veterinariasCount').textContent = stats.veterinarias;
-            document.getElementById('donacionesCount').textContent = `$${stats.donaciones}M`;
-        }
-        
-        // Toggle menú móvil
-        function toggleMobileMenu() {
-            isMobileMenuOpen = !isMobileMenuOpen;
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            localStorage.setItem('isLoggedIn', 'true');
             
-            if (isMobileMenuOpen) {
-                mainNav.style.display = 'block';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            } else {
-                mainNav.style.display = 'none';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        }
-        
-        // Event Listeners
-        loginBtn.addEventListener('click', showLoginModal);
-        footerLoginBtn.addEventListener('click', showLoginModal);
-        registerOwnerBtn.addEventListener('click', () => {
-            selectUserType('owner');
-            showLoginModal();
-        });
-        registerVetBtn.addEventListener('click', () => {
-            selectUserType('vet');
-            showLoginModal();
-        });
-        closeModal.addEventListener('click', hideLoginModal);
-        
-        // Cerrar modal al hacer clic fuera del contenido
-        loginModal.addEventListener('click', (e) => {
-            if (e.target === loginModal) {
-                hideLoginModal();
-            }
+            // Redirigir a la aplicación
+            window.location.href = 'app.html';
         });
         
-        // Login con Google
-        googleLoginBtn.addEventListener('click', loginWithGoogle);
-        
-        // Selector de tipo de usuario
-        userTypeOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                selectUserType(option.dataset.type);
-            });
+        // Login como veterinaria demo
+        demoVet.addEventListener('click', () => {
+            // Guardar datos de veterinaria demo en localStorage
+            const userData = {
+                uid: 'demo-vet-001',
+                email: 'vet@demo.com',
+                displayName: 'Veterinaria Demo',
+                photoURL: 'https://ui-avatars.com/api/?name=Veterinaria+Demo&background=6B8E23&color=fff',
+                role: 'vet_admin',
+                vetId: 'vet-001',
+                vetName: 'Clínica Veterinaria Demo',
+                isTrial: true,
+                trialDaysLeft: 15,
+                isDemo: true
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // Redirigir a la aplicación
+            window.location.href = 'app.html';
         });
         
-        // Botón "Conoce nuestro impacto"
-        learnMoreImpactBtn.addEventListener('click', () => {
-            alert('Próximamente: Página detallada con nuestro impacto social y los refugios que apoyamos.');
+        // Login como administrador demo
+        demoAdmin.addEventListener('click', () => {
+            // Guardar datos de admin demo en localStorage
+            const userData = {
+                uid: 'demo-admin-001',
+                email: 'admin@demo.com',
+                displayName: 'Administrador Demo',
+                photoURL: 'https://ui-avatars.com/api/?name=Admin+Demo&background=FF6B6B&color=fff',
+                role: 'super_admin',
+                isDemo: true
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // Redirigir a la aplicación
+            window.location.href = 'app.html';
         });
         
-        // Menú móvil
-        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        // Botones de registro
+        ctaRegisterOwner.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
         
-        // Cerrar menú móvil al hacer clic en un enlace
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    toggleMobileMenu();
+        ctaRegisterVet.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            // Mostrar mensaje específico para veterinarias
+            setTimeout(() => {
+                alert('Para veterinarias: 30 días de prueba gratuita, luego $50.000/mes. Parte se destina a refugios de animales.');
+            }, 300);
+        });
+        
+        // Enlaces del footer
+        footerLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+        
+        footerRegisterOwner.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+        
+        footerRegisterVet.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            setTimeout(() => {
+                alert('Para veterinarias: 30 días de prueba gratuita, luego $50.000/mes. Parte se destina a refugios de animales.');
+            }, 300);
+        });
+        
+        // Animar estadísticas
+        function animateCounter(element, finalValue, duration = 2000) {
+            let startValue = 0;
+            const increment = finalValue / (duration / 16); // 60fps
+            
+            const timer = setInterval(() => {
+                startValue += increment;
+                if (startValue >= finalValue) {
+                    element.textContent = finalValue.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(startValue).toLocaleString();
                 }
-            });
-        });
-        
-        // Actualizar estadísticas al cargar la página
-        document.addEventListener('DOMContentLoaded', updateStats);
-        
-        // Manejar responsive al cambiar tamaño de ventana
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                mainNav.style.display = 'block';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                isMobileMenuOpen = false;
-            } else {
-                mainNav.style.display = 'none';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                isMobileMenuOpen = false;
-            }
-        });
-        
-        // Inicializar menú responsive
-        if (window.innerWidth <= 768) {
-            mainNav.style.display = 'none';
+            }, 16);
         }
+        
+        // Iniciar animación de estadísticas cuando la página carga
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                animateCounter(refugiosAyudados, 12);
+                animateCounter(vacunasAplicadas, 1247);
+                animateCounter(turnosGestionados, 3589);
+                
+                // Para el contador de dinero, formatear como moneda
+                let startValue = 0;
+                const finalValue = 45200;
+                const increment = finalValue / (2000 / 16);
+                const timer = setInterval(() => {
+                    startValue += increment;
+                    if (startValue >= finalValue) {
+                        fondosRecaudados.textContent = `$${finalValue.toLocaleString()}`;
+                        clearInterval(timer);
+                    } else {
+                        fondosRecaudados.textContent = `$${Math.floor(startValue).toLocaleString()}`;
+                    }
+                }, 16);
+            }, 500);
+        });
         
         // Service Worker para PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
-                        console.log('ServiceWorker registrado con éxito:', registration.scope);
+                        console.log('ServiceWorker registrado con éxito: ', registration.scope);
                     })
                     .catch(error => {
-                        console.log('Error al registrar ServiceWorker:', error);
+                        console.log('ServiceWorker registro fallido: ', error);
                     });
             });
         }
+        
+        // Instalación de PWA
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevenir que el navegador muestre el prompt automático
+            e.preventDefault();
+            // Guardar el evento para activarlo más tarde
+            deferredPrompt = e;
+            
+            // Mostrar botón de instalación (podríamos agregar uno en la UI)
+            console.log('PWA lista para instalación');
+        });
     </script>
 </body>
 </html>
