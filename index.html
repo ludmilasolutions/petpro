@@ -3,101 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VetApp - Infraestructura solidaria de salud animal</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="pwa-manifest.json">
-    <meta name="theme-color" content="#2c3e50">
+    <title>PetHealth - Infraestructura Solidaria de Salud Animal</title>
+    <link rel="manifest" href="/manifest.json">
+    <!-- Iconos para PWA -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif; }
+        body { background: linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%); color: #1e3a8a; min-height: 100vh; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 40px 20px; }
+        header h1 { font-size: 2.8rem; margin-bottom: 15px; color: #0c4a6e; }
+        header .tagline { font-size: 1.4rem; color: #475569; max-width: 700px; margin: 0 auto 30px; }
+        .hero-image { font-size: 5rem; margin: 30px 0; }
+        .value-props { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin: 50px 0; }
+        .card { background: white; border-radius: 20px; padding: 30px; width: 100%; max-width: 350px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border-top: 6px solid #38bdf8; }
+        .card h3 { color: #0c4a6e; margin-bottom: 15px; font-size: 1.5rem; }
+        .card ul { list-style: none; }
+        .card li { padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+        .card li:before { content: "✓ "; color: #10b981; font-weight: bold; }
+        .impact-box { background: linear-gradient(to right, #a7f3d0, #5eead4); color: #064e3b; padding: 25px; border-radius: 16px; margin: 40px auto; max-width: 800px; text-align: center; font-weight: bold; }
+        .login-section { text-align: center; margin: 50px 0; }
+        #loginButton, #setupLink { background: #0ea5e9; color: white; border: none; padding: 18px 40px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; margin: 15px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
+        #loginButton:hover, #setupLink:hover { background: #0284c7; transform: translateY(-2px); }
+        footer { text-align: center; margin-top: 60px; color: #64748b; font-size: 0.9rem; padding: 20px; border-top: 1px solid #e2e8f0; }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            .card { max-width: 100%; }
+            .value-props { gap: 20px; }
+        }
+    </style>
+    <!-- Firebase y Google Auth -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1>VetApp 🐾</h1>
-            <p class="tagline">Una mascota. Un historial médico único. Múltiples veterinarias autorizadas. Cada uso ayuda a otros animales.</p>
+        <header>
+            <div class="hero-image">🐕‍🦺</div>
+            <h1>PetHealth</h1>
+            <p class="tagline"><strong>Una mascota. Un historial médico único. Múltiples veterinarias autorizadas. Cada uso ayuda a otros animales.</strong></p>
+            <p>No somos un software veterinario más. Somos la infraestructura solidaria de salud animal.</p>
         </header>
 
-        <main class="main-content">
-            <section class="hero">
-                <h2>Infraestructura solidaria de salud animal</h2>
-                <p>Centraliza el historial médico de tu mascota, gestiona turnos y autoriza veterinarias. Parte de lo que pagas las veterinarias ayuda a refugios de animales.</p>
-                
-                <div class="auth-section">
-                    <h3>Acceder a VetApp</h3>
-                    <button id="googleLoginBtn" class="btn btn-primary">
-                        <span>🚀</span> Iniciar sesión con Google
-                    </button>
-                    <p class="note">* Registro obligatorio con Google. No permitimos emails temporales.</p>
-                </div>
-            </section>
+        <div class="value-props">
+            <div class="card">
+                <h3>👤 Para Dueños</h3>
+                <ul>
+                    <li>Historial médico único y centralizado</li>
+                    <li>Gestión de turnos fácil y rápida</li>
+                    <li>Autorizas qué veterinarias acceden</li>
+                    <li>Recordatorios automáticos por app y WhatsApp</li>
+                    <li><strong>Uso completamente gratuito</strong></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>🏥 Para Veterinarias</h3>
+                <ul>
+                    <li>Accede a historiales autorizados</li>
+                    <li>Gestiona turnos y envía recordatorios</li>
+                    <li>Múltiples usuarios internos</li>
+                    <li>Métricas claras de tu impacto</li>
+                    <li><strong>30 días de prueba gratis</strong>, luego $50.000/mes</li>
+                </ul>
+            </div>
+        </div>
 
-            <section class="features">
-                <div class="feature-card">
-                    <h3>👤 Para dueños de mascotas</h3>
-                    <ul>
-                        <li>✓ Historial médico único por mascota</li>
-                        <li>✓ Gestión de turnos veterinarios</li>
-                        <li>✓ Recordatorios automáticos</li>
-                        <li>✓ Autorización entre veterinarias</li>
-                        <li>✓ Totalmente gratuito</li>
-                    </ul>
-                </div>
+        <div class="impact-box">
+            <h3>🌱 Tu Uso Genera Impacto Social</h3>
+            <p>Una parte de los ingresos se destina directamente al mantenimiento de refugios de animales verificados. Con PetHealth, cuidar de tu mascota también ayuda a otras.</p>
+        </div>
 
-                <div class="feature-card">
-                    <h3>🏥 Para veterinarias</h3>
-                    <ul>
-                        <li>✓ Acceso a mascotas autorizadas</li>
-                        <li>✓ Gestión profesional de turnos</li>
-                        <li>✓ Historial médico centralizado</li>
-                        <li>✓ Recordatorios a dueños</li>
-                        <li>✓ 30 días de prueba gratis</li>
-                    </ul>
-                </div>
+        <div class="login-section">
+            <h2>Comienza Ahora</h2>
+            <p>Inicia sesión de forma segura con tu cuenta de Google. Es obligatorio para garantizar la seguridad de los datos médicos.</p>
+            <button id="loginButton">🚪 Iniciar Sesión con Google</button>
+            <p style="margin-top: 30px; font-size: 0.9rem; color: #6b7280;">
+                <strong>¿Primera vez configurando el proyecto?</strong><br>
+                <button id="setupLink" style="padding: 10px 20px; font-size: 1rem;">⚙️ Ir a Configuración Inicial (setup.html)</button>
+            </p>
+            <div id="loginMessage" style="margin-top: 20px; padding: 15px; border-radius: 10px; display: none;"></div>
+        </div>
 
-                <div class="feature-card">
-                    <h3>🌱 Impacto social</h3>
-                    <p>El 20% de los ingresos se destinan directamente a:</p>
-                    <ul>
-                        <li>✓ Refugios de animales verificados</li>
-                        <li>✓ Campañas de esterilización</li>
-                        <li>✓ Medicamentos para rescates</li>
-                    </ul>
-                    <p class="impact-text">Tu uso ayuda a otros animales</p>
-                </div>
-            </section>
-
-            <section class="how-it-works">
-                <h2>¿Cómo funciona?</h2>
-                <div class="steps">
-                    <div class="step">
-                        <span class="step-number">1</span>
-                        <p>Registras tu mascota</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">2</span>
-                        <p>Autorizas veterinarias</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">3</span>
-                        <p>Todos acceden al mismo historial</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">4</span>
-                        <p>Cada consulta genera impacto social</p>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <p>VetApp &copy; <span id="currentYear"></span> - Infraestructura solidaria de salud animal</p>
-            <p class="footer-note">🐶 Un producto con propósito real</p>
+        <footer>
+            <p>PetHealth © 2026 - Un MVP real, usable, cobrable y escalable.</p>
+            <p>Listo para ser probado con veterinarias reales y evolucionar.</p>
         </footer>
     </div>
 
-    <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        // ================= CONFIGURACIÓN INICIAL =================
+        // IMPORTANTE: El desarrollador DEBE reemplazar esta configuración con las credenciales de SU proyecto Firebase.
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY_AQUI",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializar Firebase (solo si no está inicializado)
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ================= MANEJAR LOGIN CON GOOGLE =================
+        document.getElementById('loginButton').addEventListener('click', iniciarSesionGoogle);
+        document.getElementById('setupLink').addEventListener('click', () => {
+            window.location.href = '/setup.html';
+        });
+
+        // Configurar el proveedor de Google
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+        // Forzar selección de cuenta para mayor claridad
+        provider.setCustomParameters({ prompt: 'select_account' });
+
+        async function iniciarSesionGoogle() {
+            const mensajeDiv = document.getElementById('loginMessage');
+            mensajeDiv.style.display = 'block';
+            mensajeDiv.textContent = 'Conectando con Google...';
+            mensajeDiv.style.background = '#fef3c7';
+            mensajeDiv.style.color = '#92400e';
+
+            try {
+                const resultado = await auth.signInWithPopup(provider);
+                const usuario = resultado.user;
+
+                // Verificar que NO sea un email temporal/anónimo (validación básica)
+                if(usuario.email && !usuario.email.includes('tempmail') && !usuario.email.includes('noreply')) {
+                    mensajeDiv.textContent = `✅ ¡Bienvenido/a, ${usuario.displayName}! Redirigiendo a la aplicación...`;
+                    mensajeDiv.style.background = '#d1fae5';
+                    mensajeDiv.style.color = '#065f46';
+
+                    // Breve pausa para que el usuario vea el mensaje
+                    setTimeout(() => {
+                        window.location.href = '/app.html';
+                    }, 1500);
+                } else {
+                    // Si parece un email temporal, cerrar sesión y mostrar error
+                    await auth.signOut();
+                    throw new Error('No se permiten correos temporales o anónimos. Usa una cuenta Google personal/válida.');
+                }
+
+            } catch (error) {
+                console.error("Error en login:", error);
+                mensajeDiv.textContent = `❌ Error: ${error.message}`;
+                mensajeDiv.style.background = '#fee2e2';
+                mensajeDiv.style.color = '#991b1b';
+            }
+        }
+
+        // ================= DETECTAR USUARIO YA LOGUEADO =================
+        // Si el usuario ya inició sesión, redirigir automáticamente a la app
+        auth.onAuthStateChanged((usuario) => {
+            if (usuario) {
+                console.log("Usuario ya autenticado, redirigiendo...");
+                window.location.href = '/app.html';
+            }
+        });
     </script>
 </body>
 </html>
