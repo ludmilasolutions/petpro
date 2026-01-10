@@ -7,6 +7,12 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
     <meta name="theme-color" content="#4f46e5">
+    
+    <!-- Scripts de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
     <style>
         :root {
             --primary: #4f46e5;
@@ -830,7 +836,6 @@
           messagingSenderId: "384847276656",
           appId: "1:384847276656:web:ed6a128e5e09ce2e52a2b5"
         };
-
         
         // Inicialización de Firebase
         let auth, db;
