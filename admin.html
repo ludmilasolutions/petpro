@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetApp - Administración</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>VetApp 🔧</h2>
+            <p class="user-role">Administración</p>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="#veterinarias-activas"><span>🏥</span> Veterinarias</a></li>
+            <li><a href="#pagos"><span>💰</span> Pagos</a></li>
+            <li><a href="#refugios"><span>🐾</span> Refugios</a></li>
+            <li><a href="#metricas-globales"><span>📈</span> Métricas globales</a></li>
+            <li><a href="#usuarios-admin"><span>👥</span> Usuarios</a></li>
+            <li><a href="#configuracion-admin"><span>⚙️</span> Configuración</a></li>
+        </ul>
+    </nav>
+    
+    <main class="main-panel">
+        <div class="card">
+            <h3>📊 Dashboard Administrativo</h3>
+            <div class="grid-4">
+                <div class="card">
+                    <h4>Veterinarias activas</h4>
+                    <p id="vetActivas" class="big-number">0</p>
+                </div>
+                <div class="card">
+                    <h4>Mascotas registradas</h4>
+                    <p id="mascotasRegistradas" class="big-number">0</p>
+                </div>
+                <div class="card">
+                    <h4>Ingresos mensuales</h4>
+                    <p id="ingresos" class="big-number">$0</p>
+                </div>
+                <div class="card">
+                    <h4>Impacto generado</h4>
+                    <p id="impactoGenerado" class="big-number">$0</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>🏥 Veterinarias registradas</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Plan</th>
+                        <th>Mascotas</th>
+                        <th>Registro</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaVeterinarias">
+                    <!-- Dinámico -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h3>🐾 Refugios beneficiados</h3>
+            <div id="listaRefugios"></div>
+        </div>
+    </main>
+    
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Solo accesible para administradores
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'index.html';
+            }
+            // Verificar si es admin
+            verificarAdmin(user.uid);
+        });
+        
+        async function verificarAdmin(uid) {
+            // Lógica de verificación de administrador
+            cargarEstadisticas();
+        }
+        
+        async function cargarEstadisticas() {
+            // Cargar datos administrativos
+        }
+    </script>
+</body>
+</html>
