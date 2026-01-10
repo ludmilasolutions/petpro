@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetApp - Configuración Veterinaria</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🏥 Configuración de Veterinaria</h1>
+            <p>Sigue estos pasos para activar tu cuenta profesional</p>
+        </header>
+        
+        <main class="main-content">
+            <div class="card">
+                <h3>Paso 1: Datos de la veterinaria</h3>
+                <form id="vetForm">
+                    <div class="form-group">
+                        <label class="form-label">Nombre de la veterinaria *</label>
+                        <input type="text" class="form-control" id="vetNombre" required>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Teléfono *</label>
+                            <input type="tel" class="form-control" id="vetTelefono" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email de contacto</label>
+                            <input type="email" class="form-control" id="vetEmail">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="vetDireccion">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Horarios de atención</label>
+                        <textarea class="form-control" id="vetHorarios" rows="2"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Continuar al paso 2</button>
+                </form>
+            </div>
+            
+            <!-- Pasos siguientes (inicialmente ocultos) -->
+            <div id="paso2" style="display: none;" class="card">
+                <h3>Paso 2: Crear usuario interno</h3>
+                <p>Invita a tu primer colaborador:</p>
+                <form id="usuarioForm">
+                    <div class="form-group">
+                        <label class="form-label">Email del colaborador *</label>
+                        <input type="email" class="form-control" id="usuarioEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Rol</label>
+                        <select class="form-control" id="usuarioRol">
+                            <option value="veterinario">Veterinario</option>
+                            <option value="asistente">Asistente</option>
+                            <option value="recepcion">Recepción</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Enviar invitación</button>
+                </form>
+            </div>
+            
+            <div id="paso3" style="display: none;" class="card">
+                <h3>Paso 3: Registrar mascota de demostración</h3>
+                <p>Practica registrando una mascota:</p>
+                <!-- Formulario similar a owner.html -->
+            </div>
+            
+            <div id="paso4" style="display: none;" class="card">
+                <h3>Paso 4: Crear turno de demostración</h3>
+                <p>Configura tu primer turno:</p>
+                <!-- Formulario de turnos -->
+            </div>
+            
+            <div id="completado" style="display: none;" class="card">
+                <h3>🎉 ¡Configuración completada!</h3>
+                <p>Tu veterinaria está lista para usar VetApp.</p>
+                <p><strong>Recuerda:</strong> Tienes 30 días de prueba gratis.</p>
+                <button onclick="irAPanel()" class="btn btn-success">Ir al panel veterinaria</button>
+            </div>
+        </main>
+    </div>
+    
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        let pasoActual = 1;
+        
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'index.html';
+            }
+        });
+        
+        document.getElementById('vetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await guardarVeterinaria();
+        });
+        
+        async function guardarVeterinaria() {
+            const user = auth.currentUser;
+            
+            const vetData = {
+                nombre: document.getElementById('vetNombre').value,
+                telefono: document.getElementById('vetTelefono').value,
+                email: document.getElementById('vetEmail').value,
+                direccion: document.getElementById('vetDireccion').value,
+                horarios: document.getElementById('vetHorarios').value,
+                estado: 'trial',
+                fechaRegistro: firebase.firestore.FieldValue.serverTimestamp(),
+                userId: user.uid,
+                emailUsuario: user.email
+            };
+            
+            try {
+                await db.collection('veterinarias').doc(user.uid).set(vetData);
+                document.getElementById('paso2').style.display = 'block';
+                pasoActual = 2;
+            } catch (error) {
+                alert('Error al guardar: ' + error.message);
+            }
+        }
+        
+        function irAPanel() {
+            window.location.href = 'vet.html';
+        }
+    </script>
+</body>
+</html>
