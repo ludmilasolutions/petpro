@@ -3,169 +3,859 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetHealth - Infraestructura Solidaria de Salud Animal</title>
-    <link rel="manifest" href="/manifest.json">
-    <!-- Iconos para PWA -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+    <title>VetSolidaria - Salud Animal con Propósito</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif; }
-        body { background: linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%); color: #1e3a8a; min-height: 100vh; padding: 20px; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 40px 20px; }
-        header h1 { font-size: 2.8rem; margin-bottom: 15px; color: #0c4a6e; }
-        header .tagline { font-size: 1.4rem; color: #475569; max-width: 700px; margin: 0 auto 30px; }
-        .hero-image { font-size: 5rem; margin: 30px 0; }
-        .value-props { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin: 50px 0; }
-        .card { background: white; border-radius: 20px; padding: 30px; width: 100%; max-width: 350px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border-top: 6px solid #38bdf8; }
-        .card h3 { color: #0c4a6e; margin-bottom: 15px; font-size: 1.5rem; }
-        .card ul { list-style: none; }
-        .card li { padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
-        .card li:before { content: "✓ "; color: #10b981; font-weight: bold; }
-        .impact-box { background: linear-gradient(to right, #a7f3d0, #5eead4); color: #064e3b; padding: 25px; border-radius: 16px; margin: 40px auto; max-width: 800px; text-align: center; font-weight: bold; }
-        .login-section { text-align: center; margin: 50px 0; }
-        #loginButton, #setupLink { background: #0ea5e9; color: white; border: none; padding: 18px 40px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; margin: 15px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
-        #loginButton:hover, #setupLink:hover { background: #0284c7; transform: translateY(-2px); }
-        footer { text-align: center; margin-top: 60px; color: #64748b; font-size: 0.9rem; padding: 20px; border-top: 1px solid #e2e8f0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --accent: #FF9800;
+            --danger: #F44336;
+            --light: #f8f9fa;
+            --dark: #212121;
+            --gray: #757575;
+            --border: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            padding: 0 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        /* Login Section */
+        .login-section {
+            max-width: 400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .login-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+        
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            border-color: var(--primary);
+            background-color: #f8f9fa;
+        }
+        
+        .login-btn.google {
+            background-color: white;
+            color: var(--dark);
+        }
+        
+        .role-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .role-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .role-btn.active {
+            border-color: var(--primary);
+            background-color: #e8f5e9;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Impact Section */
+        .impact-section {
+            background: var(--primary);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .impact-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            header h1 { font-size: 2.2rem; }
-            .card { max-width: 100%; }
-            .value-props { gap: 20px; }
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+        
+        .alert-success {
+            background-color: #e8f5e9;
+            color: var(--primary-dark);
+            border: 1px solid var(--primary);
+        }
+        
+        .alert-error {
+            background-color: #ffebee;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .alert-info {
+            background-color: #e3f2fd;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
         }
     </style>
-    <!-- Firebase y Google Auth -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="hero-image">🐕‍🦺</div>
-            <h1>PetHealth</h1>
-            <p class="tagline"><strong>Una mascota. Un historial médico único. Múltiples veterinarias autorizadas. Cada uso ayuda a otros animales.</strong></p>
-            <p>No somos un software veterinario más. Somos la infraestructura solidaria de salud animal.</p>
-        </header>
-
-        <div class="value-props">
-            <div class="card">
-                <h3>👤 Para Dueños</h3>
-                <ul>
-                    <li>Historial médico único y centralizado</li>
-                    <li>Gestión de turnos fácil y rápida</li>
-                    <li>Autorizas qué veterinarias acceden</li>
-                    <li>Recordatorios automáticos por app y WhatsApp</li>
-                    <li><strong>Uso completamente gratuito</strong></li>
-                </ul>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <span class="logo-icon">🐾</span>
+                <span>VetSolidaria</span>
             </div>
-            <div class="card">
-                <h3>🏥 Para Veterinarias</h3>
-                <ul>
-                    <li>Accede a historiales autorizados</li>
-                    <li>Gestiona turnos y envía recordatorios</li>
-                    <li>Múltiples usuarios internos</li>
-                    <li>Métricas claras de tu impacto</li>
-                    <li><strong>30 días de prueba gratis</strong>, luego $50.000/mes</li>
-                </ul>
+            <div class="nav-links">
+                <a href="#features">¿Cómo funciona?</a>
+                <a href="#impact">Impacto Social</a>
+                <a href="#veterinarias">Para Veterinarias</a>
+                <a href="#faq">Preguntas Frecuentes</a>
+                <button class="btn btn-primary" id="loginBtn">Iniciar Sesión</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Una mascota. Un historial médico único. Múltiples veterinarias. Cada uso ayuda a otros animales.</h1>
+            <p>Centraliza el historial médico de tu mascota, gestiona turnos veterinarios y contribuye al mantenimiento de refugios animales con cada uso.</p>
+            <div style="margin: 2rem 0;">
+                <button class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;" id="startBtn">
+                    Comenzar Gratis
+                </button>
             </div>
         </div>
+    </section>
 
-        <div class="impact-box">
-            <h3>🌱 Tu Uso Genera Impacto Social</h3>
-            <p>Una parte de los ingresos se destina directamente al mantenimiento de refugios de animales verificados. Con PetHealth, cuidar de tu mascota también ayuda a otras.</p>
+    <!-- Features -->
+    <section id="features" style="padding: 4rem 2rem; background: white;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Todo en un solo lugar</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Historial Médico Único</h3>
+                    <p>Todas las consultas, vacunas y tratamientos de tu mascota en un solo lugar, accesible desde cualquier dispositivo.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏥</div>
+                    <h3>Múltiples Veterinarias</h3>
+                    <p>Autoriza el acceso a diferentes veterinarias para que puedan ver el historial completo cuando lo necesiten.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Recordatorios Automáticos</h3>
+                    <p>Recibe notificaciones de vacunas, controles y próximos turnos por app y WhatsApp.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">❤️</div>
+                    <h3>Impacto Social</h3>
+                    <p>Parte de lo que pagan las veterinarias se destina directamente a refugios de animales verificados.</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="login-section">
-            <h2>Comienza Ahora</h2>
-            <p>Inicia sesión de forma segura con tu cuenta de Google. Es obligatorio para garantizar la seguridad de los datos médicos.</p>
-            <button id="loginButton">🚪 Iniciar Sesión con Google</button>
-            <p style="margin-top: 30px; font-size: 0.9rem; color: #6b7280;">
-                <strong>¿Primera vez configurando el proyecto?</strong><br>
-                <button id="setupLink" style="padding: 10px 20px; font-size: 1rem;">⚙️ Ir a Configuración Inicial (setup.html)</button>
+    <!-- Login Section -->
+    <section id="login" style="padding: 4rem 2rem; background: #f8f9fa;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h2 style="margin-bottom: 2rem; font-size: 2rem;">¿Eres dueño de mascota o veterinaria?</h2>
+            <p style="margin-bottom: 2rem; color: var(--gray); max-width: 600px; margin-left: auto; margin-right: auto;">
+                Elige tu perfil para acceder a la plataforma. Ambos usan Google Sign-In para mayor seguridad.
             </p>
-            <div id="loginMessage" style="margin-top: 20px; padding: 15px; border-radius: 10px; display: none;"></div>
+            
+            <div class="login-section">
+                <h3>Iniciar Sesión</h3>
+                <div class="role-selector">
+                    <button class="role-btn active" data-role="owner">Dueño de Mascota</button>
+                    <button class="role-btn" data-role="vet">Veterinaria</button>
+                </div>
+                <div class="login-options">
+                    <button class="login-btn google" id="googleLogin">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continuar con Google
+                    </button>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray);">
+                    Para dueños de mascotas es completamente gratis. Veterinarias tienen 30 días de prueba gratuita.
+                </p>
+            </div>
         </div>
+    </section>
 
-        <footer>
-            <p>PetHealth © 2026 - Un MVP real, usable, cobrable y escalable.</p>
-            <p>Listo para ser probado con veterinarias reales y evolucionar.</p>
-        </footer>
+    <!-- Impact Section -->
+    <section id="impact" class="impact-section">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Tu uso ayuda a otros animales</h2>
+        <p style="max-width: 600px; margin: 0 auto 2rem; opacity: 0.9;">
+            Por cada veterinaria que usa la plataforma, destinamos el 30% de los ingresos a refugios de animales verificados.
+        </p>
+        <div class="impact-stats">
+            <div class="stat">
+                <div class="stat-number" id="refugiosCount">12</div>
+                <div class="stat-label">Refugios Beneficiados</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="mascotasAyudadas">1,250</div>
+                <div class="stat-label">Mascotas Ayudadas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">$<span id="donacionesTotal">45,800</span></div>
+                <div class="stat-label">Recaudado para Refugios</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Veterinarias Section -->
+    <section id="veterinarias" style="padding: 4rem 2rem; background: white;">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">Para Veterinarias</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem;">
+                Únete a la red solidaria y ofrece a tus clientes un servicio diferenciado mientras ayudas a animales necesitados.
+            </p>
+            <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px; text-align: left; margin-bottom: 2rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Plan Único - $50.000/mes</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">✓ 30 días de prueba gratuita</li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">✓ Usuarios internos ilimitados</li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">✓ Gestión completa de turnos</li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">✓ Acceso a historiales autorizados</li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">✓ Recordatorios automáticos</li>
+                    <li style="padding-left: 1.5rem; position: relative;">✓ Dashboard con métricas</li>
+                </ul>
+            </div>
+            <button class="btn btn-primary" id="vetRegisterBtn">Registrar Mi Veterinaria</button>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" style="padding: 4rem 2rem; background: #f8f9fa;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Preguntas Frecuentes</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: var(--shadow);">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">¿Es realmente gratis para dueños de mascotas?</h4>
+                    <p style="color: var(--gray);">Sí, completamente gratis. Los dueños pueden registrar todas sus mascotas, autorizar veterinarias y usar todas las funcionalidades sin costo.</p>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: var(--shadow);">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">¿Cómo funciona el impacto social?</h4>
+                    <p style="color: var(--gray);">El 30% de lo que pagan las veterinarias se destina directamente a refugios verificados. Cada mes mostramos públicamente las donaciones realizadas.</p>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: var(--shadow);">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">¿Qué pasa si mi veterinaria no usa la app?</h4>
+                    <p style="color: var(--gray);">Puedes autorizar el acceso temporal para que carguen información después de una consulta, o solicitarles que se unan a la plataforma.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VetSolidaria</h4>
+                <p>Salud animal con propósito. Una mascota, un historial médico único, múltiples veterinarias, cada uso ayuda a otros animales.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>info@vetsolidaria.com</p>
+                <p>+54 11 1234-5678</p>
+                <p>Buenos Aires, Argentina</p>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <p>Términos de Servicio</p>
+                <p>Política de Privacidad</p>
+                <p>Protección de Datos</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 VetSolidaria. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Iniciar Sesión</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="loginModalContent">
+                <!-- Content will be loaded by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Veterinaria</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="registerModalContent">
+                <p>Para registrar tu veterinaria necesitas iniciar sesión con Google. Después del login, comenzará el proceso guiado de onboarding.</p>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="registerWithGoogle">Continuar con Google</button>
+                    <button class="btn" id="cancelRegister">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ================= CONFIGURACIÓN INICIAL =================
-        // IMPORTANTE: El desarrollador DEBE reemplazar esta configuración con las credenciales de SU proyecto Firebase.
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY_AQUI",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
+        // Estado global de la aplicación
+        const AppState = {
+            currentUser: null,
+            userRole: null,
+            isInitialized: false
         };
 
-        // Inicializar Firebase (solo si no está inicializado)
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Simulación de datos para la landing page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navegación suave
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
 
-        // ================= MANEJAR LOGIN CON GOOGLE =================
-        document.getElementById('loginButton').addEventListener('click', iniciarSesionGoogle);
-        document.getElementById('setupLink').addEventListener('click', () => {
-            window.location.href = '/setup.html';
+            // Botones de rol
+            const roleButtons = document.querySelectorAll('.role-btn');
+            roleButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    roleButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    AppState.userRole = this.dataset.role;
+                });
+            });
+
+            // Inicializar rol por defecto
+            AppState.userRole = 'owner';
+
+            // Botón de login
+            document.getElementById('loginBtn').addEventListener('click', showLoginModal);
+            document.getElementById('startBtn').addEventListener('click', showLoginModal);
+            document.getElementById('googleLogin').addEventListener('click', handleGoogleLogin);
+            document.getElementById('vetRegisterBtn').addEventListener('click', showRegisterModal);
+            document.getElementById('registerWithGoogle').addEventListener('click', handleVetRegistration);
+            document.getElementById('cancelRegister').addEventListener('click', hideRegisterModal);
+
+            // Cerrar modales
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('loginModal').classList.remove('active');
+                    document.getElementById('registerModal').classList.remove('active');
+                });
+            });
+
+            // Cerrar modal al hacer clic fuera
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+
+            // Verificar si hay datos en localStorage
+            checkStoredData();
+
+            // Mostrar estadísticas simuladas
+            updateStats();
         });
 
-        // Configurar el proveedor de Google
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.addScope('profile');
-        provider.addScope('email');
-        // Forzar selección de cuenta para mayor claridad
-        provider.setCustomParameters({ prompt: 'select_account' });
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            const content = document.getElementById('loginModalContent');
+            
+            content.innerHTML = `
+                <div class="login-options">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🐾</div>
+                        <h4 style="color: var(--primary);">Bienvenido a VetSolidaria</h4>
+                        <p style="color: var(--gray); font-size: 0.9rem;">Elige tu perfil para continuar</p>
+                    </div>
+                    
+                    <div class="role-selector" style="margin-bottom: 2rem;">
+                        <button class="role-btn ${AppState.userRole === 'owner' ? 'active' : ''}" data-role="owner" onclick="selectRole('owner')">
+                            Dueño de Mascota
+                        </button>
+                        <button class="role-btn ${AppState.userRole === 'vet' ? 'active' : ''}" data-role="vet" onclick="selectRole('vet')">
+                            Veterinaria
+                        </button>
+                    </div>
+                    
+                    <button class="login-btn google" onclick="handleGoogleLogin()" style="width: 100%; justify-content: center;">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continuar con Google
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 1rem; color: var(--gray); font-size: 0.9rem;">
+                        ${AppState.userRole === 'owner' 
+                            ? 'Gratis para dueños de mascotas' 
+                            : '30 días de prueba gratuita para veterinarias'}
+                    </p>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
 
-        async function iniciarSesionGoogle() {
-            const mensajeDiv = document.getElementById('loginMessage');
-            mensajeDiv.style.display = 'block';
-            mensajeDiv.textContent = 'Conectando con Google...';
-            mensajeDiv.style.background = '#fef3c7';
-            mensajeDiv.style.color = '#92400e';
+        function selectRole(role) {
+            AppState.userRole = role;
+            showLoginModal(); // Recargar modal con nueva selección
+        }
 
-            try {
-                const resultado = await auth.signInWithPopup(provider);
-                const usuario = resultado.user;
+        function showRegisterModal() {
+            document.getElementById('registerModal').classList.add('active');
+        }
 
-                // Verificar que NO sea un email temporal/anónimo (validación básica)
-                if(usuario.email && !usuario.email.includes('tempmail') && !usuario.email.includes('noreply')) {
-                    mensajeDiv.textContent = `✅ ¡Bienvenido/a, ${usuario.displayName}! Redirigiendo a la aplicación...`;
-                    mensajeDiv.style.background = '#d1fae5';
-                    mensajeDiv.style.color = '#065f46';
+        function hideRegisterModal() {
+            document.getElementById('registerModal').classList.remove('active');
+        }
 
-                    // Breve pausa para que el usuario vea el mensaje
-                    setTimeout(() => {
-                        window.location.href = '/app.html';
-                    }, 1500);
-                } else {
-                    // Si parece un email temporal, cerrar sesión y mostrar error
-                    await auth.signOut();
-                    throw new Error('No se permiten correos temporales o anónimos. Usa una cuenta Google personal/válida.');
+        function handleGoogleLogin() {
+            // En un entorno real, aquí se integraría Firebase Auth
+            // Para este MVP, simulamos el login
+            
+            const email = AppState.userRole === 'owner' 
+                ? 'dueño@ejemplo.com' 
+                : 'vet@ejemplo.com';
+            
+            const name = AppState.userRole === 'owner' 
+                ? 'Juan Pérez' 
+                : 'Clínica Veterinaria Ejemplo';
+            
+            AppState.currentUser = {
+                email: email,
+                name: name,
+                role: AppState.userRole,
+                id: 'user_' + Date.now()
+            };
+            
+            // Guardar en localStorage
+            localStorage.setItem('vetSolidaria_user', JSON.stringify(AppState.currentUser));
+            
+            // Mostrar mensaje de éxito
+            showAlert('¡Inicio de sesión exitoso! Redirigiendo a la aplicación...', 'success');
+            
+            // Redirigir después de 1.5 segundos
+            setTimeout(() => {
+                window.location.href = 'app.html';
+            }, 1500);
+        }
+
+        function handleVetRegistration() {
+            // Similar al login pero específico para veterinarias
+            AppState.userRole = 'vet';
+            handleGoogleLogin();
+        }
+
+        function checkStoredData() {
+            const storedUser = localStorage.getItem('vetSolidaria_user');
+            if (storedUser) {
+                AppState.currentUser = JSON.parse(storedUser);
+                AppState.userRole = AppState.currentUser.role;
+                
+                // Actualizar botón de login si hay usuario
+                const loginBtn = document.getElementById('loginBtn');
+                if (loginBtn) {
+                    loginBtn.textContent = 'Ir a la App';
+                    loginBtn.onclick = function() {
+                        window.location.href = 'app.html';
+                    };
                 }
+            }
+            
+            // Verificar si la base está inicializada
+            const isInitialized = localStorage.getItem('vetSolidaria_initialized');
+            AppState.isInitialized = isInitialized === 'true';
+        }
 
-            } catch (error) {
-                console.error("Error en login:", error);
-                mensajeDiv.textContent = `❌ Error: ${error.message}`;
-                mensajeDiv.style.background = '#fee2e2';
-                mensajeDiv.style.color = '#991b1b';
+        function showAlert(message, type = 'info') {
+            // Crear alerta temporal
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.position = 'fixed';
+            alert.style.top = '20px';
+            alert.style.right = '20px';
+            alert.style.zIndex = '9999';
+            alert.style.minWidth = '300px';
+            alert.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            
+            document.body.appendChild(alert);
+            
+            // Remover después de 5 segundos
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function updateStats() {
+            // Simular números que aumentan
+            const refugios = document.getElementById('refugiosCount');
+            const mascotas = document.getElementById('mascotasAyudadas');
+            const donaciones = document.getElementById('donacionesTotal');
+            
+            if (refugios && mascotas && donaciones) {
+                // Estos números podrían venir de una API en producción
+                let r = 12;
+                let m = 1250;
+                let d = 45800;
+                
+                // Animar contadores
+                animateCounter(refugios, r);
+                animateCounter(mascotas, m);
+                animateCounter(donaciones, d, true);
             }
         }
 
-        // ================= DETECTAR USUARIO YA LOGUEADO =================
-        // Si el usuario ya inició sesión, redirigir automáticamente a la app
-        auth.onAuthStateChanged((usuario) => {
-            if (usuario) {
-                console.log("Usuario ya autenticado, redirigiendo...");
-                window.location.href = '/app.html';
-            }
-        });
+        function animateCounter(element, target, isCurrency = false) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = isCurrency ? Math.floor(current).toLocaleString() : Math.floor(current);
+            }, 30);
+        }
     </script>
 </body>
 </html>
