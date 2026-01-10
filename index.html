@@ -4,478 +4,544 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu Mascota Online - Infraestructura solidaria de salud animal</title>
-    <meta name="description" content="Centraliza el historial médico de tu mascota, gestiona turnos veterinarios y ayuda a refugios de animales con cada uso">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+    <meta name="theme-color" content="#4f46e5">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            color: #333;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+            width: 100%;
         }
         
         /* Header */
         header {
-            padding: 20px 0;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
+            padding: 1rem 0;
         }
         
         .logo {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
         }
         
-        .logo span {
-            font-size: 32px;
+        .logo-icon {
+            font-size: 2rem;
         }
         
-        nav {
+        nav ul {
             display: flex;
-            gap: 30px;
+            list-style: none;
+            gap: 2rem;
         }
         
         nav a {
-            color: white;
             text-decoration: none;
+            color: var(--dark);
             font-weight: 500;
-            transition: opacity 0.3s;
+            transition: color 0.3s;
         }
         
         nav a:hover {
-            opacity: 0.8;
+            color: var(--primary);
         }
         
         /* Hero Section */
         .hero {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 40px;
-            margin: 60px 0;
-            color: white;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         }
         
         .hero-content {
-            flex: 1;
-            min-width: 300px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
         }
         
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
+        .hero-text h1 {
+            font-size: 3rem;
             line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
         }
         
-        .hero p {
-            font-size: 20px;
-            margin-bottom: 30px;
-            opacity: 0.9;
+        .hero-text h1 span {
+            color: var(--primary);
+        }
+        
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
         }
         
         .hero-image {
-            flex: 1;
-            min-width: 300px;
-            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+        }
+        
+        .hero-image img {
+            max-width: 100%;
             border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Features */
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--dark);
         }
         
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
         
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         
-        .feature h3 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
         }
         
         /* Login Section */
         .login-section {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px 0;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 4rem 0;
+            background-color: var(--light);
         }
         
-        .login-section h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .user-types {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-        
-        .user-card {
-            border: 2px solid #e0e0e0;
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
             border-radius: 15px;
-            padding: 30px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
-            transition: transform 0.3s, border-color 0.3s;
         }
         
-        .user-card:hover {
-            transform: translateY(-5px);
-            border-color: #667eea;
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
         }
         
-        .user-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
+        .login-subtitle {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+        
+        .user-type-selector {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
         
-        .user-card.owner h3 { color: #4CAF50; }
-        .user-card.vet h3 { color: #2196F3; }
-        
-        .price-tag {
-            background: #f0f7ff;
-            color: #2196F3;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin: 15px 0;
-            display: inline-block;
-        }
-        
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            border: none;
+        .user-type-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--gray-light);
+            background-color: white;
             border-radius: 10px;
-            background: #4285F4;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .user-type-btn.active {
+            border-color: var(--primary);
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .google-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: background 0.3s;
-            margin-top: 20px;
-        }
-        
-        .btn-login:hover {
-            background: #3367D6;
-        }
-        
-        .btn-login.guest {
-            background: #34A853;
-        }
-        
-        .btn-login.guest:hover {
-            background: #2E8B57;
-        }
-        
-        /* Social Impact */
-        .impact {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px 0;
-            text-align: center;
-        }
-        
-        .impact h2 {
-            color: #E91E63;
-            margin-bottom: 20px;
-        }
-        
-        .impact-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .stat {
-            padding: 20px;
+            width: 100%;
+            padding: 1rem;
+            background-color: white;
+            border: 2px solid var(--gray-light);
             border-radius: 10px;
-            background: #FFF5F7;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
         }
         
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #E91E63;
-            margin: 10px 0;
+        .google-btn:hover {
+            background-color: #f8fafc;
+            border-color: var(--primary);
+        }
+        
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .login-note {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 1rem;
         }
         
         /* Footer */
         footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
             margin-top: auto;
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            padding: 40px 0;
-            text-align: center;
         }
         
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0;
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
         }
         
-        .footer-links a {
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
             color: white;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: #cbd5e1;
             text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #cbd5e1;
+            font-size: 0.9rem;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-            
-            nav {
-                display: none;
-            }
-            
-            .user-types {
+            .hero-content {
                 grid-template-columns: 1fr;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .user-type-selector {
+                flex-direction: column;
             }
         }
         
         /* Loading */
         .loading {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
+            text-align: center;
+            margin-top: 1rem;
         }
         
         .loading.active {
-            display: flex;
+            display: block;
         }
         
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(0, 0, 0, 0.1);
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 15px;
+            border-top: 3px solid var(--primary);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
         
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
-        /* Modal */
-        .modal {
+        /* Error message */
+        .error-message {
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1001;
-            justify-content: center;
-            align-items: center;
         }
         
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal h3 {
-            margin-bottom: 20px;
-            color: #333;
+        .error-message.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <span>Cargando...</span>
-    </div>
-    
-    <!-- Terms Modal -->
-    <div class="modal" id="termsModal">
-        <div class="modal-content">
-            <h3>Términos y Condiciones</h3>
-            <p>Al usar Tu Mascota Online, aceptas:</p>
-            <ul style="margin: 15px 0; padding-left: 20px;">
-                <li>Uso responsable de la plataforma</li>
-                <li>Veracidad de la información médica</li>
-                <li>Respeto a la privacidad de datos</li>
-                <li>Destino solidario del 20% de los ingresos</li>
-            </ul>
-            <button class="btn-login" onclick="acceptTerms()">Aceptar y Continuar</button>
-        </div>
-    </div>
-    
-    <div class="container">
-        <header>
-            <div class="logo">
-                <span>🐾</span>
-                <span>Tu Mascota Online</span>
-            </div>
-            <nav>
-                <a href="#features">Cómo funciona</a>
-                <a href="#impact">Impacto Social</a>
-                <a href="#about">Nosotros</a>
-            </nav>
-        </header>
-        
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Una mascota, un historial médico, múltiples veterinarias.</h1>
-                <p>Centraliza la salud de tu mascota, gestiona turnos online y ayuda a refugios de animales con cada uso.</p>
-                
-                <div class="features-grid">
-                    <div class="feature">
-                        <h3>📋 Historial Único</h3>
-                        <p>Todas las consultas en un solo lugar</p>
-                    </div>
-                    <div class="feature">
-                        <h3>🏥 Veterinarias Autorizadas</h3>
-                        <p>Control total sobre quién accede</p>
-                    </div>
-                    <div class="feature">
-                        <h3>❤️ Impacto Social</h3>
-                        <p>20% destinado a refugios</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="hero-image">
-                <div class="login-section">
-                    <h2>Ingresar a la Plataforma</h2>
-                    <p>Elige tu tipo de cuenta para continuar</p>
-                    
-                    <div class="user-types">
-                        <div class="user-card owner">
-                            <h3>👤 Dueño de Mascota</h3>
-                            <p>Gratis para siempre</p>
-                            <p>Registra mascotas, gestiona historial, autoriza veterinarias y agenda turnos.</p>
-                            <button class="btn-login" onclick="login('owner')">
-                                <span>G</span> Ingresar con Google
-                            </button>
-                        </div>
-                        
-                        <div class="user-card vet">
-                            <h3>🏥 Veterinaria</h3>
-                            <div class="price-tag">30 días gratis</div>
-                            <p>Acceso a mascotas autorizadas, gestión de turnos, historial médico y más.</p>
-                            <button class="btn-login" onclick="login('vet')">
-                                <span>G</span> Ingresar con Google
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <button class="btn-login guest" onclick="showTerms()">
-                        👀 Explorar como invitado
-                    </button>
-                </div>
-            </div>
-        </section>
-        
-        <section class="impact" id="impact">
-            <h2>❤️ Tu Uso Ayuda a Otros Animales</h2>
-            <p>El 20% de cada suscripción de veterinaria se destina directamente a refugios de animales.</p>
-            
-            <div class="impact-stats">
-                <div class="stat">
-                    <div class="stat-number">20%</div>
-                    <p>Destinado a refugios</p>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="helpedAnimals">0</div>
-                    <p>Animales ayudados</p>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="activeVets">0</div>
-                    <p>Veterinarias activas</p>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="registeredPets">0</div>
-                    <p>Mascotas registradas</p>
-                </div>
-            </div>
-        </section>
-    </div>
-    
-    <footer>
+    <header>
         <div class="container">
-            <p>🐾 Tu Mascota Online - Infraestructura solidaria de salud animal</p>
-            <div class="footer-links">
-                <a href="/setup.html" target="_blank">Configuración</a>
-                <a href="/admin.html" target="_blank">Admin</a>
-                <a href="#privacy">Privacidad</a>
-                <a href="#contact">Contacto</a>
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span>Tu Mascota Online</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#features">Funcionalidades</a></li>
+                        <li><a href="#about">Cómo funciona</a></li>
+                        <li><a href="#impact">Impacto social</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                    </ul>
+                </nav>
             </div>
-            <p>© 2024 - Cada uso ayuda a un animal necesitado</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>Historial médico único para tu <span>mascota</span></h1>
+                        <p>Centraliza la salud de tu mascota, autoriza veterinarias y ayuda a refugios animales con cada uso. Una infraestructura solidaria de salud animal.</p>
+                        <div class="cta-buttons">
+                            <!-- Botones se llenarán dinámicamente -->
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div style="width: 100%; height: 400px; background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem;">
+                            🐕‍🦺
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">Todo en un solo lugar</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3>Historial médico único</h3>
+                        <p>Todas las visitas, vacunas y tratamientos de tu mascota centralizados y accesibles desde cualquier dispositivo.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏥</div>
+                        <h3>Múltiples veterinarias</h3>
+                        <p>Autoriza a las veterinarias que elijas para que accedan al historial completo cuando lo necesiten.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3>Turnos inteligentes</h3>
+                        <p>Agenda turnos con veterinarias autorizadas y recibe recordatorios automáticos por email y WhatsApp.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">❤️</div>
+                        <h3>Impacto social</h3>
+                        <p>Una parte de cada suscripción de veterinaria se destina a refugios de animales. Cada uso ayuda a otros animales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="login-section">
+            <div class="container">
+                <div class="login-container">
+                    <h2 class="login-title">Acceso seguro a la plataforma</h2>
+                    <p class="login-subtitle">Inicia sesión con tu cuenta de Google para continuar</p>
+                    
+                    <div class="user-type-selector">
+                        <button class="user-type-btn active" data-type="owner">Dueño de mascota</button>
+                        <button class="user-type-btn" data-type="vet">Veterinaria</button>
+                    </div>
+                    
+                    <div id="login-description">
+                        <p><strong>Dueño de mascota:</strong> Acceso gratuito para registrar mascotas, gestionar historiales y autorizar veterinarias.</p>
+                    </div>
+                    
+                    <button id="google-login-btn" class="google-btn">
+                        <svg class="google-icon" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Iniciar sesión con Google
+                    </button>
+                    
+                    <div class="loading" id="login-loading">
+                        <div class="spinner"></div>
+                        <p>Iniciando sesión...</p>
+                    </div>
+                    
+                    <div class="error-message" id="login-error"></div>
+                    
+                    <p class="login-note">
+                        <strong>Importante:</strong> No permitimos emails temporales ni registros anónimos. Tu cuenta de Google debe ser verificada.
+                    </p>
+                    
+                    <p class="login-note">
+                        ¿Eres veterinaria? <a href="#" id="switch-to-vet">Solicita acceso profesional</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="features" style="background-color: #f0f9ff;">
+            <div class="container">
+                <h2 class="section-title">Nuestro impacto social</h2>
+                <div class="features-grid">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="feature-icon">💰</div>
+                        <h3>Financiamiento a refugios</h3>
+                        <p>El 20% de cada suscripción de veterinaria se destina directamente a refugios de animales asociados.</p>
+                    </div>
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="feature-icon">📈</div>
+                        <h3>Crecimiento medible</h3>
+                        <p>Cada veterinaria que se une permite ayudar a más animales en situación de calle o abandono.</p>
+                    </div>
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="feature-icon">🤝</div>
+                        <h3>Comunidad solidaria</h3>
+                        <p>Dueños, veterinarias y refugios trabajando juntos por el bienestar animal integral.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tu Mascota Online</h3>
+                    <p>Infraestructura solidaria de salud animal</p>
+                    <p>Centralizamos el historial médico de mascotas y financiamos refugios con cada uso.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Enlaces</h3>
+                    <ul>
+                        <li><a href="/setup.html">Configuración inicial</a></li>
+                        <li><a href="#features">Funcionalidades</a></li>
+                        <li><a href="#impact">Impacto social</a></li>
+                        <li><a href="#">Términos de uso</a></li>
+                        <li><a href="#">Política de privacidad</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li>soporte@tumascotaonline.com</li>
+                        <li>+54 11 1234-5678</li>
+                        <li>Buenos Aires, Argentina</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 Tu Mascota Online. Todos los derechos reservados. 🐾</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        // Firebase configuration
+        // Configuración de Firebase (se completará en setup)
         const firebaseConfig = {
           apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
           authDomain: "petpro-19db3.firebaseapp.com",
@@ -486,75 +552,234 @@
         };
 
         
-        // Stats simulation
-        document.getElementById('helpedAnimals').textContent = Math.floor(Math.random() * 1000) + 500;
-        document.getElementById('activeVets').textContent = Math.floor(Math.random() * 50) + 20;
-        document.getElementById('registeredPets').textContent = Math.floor(Math.random() * 5000) + 3000;
+        // Inicialización condicional de Firebase
+        let auth, db;
         
-        let userType = '';
+        // Elementos DOM
+        const userTypeBtns = document.querySelectorAll('.user-type-btn');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const loginDescription = document.getElementById('login-description');
+        const loginLoading = document.getElementById('login-loading');
+        const loginError = document.getElementById('login-error');
+        const switchToVetLink = document.getElementById('switch-to-vet');
         
-        function showLoading() {
-            document.getElementById('loading').classList.add('active');
+        // Variables de estado
+        let userType = 'owner'; // 'owner' o 'vet'
+        
+        // Manejar cambio de tipo de usuario
+        userTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                userTypeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                userType = btn.dataset.type;
+                
+                updateLoginDescription();
+            });
+        });
+        
+        // Actualizar descripción según tipo de usuario
+        function updateLoginDescription() {
+            if (userType === 'owner') {
+                loginDescription.innerHTML = `
+                    <p><strong>Dueño de mascota:</strong> Acceso gratuito para registrar mascotas, gestionar historiales y autorizar veterinarias.</p>
+                    <p>Podrás:</p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                        <li>Registrar tus mascotas</li>
+                        <li>Ver historial médico completo</li>
+                        <li>Autorizar veterinarias</li>
+                        <li>Agendar turnos</li>
+                        <li>Ver impacto social generado</li>
+                    </ul>
+                `;
+            } else {
+                loginDescription.innerHTML = `
+                    <p><strong>Veterinaria:</strong> Acceso profesional con suscripción mensual. Primer mes gratis.</p>
+                    <p>Podrás:</p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                        <li>Gestionar turnos de tu consultorio</li>
+                        <li>Cargar historial médico</li>
+                        <li>Buscar mascotas autorizadas</li>
+                        <li>Enviar recordatorios</li>
+                        <li>Ver métricas e impacto social</li>
+                    </ul>
+                `;
+            }
         }
         
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('active');
-        }
+        // Manejar login con Google
+        googleLoginBtn.addEventListener('click', handleGoogleLogin);
         
-        function showTerms() {
-            document.getElementById('termsModal').classList.add('active');
-        }
-        
-        function acceptTerms() {
-            document.getElementById('termsModal').classList.remove('active');
-            // As guest, redirect to app with limited access
-            window.location.href = '/app.html?guest=true';
-        }
-        
-        function login(type) {
-            userType = type;
-            showLoading();
-            
-            // Simulate Firebase login process
-            setTimeout(() => {
-                // In production, this would redirect to Firebase Auth
-                // For MVP, we'll simulate login and redirect
-                const userId = 'user_' + Date.now();
+        // Función de login con Google
+        async function handleGoogleLogin() {
+            try {
+                // Mostrar loading
+                loginLoading.classList.add('active');
+                loginError.classList.remove('active');
+                
+                // Verificar si Firebase está inicializado
+                if (typeof firebase === 'undefined') {
+                    throw new Error('Firebase no está cargado. Verifica la conexión a internet.');
+                }
+                
+                // Inicializar Firebase si no está inicializado
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                auth = firebase.auth();
+                db = firebase.firestore();
+                
+                // Configurar proveedor de Google
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
+                
+                // Forzar selección de cuenta
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+                
+                // Iniciar sesión
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+                
+                // Verificar que no sea email temporal
+                if (user.email && (user.email.includes('tempmail') || user.email.includes('temp-mail') || user.email.includes('guerrillamail'))) {
+                    await auth.signOut();
+                    throw new Error('No permitimos emails temporales. Usa una cuenta de Google personal o empresarial.');
+                }
+                
+                // Verificar email verificado
+                if (!user.emailVerified) {
+                    console.warn('Email no verificado, pero permitimos el acceso');
+                }
+                
+                // Guardar información del usuario en Firestore según tipo
                 const userData = {
-                    uid: userId,
-                    email: 'usuario@ejemplo.com',
-                    displayName: type === 'owner' ? 'Dueño Demo' : 'Veterinaria Demo',
-                    photoURL: '',
-                    userType: type
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    userType: userType,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                // Store user data in sessionStorage
-                sessionStorage.setItem('user', JSON.stringify(userData));
-                sessionStorage.setItem('userType', type);
+                // Referencia al documento del usuario
+                const userRef = db.collection('users').doc(user.uid);
                 
-                // Redirect to main app
-                window.location.href = '/app.html';
-            }, 1500);
+                // Verificar si el usuario ya existe
+                const userDoc = await userRef.get();
+                
+                if (!userDoc.exists) {
+                    // Usuario nuevo - crear documento
+                    if (userType === 'vet') {
+                        userData.vetStatus = 'pending';
+                        userData.trialEnds = null;
+                    }
+                    
+                    await userRef.set(userData);
+                    
+                    // Si es veterinaria, redirigir a setup
+                    if (userType === 'vet') {
+                        window.location.href = '/app.html?type=vet_setup';
+                    } else {
+                        window.location.href = '/app.html';
+                    }
+                } else {
+                    // Usuario existente - actualizar último login
+                    await userRef.update({
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Verificar tipo de usuario
+                    const existingUserType = userDoc.data().userType;
+                    
+                    // Si está intentando acceder como veterinaria pero es dueño, mostrar error
+                    if (userType === 'vet' && existingUserType !== 'vet') {
+                        await auth.signOut();
+                        throw new Error('Esta cuenta está registrada como dueño de mascota. Para acceder como veterinaria, crea una nueva cuenta o contacta a soporte.');
+                    }
+                    
+                    // Redirigir según tipo de usuario
+                    if (existingUserType === 'vet') {
+                        window.location.href = '/app.html?type=vet';
+                    } else {
+                        window.location.href = '/app.html';
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error en login:', error);
+                loginError.textContent = error.message || 'Error al iniciar sesión. Intenta nuevamente.';
+                loginError.classList.add('active');
+                loginLoading.classList.remove('active');
+            }
         }
         
-        // Check if user is already logged in
-        window.addEventListener('DOMContentLoaded', () => {
-            const user = sessionStorage.getItem('user');
-            if (user) {
-                // User is already logged in, redirect to app
-                window.location.href = '/app.html';
+        // Manejar enlace para veterinarias
+        switchToVetLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            userTypeBtns.forEach(b => b.classList.remove('active'));
+            userTypeBtns[1].classList.add('active');
+            userType = 'vet';
+            updateLoginDescription();
+            
+            // Scroll suave al formulario
+            document.querySelector('.login-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        // Actualizar descripción inicial
+        updateLoginDescription();
+        
+        // Verificar si ya hay una sesión activa
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Cargar Firebase solo si está disponible
+                if (typeof firebase !== 'undefined') {
+                    // Inicializar Firebase si no está inicializado
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    
+                    auth = firebase.auth();
+                    
+                    // Escuchar cambios en autenticación
+                    auth.onAuthStateChanged(async (user) => {
+                        if (user) {
+                            // Usuario ya logueado, redirigir a app
+                            try {
+                                // Inicializar Firestore
+                                db = firebase.firestore();
+                                
+                                // Obtener tipo de usuario
+                                const userDoc = await db.collection('users').doc(user.uid).get();
+                                
+                                if (userDoc.exists) {
+                                    const userData = userDoc.data();
+                                    if (userData.userType === 'vet') {
+                                        window.location.href = '/app.html?type=vet';
+                                    } else {
+                                        window.location.href = '/app.html';
+                                    }
+                                }
+                            } catch (error) {
+                                console.error('Error al verificar usuario:', error);
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error al inicializar Firebase:', error);
             }
         });
         
-        // PWA Installation
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            // Store the event for later use
-            window.deferredPrompt = e;
-            
-            // Show install button (optional)
-            console.log('PWA install prompt available');
-        });
+        // Verificar si estamos en localhost y mostrar advertencia
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('Modo desarrollo local. Recuerda configurar Firebase en setup.html');
+        }
     </script>
 </body>
 </html>
