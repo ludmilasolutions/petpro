@@ -3,102 +3,1741 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VetApp Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="pwa-manifest.json">
+    <title>VetCare - Aplicación</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐶</text></svg>">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --accent: #FF9800;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #757575;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --sidebar-width: 250px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .user-info {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .nav-menu {
+            padding: 1rem 0;
+        }
+        
+        .nav-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: background 0.3s;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: var(--light);
+            color: var(--primary);
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .nav-badge {
+            margin-left: auto;
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light);
+            margin-top: auto;
+        }
+        
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        /* Cards y grids */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        /* Tablas */
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light);
+        }
+        
+        th {
+            font-weight: 600;
+            background: var(--light);
+        }
+        
+        tr:hover {
+            background: var(--light);
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-active { background: #e8f5e9; color: var(--success); }
+        .status-pending { background: #fff3e0; color: var(--warning); }
+        .status-inactive { background: #ffebee; color: var(--danger); }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Vista específica para veterinarias */
+        .vet-welcome {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        /* Paneles específicos */
+        .panel {
+            display: none;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-bar, .content-area {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
-<body class="dashboard">
+<body>
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2>VetApp 🐾</h2>
-            <p class="user-role" id="userRole">Cargando...</p>
+            <div class="logo">🐶 VetCare</div>
         </div>
         
         <div class="user-info">
-            <div class="user-avatar" id="userAvatar">
-                <span>👤</span>
-            </div>
-            <div>
-                <h4 id="userName">Cargando...</h4>
-                <p id="userEmail" style="font-size: 0.85rem; opacity: 0.8;"></p>
+            <div class="user-avatar" id="userAvatar">UD</div>
+            <div class="user-details">
+                <div class="user-name" id="userName">Usuario Demo</div>
+                <div class="user-role" id="userRole">Dueño de Mascota</div>
             </div>
         </div>
         
-        <ul class="nav-menu">
-            <li><a href="#dashboard" class="active"><span>📊</span> Dashboard</a></li>
-            <li><a href="#mascotas"><span>🐶</span> Mis Mascotas</a></li>
-            <li><a href="#turnos"><span>📅</span> Turnos</a></li>
-            <li><a href="#historial"><span>🏥</span> Historial Médico</a></li>
-            <li><a href="#veterinarias"><span>🏥</span> Veterinarias</a></li>
-            <li><a href="#recordatorios"><span>⏰</span> Recordatorios</a></li>
-            <li><a href="#impacto"><span>🌱</span> Impacto Social</a></li>
-            <li><a href="#configuracion"><span>⚙️</span> Configuración</a></li>
-        </ul>
+        <nav class="nav-menu" id="navMenu">
+            <!-- Menú se llena dinámicamente según el tipo de usuario -->
+        </nav>
         
-        <div style="margin-top: auto; padding-top: 2rem;">
-            <button onclick="logout()" class="btn btn-secondary">
-                <span>🚪</span> Cerrar Sesión
+        <div class="sidebar-footer">
+            <button class="btn btn-outline" style="width: 100%;" onclick="logout()">
+                <span class="nav-icon">🚪</span> Cerrar sesión
             </button>
         </div>
-    </nav>
-    
-    <!-- Main Panel -->
-    <main class="main-panel">
-        <div class="card fade-in">
-            <div class="card-header">
-                <h3>Bienvenido a VetApp</h3>
-                <div id="statusBadge" class="status-badge status-programado">Activo</div>
-            </div>
-            
-            <div id="dashboardContent">
-                <!-- Contenido dinámico -->
-                <div class="grid-3">
-                    <div class="card">
-                        <h4>📈 Resumen</h4>
-                        <p id="resumenStats">Cargando estadísticas...</p>
-                    </div>
-                    <div class="card">
-                        <h4>⏰ Próximos recordatorios</h4>
-                        <div id="proximosRecordatorios"></div>
-                    </div>
-                    <div class="card">
-                        <h4>🌱 Tu impacto</h4>
-                        <p id="impactoStats">Cargando impacto...</p>
-                    </div>
-                </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="top-bar">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            <div class="page-title" id="pageTitle">Dashboard</div>
+            <div>
+                <span id="impactCounter" style="color: var(--primary); font-weight: 500;">Ayudando a 0 refugios</span>
             </div>
         </div>
         
-        <!-- Secciones dinámicas -->
-        <div id="dynamicContent"></div>
+        <div class="content-area" id="contentArea">
+            <!-- Contenido se carga dinámicamente -->
+            <div id="dashboardPanel" class="panel active">
+                <div class="dashboard-grid">
+                    <!-- Se carga dinámicamente según usuario -->
+                </div>
+            </div>
+            
+            <!-- Panel para gestión de mascotas -->
+            <div id="petsPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para historial médico -->
+            <div id="medicalPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para turnos -->
+            <div id="appointmentsPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para veterinarias (dueños) -->
+            <div id="vetsPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para recordatorios -->
+            <div id="remindersPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para métricas (veterinarias) -->
+            <div id="metricsPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para administración (super admin) -->
+            <div id="adminPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+            
+            <!-- Panel para onboarding de veterinarias -->
+            <div id="onboardingPanel" class="panel">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
     </main>
-    
-    <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
-    <script src="app.js"></script>
+
+    <!-- Modal genérico -->
+    <div class="modal" id="genericModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal</h3>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                Contenido del modal
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" id="modalConfirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Detectar tipo de usuario y redirigir
-        auth.onAuthStateChanged(user => {
-            if (!user) {
-                window.location.href = 'index.html';
-            } else {
-                // Verificar si es veterinaria o dueño
-                checkUserType(user.uid);
+        // Base de datos simulada
+        const VetCareDB = {
+            users: {},
+            pets: {},
+            vets: {},
+            appointments: {},
+            medicalRecords: {},
+            reminders: {},
+            authorizations: {},
+            payments: {},
+            shelters: {},
+            adminMetrics: {},
+            
+            init: function() {
+                // Cargar datos del localStorage o inicializar
+                const saved = localStorage.getItem('vetcare_db');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    Object.assign(this, data);
+                } else {
+                    // Datos de demo
+                    this.users = {
+                        'demo-owner': {
+                            id: 'demo-owner',
+                            email: 'dueño@ejemplo.com',
+                            name: 'Dueño Demo',
+                            type: 'owner',
+                            pets: ['pet-1', 'pet-2']
+                        },
+                        'demo-vet': {
+                            id: 'demo-vet',
+                            email: 'veterinaria@ejemplo.com',
+                            name: 'Clínica Veterinaria Demo',
+                            type: 'vet_admin',
+                            vetId: 'vet-1',
+                            trialEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                            status: 'trial'
+                        }
+                    };
+                    
+                    this.pets = {
+                        'pet-1': {
+                            id: 'pet-1',
+                            name: 'Luna',
+                            type: 'Perro',
+                            breed: 'Labrador',
+                            age: 3,
+                            ownerId: 'demo-owner',
+                            qrCode: 'VET-PET-001',
+                            authorizedVets: ['vet-1']
+                        },
+                        'pet-2': {
+                            id: 'pet-2',
+                            name: 'Michi',
+                            type: 'Gato',
+                            breed: 'Siamés',
+                            age: 2,
+                            ownerId: 'demo-owner',
+                            qrCode: 'VET-PET-002',
+                            authorizedVets: []
+                        }
+                    };
+                    
+                    this.vets = {
+                        'vet-1': {
+                            id: 'vet-1',
+                            name: 'Clínica Veterinaria Demo',
+                            phone: '+54 11 1234-5678',
+                            address: 'Av. Siempre Viva 123',
+                            email: 'veterinaria@ejemplo.com',
+                            status: 'trial',
+                            users: ['demo-vet'],
+                            created: new Date().toISOString()
+                        }
+                    };
+                    
+                    this.shelters = [
+                        {
+                            id: 'shelter-1',
+                            name: 'Refugio Patitas Felices',
+                            location: 'Buenos Aires',
+                            animalsHelped: 150,
+                            donation: 50000
+                        }
+                    ];
+                    
+                    this.save();
+                }
+            },
+            
+            save: function() {
+                localStorage.setItem('vetcare_db', JSON.stringify(this));
+            },
+            
+            // Métodos CRUD...
+            getPetsByOwner: function(ownerId) {
+                return Object.values(this.pets).filter(pet => pet.ownerId === ownerId);
+            },
+            
+            getAuthorizedPets: function(vetId) {
+                return Object.values(this.pets).filter(pet => 
+                    pet.authorizedVets && pet.authorizedVets.includes(vetId)
+                );
+            },
+            
+            authorizeVet: function(petId, vetId) {
+                if (this.pets[petId]) {
+                    if (!this.pets[petId].authorizedVets) {
+                        this.pets[petId].authorizedVets = [];
+                    }
+                    if (!this.pets[petId].authorizedVets.includes(vetId)) {
+                        this.pets[petId].authorizedVets.push(vetId);
+                        this.save();
+                        return true;
+                    }
+                }
+                return false;
+            },
+            
+            revokeAuthorization: function(petId, vetId) {
+                if (this.pets[petId] && this.pets[petId].authorizedVets) {
+                    const index = this.pets[petId].authorizedVets.indexOf(vetId);
+                    if (index > -1) {
+                        this.pets[petId].authorizedVets.splice(index, 1);
+                        this.save();
+                        return true;
+                    }
+                }
+                return false;
             }
+        };
+
+        // Aplicación principal
+        let currentUser = null;
+        let currentPanel = 'dashboard';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar base de datos
+            VetCareDB.init();
+            
+            // Verificar autenticación
+            const userData = localStorage.getItem('vetcare_user');
+            if (!userData) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            
+            // Configurar URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const vetSetup = urlParams.get('vet');
+            
+            // Inicializar interfaz
+            updateUserInfo();
+            setupNavigation();
+            loadDashboard();
+            
+            // Mostrar onboarding si es veterinaria nueva
+            if (currentUser.type === 'vet_admin' && vetSetup === 'setup') {
+                showOnboarding();
+            }
+            
+            // Actualizar contador de impacto
+            updateImpactCounter();
         });
         
-        function checkUserType(uid) {
-            // Lógica para determinar tipo de usuario
-            // Por ahora, asumimos dueño
-            document.getElementById('userRole').textContent = 'Dueño de mascota';
+        function updateUserInfo() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = 
+                currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            let roleText = '';
+            switch(currentUser.type) {
+                case 'owner': roleText = 'Dueño de Mascota'; break;
+                case 'vet_admin': roleText = 'Administrador Veterinaria'; break;
+                case 'vet_user': roleText = 'Usuario Veterinaria'; break;
+                case 'super_admin': roleText = 'Super Administrador'; break;
+            }
+            document.getElementById('userRole').textContent = roleText;
+        }
+        
+        function setupNavigation() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.innerHTML = '';
+            
+            const menuItems = [];
+            
+            if (currentUser.type === 'owner') {
+                menuItems.push(
+                    { id: 'dashboard', icon: '📊', text: 'Dashboard' },
+                    { id: 'pets', icon: '🐕', text: 'Mis Mascotas', badge: VetCareDB.getPetsByOwner(currentUser.id).length },
+                    { id: 'medical', icon: '📋', text: 'Historial Médico' },
+                    { id: 'appointments', icon: '📅', text: 'Turnos' },
+                    { id: 'vets', icon: '🏥', text: 'Veterinarias Autorizadas' },
+                    { id: 'reminders', icon: '⏰', text: 'Recordatorios' }
+                );
+            } else if (currentUser.type === 'vet_admin' || currentUser.type === 'vet_user') {
+                menuItems.push(
+                    { id: 'dashboard', icon: '📊', text: 'Dashboard' },
+                    { id: 'pets', icon: '🐕', text: 'Mascotas Autorizadas', badge: VetCareDB.getAuthorizedPets(currentUser.vetId).length },
+                    { id: 'appointments', icon: '📅', text: 'Turnos del Día' },
+                    { id: 'medical', icon: '📋', text: 'Historiales' },
+                    { id: 'reminders', icon: '⏰', text: 'Recordatorios' },
+                    { id: 'metrics', icon: '📈', text: 'Métricas' }
+                );
+            }
+            
+            if (currentUser.type === 'super_admin') {
+                menuItems.push(
+                    { id: 'dashboard', icon: '📊', text: 'Dashboard' },
+                    { id: 'admin', icon: '🛡️', text: 'Panel Admin' },
+                    { id: 'pets', icon: '🐕', text: 'Todas las Mascotas' },
+                    { id: 'appointments', icon: '📅', text: 'Todos los Turnos' },
+                    { id: 'vets', icon: '🏥', text: 'Todas las Veterinarias' }
+                );
+            }
+            
+            menuItems.forEach(item => {
+                const navItem = document.createElement('a');
+                navItem.href = '#';
+                navItem.className = `nav-item ${item.id === currentPanel ? 'active' : ''}`;
+                navItem.onclick = (e) => {
+                    e.preventDefault();
+                    showPanel(item.id);
+                };
+                
+                navItem.innerHTML = `
+                    <span class="nav-icon">${item.icon}</span>
+                    <span>${item.text}</span>
+                    ${item.badge ? `<span class="nav-badge">${item.badge}</span>` : ''}
+                `;
+                
+                navMenu.appendChild(navItem);
+            });
+        }
+        
+        function showPanel(panelId) {
+            // Ocultar todos los paneles
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Actualizar navegación
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.nav-item:has(.nav-icon:contains("${getPanelIcon(panelId)}"))`).classList.add('active');
+            
+            // Mostrar panel seleccionado
+            currentPanel = panelId;
+            const panel = document.getElementById(`${panelId}Panel`);
+            if (panel) {
+                panel.classList.add('active');
+                document.getElementById('pageTitle').textContent = getPanelTitle(panelId);
+                
+                // Cargar contenido específico del panel
+                switch(panelId) {
+                    case 'dashboard': loadDashboard(); break;
+                    case 'pets': loadPetsPanel(); break;
+                    case 'medical': loadMedicalPanel(); break;
+                    case 'appointments': loadAppointmentsPanel(); break;
+                    case 'vets': loadVetsPanel(); break;
+                    case 'reminders': loadRemindersPanel(); break;
+                    case 'metrics': loadMetricsPanel(); break;
+                    case 'admin': loadAdminPanel(); break;
+                }
+            }
+        }
+        
+        function getPanelIcon(panelId) {
+            const icons = {
+                dashboard: '📊', pets: '🐕', medical: '📋',
+                appointments: '📅', vets: '🏥', reminders: '⏰',
+                metrics: '📈', admin: '🛡️'
+            };
+            return icons[panelId] || '📄';
+        }
+        
+        function getPanelTitle(panelId) {
+            const titles = {
+                dashboard: 'Dashboard',
+                pets: currentUser.type === 'owner' ? 'Mis Mascotas' : 'Mascotas Autorizadas',
+                medical: 'Historial Médico',
+                appointments: 'Turnos',
+                vets: 'Veterinarias',
+                reminders: 'Recordatorios',
+                metrics: 'Métricas',
+                admin: 'Panel de Administración'
+            };
+            return titles[panelId] || 'Panel';
+        }
+        
+        function loadDashboard() {
+            const dashboardGrid = document.querySelector('#dashboardPanel .dashboard-grid');
+            
+            if (currentUser.type === 'owner') {
+                const pets = VetCareDB.getPetsByOwner(currentUser.id);
+                
+                dashboardGrid.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🐕 Mis Mascotas</div>
+                            <button class="btn btn-primary" onclick="showAddPetModal()">+ Agregar</button>
+                        </div>
+                        ${pets.length === 0 ? 
+                            `<p style="text-align: center; padding: 2rem; color: var(--gray);">No tenés mascotas registradas</p>` :
+                            pets.map(pet => `
+                                <div style="padding: 1rem; border-bottom: 1px solid var(--light); display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">${pet.type === 'Perro' ? '🐕' : '🐈'}</div>
+                                    <div style="flex: 1;">
+                                        <strong>${pet.name}</strong>
+                                        <div style="font-size: 0.9rem; color: var(--gray);">${pet.breed} • ${pet.age} años</div>
+                                    </div>
+                                    <button class="btn btn-outline" onclick="viewPet('${pet.id}')">Ver</button>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">📅 Próximos Turnos</div>
+                        </div>
+                        <p style="text-align: center; padding: 2rem; color: var(--gray);">No hay turnos programados</p>
+                        <div style="text-align: center; padding: 1rem;">
+                            <button class="btn btn-primary" onclick="showPanel('appointments')">Agendar Turno</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">⏰ Recordatorios Pendientes</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem; background: #fff3e0; border-radius: 5px; margin-bottom: 0.5rem;">
+                                <span style="color: var(--warning);">⚠️</span>
+                                <div>
+                                    <strong>Vacuna antirrábica</strong>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Luna • Vence en 15 días</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🌱 Tu Impacto Social</div>
+                        </div>
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">❤️</div>
+                            <h3>Estás ayudando a refugios de animales</h3>
+                            <p style="color: var(--gray); margin: 1rem 0;">Cada veterinaria que utiliza VetCare contribuye al fondo solidario.</p>
+                            <div style="background: var(--light); padding: 1rem; border-radius: 5px; margin-top: 1rem;">
+                                <strong>Refugio beneficiado:</strong> Patitas Felices
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.type === 'vet_admin' || currentUser.type === 'vet_user') {
+                const vetId = currentUser.vetId;
+                const pets = VetCareDB.getAuthorizedPets(vetId);
+                
+                dashboardGrid.innerHTML = `
+                    <div class="vet-welcome">
+                        <h2 style="margin-bottom: 1rem;">🏥 ${VetCareDB.vets[vetId]?.name || 'Veterinaria'}</h2>
+                        <p>${currentUser.type === 'vet_admin' ? 'Período de prueba activo - ' : ''}${pets.length} mascotas autorizadas</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">📅 Turnos de Hoy</div>
+                            <button class="btn btn-primary" onclick="showAddAppointmentModal()">+ Nuevo</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Mascota</th>
+                                    <th>Dueño</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" style="text-align: center; padding: 2rem; color: var(--gray);">No hay turnos para hoy</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🔍 Buscar Mascota</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                <input type="text" class="form-control" placeholder="Nombre de mascota o dueño" id="searchPetInput">
+                                <button class="btn btn-primary" onclick="searchPet()">Buscar</button>
+                            </div>
+                            <div style="text-align: center;">
+                                <button class="btn btn-outline" style="width: 100%; margin-bottom: 0.5rem;" onclick="showQRScanner()">
+                                    📷 Escanear QR
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">📊 Métricas Rápidas</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div style="text-align: center; padding: 1rem; background: var(--light); border-radius: 5px;">
+                                    <div style="font-size: 2rem;">${pets.length}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Mascotas</div>
+                                </div>
+                                <div style="text-align: center; padding: 1rem; background: var(--light); border-radius: 5px;">
+                                    <div style="font-size: 2rem;">0</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Turnos hoy</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.type === 'super_admin') {
+                dashboardGrid.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🛡️ Panel de Super Administrador</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <p>Acceso total al sistema. Desde aquí podés gestionar:</p>
+                            <ul style="margin: 1rem 0 1rem 1.5rem;">
+                                <li>Todas las veterinarias</li>
+                                <li>Todos los dueños y mascotas</li>
+                                <li>Configuración del sistema</li>
+                                <li>Gestión de pagos</li>
+                                <li>Impacto social</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="showPanel('admin')">Ir al Panel Admin</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">📊 Métricas Globales</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                                <div style="text-align: center; padding: 1rem; background: var(--light); border-radius: 5px;">
+                                    <div style="font-size: 2rem;">${Object.keys(VetCareDB.vets).length}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Veterinarias</div>
+                                </div>
+                                <div style="text-align: center; padding: 1rem; background: var(--light); border-radius: 5px;">
+                                    <div style="font-size: 2rem;">${Object.keys(VetCareDB.users).filter(id => VetCareDB.users[id].type === 'owner').length}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Dueños</div>
+                                </div>
+                                <div style="text-align: center; padding: 1rem; background: var(--light); border-radius: 5px;">
+                                    <div style="font-size: 2rem;">${Object.keys(VetCareDB.pets).length}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Mascotas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function showAddPetModal() {
+            document.getElementById('modalTitle').textContent = 'Registrar Nueva Mascota';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Nombre de la mascota</label>
+                    <input type="text" class="form-control" id="petName" placeholder="Ej: Luna">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tipo</label>
+                        <select class="form-control" id="petType">
+                            <option value="Perro">Perro</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Edad (años)</label>
+                        <input type="number" class="form-control" id="petAge" min="0" max="30" value="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Raza</label>
+                    <input type="text" class="form-control" id="petBreed" placeholder="Ej: Labrador, Siamés, etc.">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color principal</label>
+                    <input type="text" class="form-control" id="petColor" placeholder="Ej: Negro, Blanco, etc.">
+                </div>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Registrar Mascota';
+            document.getElementById('modalConfirm').onclick = function() {
+                const petData = {
+                    id: 'pet-' + Date.now(),
+                    name: document.getElementById('petName').value,
+                    type: document.getElementById('petType').value,
+                    age: parseInt(document.getElementById('petAge').value),
+                    breed: document.getElementById('petBreed').value,
+                    color: document.getElementById('petColor').value,
+                    ownerId: currentUser.id,
+                    qrCode: 'VET-PET-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                    authorizedVets: []
+                };
+                
+                VetCareDB.pets[petData.id] = petData;
+                VetCareDB.save();
+                
+                closeModal();
+                showPanel('pets');
+                showNotification('Mascota registrada exitosamente', 'success');
+            };
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function loadPetsPanel() {
+            const panel = document.getElementById('petsPanel');
+            
+            if (currentUser.type === 'owner') {
+                const pets = VetCareDB.getPetsByOwner(currentUser.id);
+                
+                panel.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🐕 Mis Mascotas</div>
+                            <button class="btn btn-primary" onclick="showAddPetModal()">+ Agregar Mascota</button>
+                        </div>
+                        
+                        ${pets.length === 0 ? 
+                            `<div style="text-align: center; padding: 3rem;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🐕</div>
+                                <h3>No tenés mascotas registradas</h3>
+                                <p style="color: var(--gray); margin: 1rem 0;">Registrá tu primera mascota para comenzar a usar VetCare</p>
+                                <button class="btn btn-primary" onclick="showAddPetModal()">Registrar Primera Mascota</button>
+                            </div>` :
+                            `
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th>Raza</th>
+                                            <th>Edad</th>
+                                            <th>QR</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${pets.map(pet => `
+                                            <tr>
+                                                <td>
+                                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                                        <span style="font-size: 1.5rem;">${pet.type === 'Perro' ? '🐕' : '🐈'}</span>
+                                                        <strong>${pet.name}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>${pet.type}</td>
+                                                <td>${pet.breed || '-'}</td>
+                                                <td>${pet.age} años</td>
+                                                <td><span class="status-badge status-active">${pet.qrCode}</span></td>
+                                                <td>
+                                                    <button class="btn btn-outline" style="margin-right: 0.5rem;" onclick="viewPet('${pet.id}')">Ver</button>
+                                                    <button class="btn btn-outline" onclick="showQRModal('${pet.id}')">QR</button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                            `
+                        }
+                    </div>
+                `;
+            } else if (currentUser.type === 'vet_admin' || currentUser.type === 'vet_user') {
+                const vetId = currentUser.vetId;
+                const pets = VetCareDB.getAuthorizedPets(vetId);
+                
+                panel.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🐕 Mascotas Autorizadas</div>
+                            <button class="btn btn-outline" onclick="showSearchPetModal()">🔍 Buscar Mascota</button>
+                        </div>
+                        
+                        ${pets.length === 0 ? 
+                            `<div style="text-align: center; padding: 3rem;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                                <h3>No tenés mascotas autorizadas</h3>
+                                <p style="color: var(--gray); margin: 1rem 0;">Podés buscar mascotas por nombre o escanear su código QR</p>
+                                <button class="btn btn-primary" onclick="showSearchPetModal()">Buscar Mascota</button>
+                            </div>` :
+                            `
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th>Dueño</th>
+                                            <th>Última visita</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${pets.map(pet => `
+                                            <tr>
+                                                <td>
+                                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                                        <span style="font-size: 1.5rem;">${pet.type === 'Perro' ? '🐕' : '🐈'}</span>
+                                                        <strong>${pet.name}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>${pet.type}</td>
+                                                <td>${VetCareDB.users[pet.ownerId]?.name || 'Dueño'}</td>
+                                                <td>-</td>
+                                                <td>
+                                                    <button class="btn btn-outline" onclick="viewPetMedical('${pet.id}')">Historial</button>
+                                                    <button class="btn btn-primary" style="margin-left: 0.5rem;" onclick="showAddAppointmentForPet('${pet.id}')">Turno</button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                            `
+                        }
+                    </div>
+                `;
+            }
+        }
+        
+        function showQRModal(petId) {
+            const pet = VetCareDB.pets[petId];
+            if (!pet) return;
+            
+            document.getElementById('modalTitle').textContent = `QR de ${pet.name}`;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 5rem; margin-bottom: 1rem;">📱</div>
+                    <h3>${pet.name}</h3>
+                    <p style="color: var(--gray); margin-bottom: 1rem;">Código: ${pet.qrCode}</p>
+                    <div style="background: var(--light); padding: 1rem; border-radius: 5px; display: inline-block; font-family: monospace;">
+                        ${pet.qrCode}
+                    </div>
+                    <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--gray);">
+                        Mostrá este código QR en la veterinaria para que puedan acceder al historial de ${pet.name}
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Cerrar';
+            document.getElementById('modalConfirm').onclick = closeModal;
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function showSearchPetModal() {
+            document.getElementById('modalTitle').textContent = 'Buscar Mascota';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">🔍 Buscar por:</label>
+                    <select class="form-control" id="searchBy">
+                        <option value="name">Nombre de mascota</option>
+                        <option value="owner">Nombre del dueño</option>
+                        <option value="qr">Código QR</option>
+                        <option value="phone">Teléfono del dueño</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Término de búsqueda</label>
+                    <input type="text" class="form-control" id="searchTerm" placeholder="Ingresá lo que buscas...">
+                </div>
+                <div style="text-align: center; margin: 2rem 0;">
+                    <div style="font-size: 2rem;">📱</div>
+                    <button class="btn btn-outline" onclick="showQRScanner()" style="margin-top: 1rem;">
+                        📷 Escanear QR de mascota
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Buscar';
+            document.getElementById('modalConfirm').onclick = function() {
+                const searchBy = document.getElementById('searchBy').value;
+                const term = document.getElementById('searchTerm').value;
+                
+                // Simular búsqueda
+                showNotification('Búsqueda realizada. En una implementación real, esto buscaría en la base de datos.', 'info');
+                closeModal();
+            };
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function showQRScanner() {
+            document.getElementById('modalTitle').textContent = 'Escanear QR';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 5rem; margin-bottom: 1rem;">📷</div>
+                    <h3>Escanear código QR de mascota</h3>
+                    <p style="color: var(--gray); margin-bottom: 2rem;">
+                        En una implementación real, aquí se activaría la cámara para escanear el código QR de la mascota.
+                    </p>
+                    <div style="background: #000; color: white; padding: 2rem; border-radius: 5px; display: inline-block; font-family: monospace;">
+                        [SIMULACIÓN DE LECTOR QR]
+                    </div>
+                    <div style="margin-top: 2rem; text-align: left;">
+                        <p><strong>QR escaneado:</strong> VET-PET-001</p>
+                        <p><strong>Mascota:</strong> Luna (Labrador)</p>
+                        <p><strong>Dueño:</strong> Dueño Demo</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalFooter').innerHTML = `
+                <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="requestPetAccess('VET-PET-001')">Solicitar Acceso</button>
+            `;
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function requestPetAccess(qrCode) {
+            // Encontrar mascota por QR
+            const pet = Object.values(VetCareDB.pets).find(p => p.qrCode === qrCode);
+            
+            if (pet) {
+                showNotification(`Solicitud de acceso enviada para ${pet.name}. El dueño será notificado.`, 'success');
+                
+                // Simular notificación al dueño
+                setTimeout(() => {
+                    if (currentUser.type === 'owner') {
+                        showNotification(`Nueva solicitud de acceso: ${VetCareDB.vets[currentUser.vetId]?.name || 'Una veterinaria'} quiere acceder al historial de ${pet.name}`, 'info');
+                    }
+                }, 2000);
+            }
+            
+            closeModal();
+        }
+        
+        function showOnboarding() {
+            const panel = document.getElementById('onboardingPanel');
+            panel.innerHTML = `
+                <div class="card" style="max-width: 800px; margin: 0 auto;">
+                    <div style="text-align: center; padding: 3rem 2rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                        <h1 style="margin-bottom: 1rem;">¡Bienvenido a VetCare!</h1>
+                        <p style="color: var(--gray); margin-bottom: 3rem;">
+                            Estás en el período de prueba de 30 días. Vamos a configurar tu veterinaria paso a paso.
+                        </p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 2rem; margin-bottom: 3rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: var(--light); border-radius: 10px;">
+                                <div style="font-size: 2rem;">1️⃣</div>
+                                <div style="flex: 1;">
+                                    <h3>Completar datos de la veterinaria</h3>
+                                    <p style="color: var(--gray);">Verificá que los datos de tu clínica estén correctos</p>
+                                </div>
+                                <button class="btn btn-primary" onclick="editVetInfo()">Completar</button>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: var(--light); border-radius: 10px;">
+                                <div style="font-size: 2rem;">2️⃣</div>
+                                <div style="flex: 1;">
+                                    <h3>Crear usuarios internos</h3>
+                                    <p style="color: var(--gray);">Agregá veterinarios y personal administrativo</p>
+                                </div>
+                                <button class="btn btn-outline" onclick="showAddUserModal()">Crear Usuario</button>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: var(--light); border-radius: 10px;">
+                                <div style="font-size: 2rem;">3️⃣</div>
+                                <div style="flex: 1;">
+                                    <h3>Registrar tu primera mascota</h3>
+                                    <p style="color: var(--gray);">Podés registrar una mascota demo o real</p>
+                                </div>
+                                <button class="btn btn-outline" onclick="showAddPetModal()">Registrar Mascota</button>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: var(--light); border-radius: 10px;">
+                                <div style="font-size: 2rem;">4️⃣</div>
+                                <div style="flex: 1;">
+                                    <h3>Crear tu primer turno</h3>
+                                    <p style="color: var(--gray);">Agendá un turno para familiarizarte con el sistema</p>
+                                </div>
+                                <button class="btn btn-outline" onclick="showAddAppointmentModal()">Crear Turno</button>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <button class="btn btn-outline" onclick="skipOnboarding()">Saltar Tutorial</button>
+                            <button class="btn btn-primary" onclick="completeOnboarding()">Tutorial Completado</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            showPanel('onboarding');
+        }
+        
+        function editVetInfo() {
+            const vetId = currentUser.vetId;
+            const vet = VetCareDB.vets[vetId];
+            
+            document.getElementById('modalTitle').textContent = 'Datos de la Veterinaria';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Nombre de la veterinaria *</label>
+                    <input type="text" class="form-control" id="vetName" value="${vet?.name || ''}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono *</label>
+                    <input type="tel" class="form-control" id="vetPhone" value="${vet?.phone || ''}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="vetAddress" value="${vet?.address || ''}" placeholder="Calle y número">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email de contacto</label>
+                    <input type="email" class="form-control" id="vetEmail" value="${vet?.email || currentUser.email}">
+                </div>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Guardar Cambios';
+            document.getElementById('modalConfirm').onclick = function() {
+                if (!VetCareDB.vets[vetId]) {
+                    VetCareDB.vets[vetId] = {
+                        id: vetId,
+                        created: new Date().toISOString(),
+                        status: 'trial'
+                    };
+                }
+                
+                VetCareDB.vets[vetId].name = document.getElementById('vetName').value;
+                VetCareDB.vets[vetId].phone = document.getElementById('vetPhone').value;
+                VetCareDB.vets[vetId].address = document.getElementById('vetAddress').value;
+                VetCareDB.vets[vetId].email = document.getElementById('vetEmail').value;
+                
+                VetCareDB.save();
+                closeModal();
+                showNotification('Datos de la veterinaria actualizados', 'success');
+            };
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function completeOnboarding() {
+            showNotification('¡Tutorial completado! Ya podés usar todas las funcionalidades de VetCare.', 'success');
+            showPanel('dashboard');
+        }
+        
+        function skipOnboarding() {
+            showNotification('Podés volver a ver el tutorial en cualquier momento desde el menú.', 'info');
+            showPanel('dashboard');
+        }
+        
+        function loadAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            
+            panel.innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">🛡️ Panel de Super Administrador</h2>
+                    <p>Gestión total del sistema VetCare</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🏥 Veterinarias</div>
+                            <button class="btn btn-primary" onclick="showAllVets()">Ver Todas</button>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="text-align: center; padding: 1rem; background: #e8f5e9; border-radius: 5px;">
+                                    <div style="font-size: 1.5rem;">${Object.values(VetCareDB.vets).filter(v => v.status === 'active').length}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Activas</div>
+                                </div>
+                                <div style="text-align: center; padding: 1rem; background: #fff3e0; border-radius: 5px;">
+                                    <div style="font-size: 1.5rem;">${Object.values(VetCareDB.vets).filter(v => v.status === 'trial').length}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">En Trial</div>
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+                                        <th>Desde</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${Object.values(VetCareDB.vets).slice(0, 3).map(vet => `
+                                        <tr>
+                                            <td>${vet.name}</td>
+                                            <td><span class="status-badge ${vet.status === 'active' ? 'status-active' : 'status-pending'}">${vet.status === 'active' ? 'Activa' : 'Trial'}</span></td>
+                                            <td>${new Date(vet.created).toLocaleDateString()}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">👤 Dueños</div>
+                            <button class="btn btn-outline" onclick="showAllOwners()">Ver Todos</button>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="text-align: center; padding: 1rem; background: var(--light); border-radius: 5px; margin-bottom: 1rem;">
+                                <div style="font-size: 1.5rem;">${Object.values(VetCareDB.users).filter(u => u.type === 'owner').length}</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Dueños registrados</div>
+                            </div>
+                            <p style="color: var(--gray); font-size: 0.9rem;">Total mascotas: ${Object.keys(VetCareDB.pets).length}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">💰 Pagos</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="text-align: center; padding: 1rem; background: #e3f2fd; border-radius: 5px;">
+                                    <div style="font-size: 1.5rem;">$0</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Ingresos mes</div>
+                                </div>
+                                <div style="text-align: center; padding: 1rem; background: #f3e5f5; border-radius: 5px;">
+                                    <div style="font-size: 1.5rem;">0%</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">A refugios</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%;" onclick="configurePayments()">Configurar Pagos</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🌱 Impacto Social</div>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Refugios beneficiados:</strong>
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                    ${VetCareDB.shelters.map(s => `<li>${s.name} - $${s.donation}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="manageShelters()">Gestionar Refugios</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <div class="card-title">📊 Métricas Globales</div>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center; padding: 1.5rem; background: var(--light); border-radius: 5px;">
+                                <div style="font-size: 2rem;">${Object.keys(VetCareDB.vets).length}</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Veterinarias</div>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; background: var(--light); border-radius: 5px;">
+                                <div style="font-size: 2rem;">${Object.keys(VetCareDB.pets).length}</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Mascotas</div>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; background: var(--light); border-radius: 5px;">
+                                <div style="font-size: 2rem;">0</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Turnos hoy</div>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; background: var(--light); border-radius: 5px;">
+                                <div style="font-size: 2rem;">${VetCareDB.shelters.length}</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Refugios</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showAllVets() {
+            document.getElementById('modalTitle').textContent = 'Todas las Veterinarias';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Teléfono</th>
+                                <th>Desde</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.values(VetCareDB.vets).map(vet => `
+                                <tr>
+                                    <td>${vet.name}</td>
+                                    <td>
+                                        <span class="status-badge ${vet.status === 'active' ? 'status-active' : vet.status === 'trial' ? 'status-pending' : 'status-inactive'}">
+                                            ${vet.status === 'active' ? 'Activa' : vet.status === 'trial' ? 'Trial' : 'Inactiva'}
+                                        </span>
+                                    </td>
+                                    <td>${vet.phone}</td>
+                                    <td>${new Date(vet.created).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.9rem;" onclick="editVetStatus('${vet.id}')">Editar</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Cerrar';
+            document.getElementById('modalConfirm').onclick = closeModal;
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function configurePayments() {
+            document.getElementById('modalTitle').textContent = 'Configuración de Pagos';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Precio mensual por veterinaria</label>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 1.5rem;">$</span>
+                        <input type="number" class="form-control" value="50000" style="flex: 1;">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Días de período de prueba</label>
+                    <input type="number" class="form-control" value="30" min="0" max="90">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Porcentaje para refugios</label>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="range" min="5" max="50" value="20" class="form-control" style="flex: 1;">
+                        <span style="min-width: 50px; text-align: right;">20%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Integración Mercado Pago</label>
+                    <div style="padding: 1rem; background: var(--light); border-radius: 5px;">
+                        <p style="color: var(--gray); margin-bottom: 0.5rem;">Clave pública:</p>
+                        <input type="text" class="form-control" value="TEST-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="font-family: monospace;">
+                        <p style="color: var(--gray); margin-top: 1rem; font-size: 0.9rem;">En producción, configurar las credenciales reales</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Guardar Configuración';
+            document.getElementById('modalConfirm').onclick = function() {
+                showNotification('Configuración de pagos actualizada', 'success');
+                closeModal();
+            };
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function manageShelters() {
+            document.getElementById('modalTitle').textContent = 'Gestionar Refugios';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;">Refugios beneficiados</h4>
+                    ${VetCareDB.shelters.map((shelter, index) => `
+                        <div style="padding: 1rem; background: var(--light); border-radius: 5px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${shelter.name}</strong>
+                                <div style="font-size: 0.9rem; color: var(--gray);">${shelter.location} • $${shelter.donation} asignados</div>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 0.3rem 0.6rem;" onclick="editShelter(${index})">Editar</button>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%;" onclick="addNewShelter()">+ Agregar Refugio</button>
+            `;
+            
+            document.getElementById('modalConfirm').textContent = 'Cerrar';
+            document.getElementById('modalConfirm').onclick = closeModal;
+            
+            document.getElementById('genericModal').classList.add('active');
+        }
+        
+        function updateImpactCounter() {
+            const counter = document.getElementById('impactCounter');
+            const shelterCount = VetCareDB.shelters.length;
+            counter.textContent = `Ayudando a ${shelterCount} refugio${shelterCount !== 1 ? 's' : ''}`;
+        }
+        
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('genericModal').classList.remove('active');
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Crear notificación
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : '#2196F3'};
+                color: white;
+                border-radius: 5px;
+                box-shadow: var(--shadow);
+                z-index: 3000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
         
         function logout() {
-            firebase.auth().signOut().then(() => {
-                window.location.href = 'index.html';
-            });
+            localStorage.removeItem('vetcare_user');
+            window.location.href = 'index.html';
         }
+        
+        // Funciones placeholder para funcionalidades futuras
+        function loadMedicalPanel() {
+            document.getElementById('medicalPanel').innerHTML = '<div class="card"><div class="card-header"><div class="card-title">Historial Médico</div></div><div style="padding: 2rem; text-align: center; color: var(--gray);">Funcionalidad en desarrollo</div></div>';
+        }
+        
+        function loadAppointmentsPanel() {
+            document.getElementById('appointmentsPanel').innerHTML = '<div class="card"><div class="card-header"><div class="card-title">Turnos</div></div><div style="padding: 2rem; text-align: center; color: var(--gray);">Funcionalidad en desarrollo</div></div>';
+        }
+        
+        function loadVetsPanel() {
+            document.getElementById('vetsPanel').innerHTML = '<div class="card"><div class="card-header"><div class="card-title">Veterinarias</div></div><div style="padding: 2rem; text-align: center; color: var(--gray);">Funcionalidad en desarrollo</div></div>';
+        }
+        
+        function loadRemindersPanel() {
+            document.getElementById('remindersPanel').innerHTML = '<div class="card"><div class="card-header"><div class="card-title">Recordatorios</div></div><div style="padding: 2rem; text-align: center; color: var(--gray);">Funcionalidad en desarrollo</div></div>';
+        }
+        
+        function loadMetricsPanel() {
+            document.getElementById('metricsPanel').innerHTML = '<div class="card"><div class="card-header"><div class="card-title">Métricas</div></div><div style="padding: 2rem; text-align: center; color: var(--gray);">Funcionalidad en desarrollo</div></div>';
+        }
+        
+        function viewPet(petId) {
+            showNotification(`Viendo mascota ${petId}`, 'info');
+        }
+        
+        function viewPetMedical(petId) {
+            showNotification(`Viendo historial médico de mascota ${petId}`, 'info');
+        }
+        
+        function showAddAppointmentModal() {
+            showNotification('Funcionalidad de agregar turno en desarrollo', 'info');
+        }
+        
+        function showAddAppointmentForPet(petId) {
+            showNotification(`Agregando turno para mascota ${petId}`, 'info');
+        }
+        
+        function showAddUserModal() {
+            showNotification('Funcionalidad de agregar usuario en desarrollo', 'info');
+        }
+        
+        function editVetStatus(vetId) {
+            showNotification(`Editando estado de veterinaria ${vetId}`, 'info');
+        }
+        
+        function showAllOwners() {
+            showNotification('Mostrando todos los dueños', 'info');
+        }
+        
+        function editShelter(index) {
+            showNotification(`Editando refugio ${index}`, 'info');
+        }
+        
+        function addNewShelter() {
+            showNotification('Agregando nuevo refugio', 'info');
+        }
+        
+        function searchPet() {
+            const term = document.getElementById('searchPetInput').value;
+            showNotification(`Buscando mascota: ${term}`, 'info');
+        }
+        
+        // Inyectar estilos CSS para animaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
