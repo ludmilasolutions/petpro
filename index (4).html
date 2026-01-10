@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetApp - Infraestructura solidaria de salud animal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="pwa-manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>VetApp 🐾</h1>
+            <p class="tagline">Una mascota. Un historial médico único. Múltiples veterinarias autorizadas. Cada uso ayuda a otros animales.</p>
+        </header>
+
+        <main class="main-content">
+            <section class="hero">
+                <h2>Infraestructura solidaria de salud animal</h2>
+                <p>Centraliza el historial médico de tu mascota, gestiona turnos y autoriza veterinarias. Parte de lo que pagas las veterinarias ayuda a refugios de animales.</p>
+                
+                <div class="auth-section">
+                    <h3>Acceder a VetApp</h3>
+                    <button id="googleLoginBtn" class="btn btn-primary">
+                        <span>🚀</span> Iniciar sesión con Google
+                    </button>
+                    <p class="note">* Registro obligatorio con Google. No permitimos emails temporales.</p>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <h3>👤 Para dueños de mascotas</h3>
+                    <ul>
+                        <li>✓ Historial médico único por mascota</li>
+                        <li>✓ Gestión de turnos veterinarios</li>
+                        <li>✓ Recordatorios automáticos</li>
+                        <li>✓ Autorización entre veterinarias</li>
+                        <li>✓ Totalmente gratuito</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🏥 Para veterinarias</h3>
+                    <ul>
+                        <li>✓ Acceso a mascotas autorizadas</li>
+                        <li>✓ Gestión profesional de turnos</li>
+                        <li>✓ Historial médico centralizado</li>
+                        <li>✓ Recordatorios a dueños</li>
+                        <li>✓ 30 días de prueba gratis</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🌱 Impacto social</h3>
+                    <p>El 20% de los ingresos se destinan directamente a:</p>
+                    <ul>
+                        <li>✓ Refugios de animales verificados</li>
+                        <li>✓ Campañas de esterilización</li>
+                        <li>✓ Medicamentos para rescates</li>
+                    </ul>
+                    <p class="impact-text">Tu uso ayuda a otros animales</p>
+                </div>
+            </section>
+
+            <section class="how-it-works">
+                <h2>¿Cómo funciona?</h2>
+                <div class="steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <p>Registras tu mascota</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <p>Autorizas veterinarias</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <p>Todos acceden al mismo historial</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <p>Cada consulta genera impacto social</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>VetApp &copy; <span id="currentYear"></span> - Infraestructura solidaria de salud animal</p>
+            <p class="footer-note">🐶 Un producto con propósito real</p>
+        </footer>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
