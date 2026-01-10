@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetApp - Dueño de Mascota</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="pwa-manifest.json">
+</head>
+<body class="dashboard">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>VetApp 🐕</h2>
+            <p class="user-role">Dueño de mascota</p>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar" id="ownerAvatar"></div>
+            <div>
+                <h4 id="ownerName"></h4>
+                <p id="ownerEmail"></p>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="#mis-mascotas" class="active"><span>🐶</span> Mis Mascotas</a></li>
+            <li><a href="#agregar-mascota"><span>➕</span> Agregar Mascota</a></li>
+            <li><a href="#turnos"><span>📅</span> Turnos</a></li>
+            <li><a href="#historial"><span>📋</span> Historial</a></li>
+            <li><a href="#veterinarias"><span>🏥</span> Veterinarias</a></li>
+            <li><a href="#recordatorios"><span>⏰</span> Recordatorios</a></li>
+            <li><a href="#impacto"><span>🌱</span> Mi Impacto</a></li>
+        </ul>
+        
+        <div style="margin-top: auto;">
+            <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+        </div>
+    </nav>
+    
+    <main class="main-panel">
+        <div class="card">
+            <h3>Mis Mascotas</h3>
+            <button onclick="nuevaMascota()" class="btn btn-primary">➕ Agregar Mascota</button>
+        </div>
+        
+        <div id="mascotasList" class="grid-3"></div>
+        
+        <!-- Formulario nueva mascota (oculto inicialmente) -->
+        <div id="nuevaMascotaForm" style="display: none;" class="card">
+            <h3>Registrar nueva mascota</h3>
+            <form id="mascotaForm">
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="mascotaNombre" required>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Especie</label>
+                        <select class="form-control" id="mascotaEspecie" required>
+                            <option value="">Seleccionar</option>
+                            <option value="perro">Perro</option>
+                            <option value="gato">Gato</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Raza</label>
+                        <input type="text" class="form-control" id="mascotaRaza">
+                    </div>
+                </div>
+                
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de nacimiento</label>
+                        <input type="date" class="form-control" id="mascotaNacimiento">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <input type="text" class="form-control" id="mascotaColor">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Microchip</label>
+                        <input type="text" class="form-control" id="mascotaMicrochip">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas importantes</label>
+                    <textarea class="form-control" id="mascotaNotas" rows="3"></textarea>
+                </div>
+                
+                <div class="grid-2">
+                    <button type="submit" class="btn btn-success">Guardar Mascota</button>
+                    <button type="button" onclick="cancelarNuevaMascota()" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="mascotas.js"></script>
+    <script>
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('ownerName').textContent = user.displayName || 'Dueño';
+                document.getElementById('ownerEmail').textContent = user.email;
+                cargarMascotas(user.uid);
+            }
+        });
+        
+        function nuevaMascota() {
+            document.getElementById('nuevaMascotaForm').style.display = 'block';
+            document.getElementById('mascotasList').style.display = 'none';
+        }
+        
+        function cancelarNuevaMascota() {
+            document.getElementById('nuevaMascotaForm').style.display = 'none';
+            document.getElementById('mascotasList').style.display = 'grid';
+        }
+        
+        document.getElementById('mascotaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await guardarMascota();
+        });
+        
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+    </script>
+</body>
+</html>
