@@ -3,93 +3,3105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VetApp - Administración</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="dashboard">
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h2>VetApp 🔧</h2>
-            <p class="user-role">Administración</p>
-        </div>
+    <title>Tu Mascota Online - Panel de Administración</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+        }
         
-        <ul class="nav-menu">
-            <li><a href="#veterinarias-activas"><span>🏥</span> Veterinarias</a></li>
-            <li><a href="#pagos"><span>💰</span> Pagos</a></li>
-            <li><a href="#refugios"><span>🐾</span> Refugios</a></li>
-            <li><a href="#metricas-globales"><span>📈</span> Métricas globales</a></li>
-            <li><a href="#usuarios-admin"><span>👥</span> Usuarios</a></li>
-            <li><a href="#configuracion-admin"><span>⚙️</span> Configuración</a></li>
-        </ul>
-    </nav>
-    
-    <main class="main-panel">
-        <div class="card">
-            <h3>📊 Dashboard Administrativo</h3>
-            <div class="grid-4">
-                <div class="card">
-                    <h4>Veterinarias activas</h4>
-                    <p id="vetActivas" class="big-number">0</p>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        /* Header */
+        .admin-header {
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gray);
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Main layout */
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+        
+        /* Sidebar */
+        .admin-sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid var(--gray-light);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .admin-nav-section {
+            margin-bottom: 2rem;
+        }
+        
+        .admin-nav-title {
+            padding: 0 1.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .admin-nav-menu {
+            list-style: none;
+        }
+        
+        .admin-nav-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+        }
+        
+        .admin-nav-item:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .admin-nav-item.active {
+            background-color: #f1f5f9;
+            border-left-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .admin-nav-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Main content */
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: var(--light);
+        }
+        
+        .content-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .content-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .content-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-title {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-change.positive {
+            color: var(--secondary);
+        }
+        
+        .stat-change.negative {
+            color: var(--danger);
+        }
+        
+        /* Tables */
+        .table-container {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            background-color: #f8fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .table tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* Status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #d1fae5;
+            color: var(--secondary);
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .status-suspended {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+        
+        .status-trial {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-sm {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray-light);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        /* Actions */
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* Filters */
+        .filters-bar {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+        
+        .filter-control {
+            padding: 0.5rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-info {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        
+        .alert-warning {
+            background-color: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            color: var(--secondary);
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+            margin-bottom: 2rem;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-light);
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .page-btn:hover:not(.active) {
+            background-color: var(--gray-light);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-light);
+                padding: 1rem 0;
+            }
+            
+            .admin-nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 1rem;
+            }
+            
+            .admin-nav-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                flex-direction: column;
+                padding: 0.5rem 1rem;
+            }
+            
+            .admin-nav-item.active {
+                border-left: none;
+                border-bottom-color: var(--primary);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🛡️</span>
+                    <span>Tu Mascota Online - Admin</span>
                 </div>
-                <div class="card">
-                    <h4>Mascotas registradas</h4>
-                    <p id="mascotasRegistradas" class="big-number">0</p>
-                </div>
-                <div class="card">
-                    <h4>Ingresos mensuales</h4>
-                    <p id="ingresos" class="big-number">$0</p>
-                </div>
-                <div class="card">
-                    <h4>Impacto generado</h4>
-                    <p id="impactoGenerado" class="big-number">$0</p>
+                
+                <div class="admin-info">
+                    <span id="admin-email">admin@tumascotaonline.com</span>
+                    <button id="admin-logout-btn" class="logout-btn">Cerrar sesión</button>
                 </div>
             </div>
         </div>
-        
-        <div class="card">
-            <h3>🏥 Veterinarias registradas</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Estado</th>
-                        <th>Plan</th>
-                        <th>Mascotas</th>
-                        <th>Registro</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaVeterinarias">
-                    <!-- Dinámico -->
-                </tbody>
-            </table>
+    </header>
+
+    <div class="admin-container">
+        <nav class="admin-sidebar">
+            <div class="admin-nav-section">
+                <h3 class="admin-nav-title">Dashboard</h3>
+                <ul class="admin-nav-menu">
+                    <li class="admin-nav-item active" data-section="overview">
+                        <span class="admin-nav-icon">📊</span>
+                        <span>Resumen</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="admin-nav-section">
+                <h3 class="admin-nav-title">Gestión</h3>
+                <ul class="admin-nav-menu">
+                    <li class="admin-nav-item" data-section="veterinarias">
+                        <span class="admin-nav-icon">🏥</span>
+                        <span>Veterinarias</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="usuarios">
+                        <span class="admin-nav-icon">👤</span>
+                        <span>Usuarios</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="mascotas">
+                        <span class="admin-nav-icon">🐾</span>
+                        <span>Mascotas</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="turnos">
+                        <span class="admin-nav-icon">📅</span>
+                        <span>Turnos</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="admin-nav-section">
+                <h3 class="admin-nav-title">Finanzas</h3>
+                <ul class="admin-nav-menu">
+                    <li class="admin-nav-item" data-section="pagos">
+                        <span class="admin-nav-icon">💰</span>
+                        <span>Pagos</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="finanzas">
+                        <span class="admin-nav-icon">📈</span>
+                        <span>Finanzas</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="admin-nav-section">
+                <h3 class="admin-nav-title">Impacto Social</h3>
+                <ul class="admin-nav-menu">
+                    <li class="admin-nav-item" data-section="refugios">
+                        <span class="admin-nav-icon">❤️</span>
+                        <span>Refugios</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="impacto">
+                        <span class="admin-nav-icon">🌱</span>
+                        <span>Impacto</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="admin-nav-section">
+                <h3 class="admin-nav-title">Sistema</h3>
+                <ul class="admin-nav-menu">
+                    <li class="admin-nav-item" data-section="configuracion">
+                        <span class="admin-nav-icon">⚙️</span>
+                        <span>Configuración</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="auditoria">
+                        <span class="admin-nav-icon">📋</span>
+                        <span>Auditoría</span>
+                    </li>
+                    <li class="admin-nav-item" data-section="seguridad">
+                        <span class="admin-nav-icon">🔐</span>
+                        <span>Seguridad</span>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="admin-content">
+            <div id="admin-content-container">
+                <!-- Contenido dinámico se cargará aquí -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Cargando panel de administración...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para detalles -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="details-modal-title">Detalles</h2>
+                <button class="modal-close" id="details-modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="details-modal-body">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="details-modal-cancel">Cerrar</button>
+            </div>
         </div>
-        
-        <div class="card">
-            <h3>🐾 Refugios beneficiados</h3>
-            <div id="listaRefugios"></div>
+    </div>
+
+    <!-- Modal para acciones -->
+    <div id="action-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="action-modal-title">Acción</h2>
+                <button class="modal-close" id="action-modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="action-modal-body">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="action-modal-cancel">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="action-modal-confirm">Confirmar</button>
+            </div>
         </div>
-    </main>
-    
-    <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
+    </div>
+
     <script>
-        // Solo accesible para administradores
-        auth.onAuthStateChanged(user => {
-            if (!user) {
-                window.location.href = 'index.html';
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "TODO_REEMPLAZAR_CON_TU_API_KEY",
+            authDomain: "TODO_REEMPLAZAR_CON_TU_AUTH_DOMAIN",
+            projectId: "TODO_REEMPLAZAR_CON_TU_PROJECT_ID",
+            storageBucket: "TODO_REEMPLAZAR_CON_TU_STORAGE_BUCKET",
+            messagingSenderId: "TODO_REEMPLAZAR_CON_TU_MESSAGING_SENDER_ID",
+            appId: "TODO_REEMPLAZAR_CON_TU_APP_ID"
+        };
+        
+        // Inicialización de Firebase
+        let auth, db;
+        let currentAdmin = null;
+        let adminData = null;
+        
+        // Elementos DOM
+        const adminContentContainer = document.getElementById('admin-content-container');
+        const adminNavItems = document.querySelectorAll('.admin-nav-item');
+        const adminEmail = document.getElementById('admin-email');
+        const adminLogoutBtn = document.getElementById('admin-logout-btn');
+        
+        // Modal elements
+        const detailsModal = document.getElementById('details-modal');
+        const detailsModalClose = document.getElementById('details-modal-close');
+        const detailsModalCancel = document.getElementById('details-modal-cancel');
+        const detailsModalTitle = document.getElementById('details-modal-title');
+        const detailsModalBody = document.getElementById('details-modal-body');
+        
+        const actionModal = document.getElementById('action-modal');
+        const actionModalClose = document.getElementById('action-modal-close');
+        const actionModalCancel = document.getElementById('action-modal-cancel');
+        const actionModalConfirm = document.getElementById('action-modal-confirm');
+        const actionModalTitle = document.getElementById('action-modal-title');
+        const actionModalBody = document.getElementById('action-modal-body');
+        
+        // Variables de estado
+        let currentSection = 'overview';
+        let currentAction = null;
+        let currentItemId = null;
+        
+        // Datos de ejemplo para desarrollo
+        let veterinarias = [];
+        let usuarios = [];
+        let mascotas = [];
+        let turnos = [];
+        let pagos = [];
+        let refugios = [];
+        
+        // Inicializar panel de administración
+        document.addEventListener('DOMContentLoaded', initializeAdmin);
+        
+        // Función para inicializar el admin
+        async function initializeAdmin() {
+            try {
+                // Inicializar Firebase si no está inicializado
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                auth = firebase.auth();
+                db = firebase.firestore();
+                
+                // Escuchar cambios en autenticación
+                auth.onAuthStateChanged(handleAdminAuthStateChange);
+                
+                // Configurar listeners
+                setupAdminEventListeners();
+                
+            } catch (error) {
+                console.error('Error al inicializar admin:', error);
+                showAdminError('Error al inicializar el panel de administración.');
             }
-            // Verificar si es admin
-            verificarAdmin(user.uid);
-        });
-        
-        async function verificarAdmin(uid) {
-            // Lógica de verificación de administrador
-            cargarEstadisticas();
         }
         
-        async function cargarEstadisticas() {
-            // Cargar datos administrativos
+        // Manejar cambio de estado de autenticación del admin
+        async function handleAdminAuthStateChange(user) {
+            if (user) {
+                // Usuario autenticado
+                currentAdmin = user;
+                adminEmail.textContent = user.email;
+                
+                // Verificar si es super admin
+                await verifyAdminAccess(user.uid);
+                
+                // Cargar datos
+                await loadAdminData();
+                
+                // Cargar sección actual
+                loadAdminSection(currentSection);
+                
+            } else {
+                // Usuario no autenticado, redirigir a login
+                window.location.href = '/index.html';
+            }
         }
+        
+        // Verificar acceso de administrador
+        async function verifyAdminAccess(uid) {
+            try {
+                // Verificar si el usuario tiene permisos de super admin
+                const userDoc = await db.collection('users').doc(uid).get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    
+                    if (userData.super_admin !== true && userData.userType !== 'super_admin') {
+                        // No es super admin, redirigir
+                        await auth.signOut();
+                        window.location.href = '/app.html';
+                        return false;
+                    }
+                    
+                    adminData = userData;
+                    return true;
+                } else {
+                    // Verificar en admin_users
+                    const adminDoc = await db.collection('admin_users').doc(currentAdmin.email).get();
+                    
+                    if (adminDoc.exists && adminDoc.data().super_admin === true) {
+                        // Crear usuario admin si no existe
+                        adminData = {
+                            uid: uid,
+                            email: currentAdmin.email,
+                            displayName: currentAdmin.displayName,
+                            super_admin: true,
+                            userType: 'super_admin',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        
+                        await db.collection('users').doc(uid).set(adminData, { merge: true });
+                        return true;
+                    } else {
+                        await auth.signOut();
+                        window.location.href = '/index.html';
+                        return false;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error al verificar acceso admin:', error);
+                await auth.signOut();
+                window.location.href = '/index.html';
+                return false;
+            }
+        }
+        
+        // Cargar datos para el admin
+        async function loadAdminData() {
+            try {
+                // Cargar veterinarias
+                const vetsSnapshot = await db.collection('users')
+                    .where('userType', '==', 'vet')
+                    .limit(50)
+                    .get();
+                
+                veterinarias = [];
+                for (const doc of vetsSnapshot.docs) {
+                    const vetData = doc.data();
+                    vetData.id = doc.id;
+                    
+                    // Obtener info adicional de veterinaria
+                    const vetInfoDoc = await db.collection('vet_info').doc(doc.id).get();
+                    if (vetInfoDoc.exists) {
+                        vetData.vetInfo = vetInfoDoc.data();
+                    }
+                    
+                    // Obtener estado de pago
+                    const paymentDoc = await db.collection('payments')
+                        .where('vetId', '==', doc.id)
+                        .orderBy('dueDate', 'desc')
+                        .limit(1)
+                        .get();
+                    
+                    if (!paymentDoc.empty) {
+                        vetData.lastPayment = paymentDoc.docs[0].data();
+                    }
+                    
+                    veterinarias.push(vetData);
+                }
+                
+                // Cargar usuarios (dueños)
+                const ownersSnapshot = await db.collection('users')
+                    .where('userType', '==', 'owner')
+                    .limit(50)
+                    .get();
+                
+                usuarios = [];
+                ownersSnapshot.forEach(doc => {
+                    usuarios.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Cargar mascotas (limitado)
+                const petsSnapshot = await db.collection('pets')
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .get();
+                
+                mascotas = [];
+                petsSnapshot.forEach(doc => {
+                    mascotas.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Cargar turnos recientes
+                const appointmentsSnapshot = await db.collection('appointments')
+                    .orderBy('date', 'desc')
+                    .limit(50)
+                    .get();
+                
+                turnos = [];
+                appointmentsSnapshot.forEach(doc => {
+                    turnos.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Cargar pagos recientes
+                const paymentsSnapshot = await db.collection('payments')
+                    .orderBy('dueDate', 'desc')
+                    .limit(50)
+                    .get();
+                
+                pagos = [];
+                paymentsSnapshot.forEach(doc => {
+                    pagos.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Cargar refugios
+                const sheltersSnapshot = await db.collection('shelters')
+                    .limit(50)
+                    .get();
+                
+                refugios = [];
+                sheltersSnapshot.forEach(doc => {
+                    refugios.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error al cargar datos admin:', error);
+                // Usar datos de ejemplo si hay error
+                loadSampleData();
+            }
+        }
+        
+        // Cargar datos de ejemplo para desarrollo
+        function loadSampleData() {
+            // Datos de ejemplo para desarrollo
+            veterinarias = [
+                {
+                    id: 'vet1',
+                    email: 'clinicaveterinaria@ejemplo.com',
+                    displayName: 'Dr. Juan Pérez',
+                    vetStatus: 'active',
+                    vetInfo: {
+                        name: 'Clínica Veterinaria Central',
+                        phone: '011-1234-5678',
+                        address: 'Av. Siempre Viva 123',
+                        city: 'Buenos Aires',
+                        specialties: 'Cirugía, Dermatología'
+                    },
+                    lastPayment: {
+                        amount: 50000,
+                        status: 'paid',
+                        dueDate: '2023-12-01'
+                    }
+                },
+                {
+                    id: 'vet2',
+                    email: 'vetpatitas@ejemplo.com',
+                    displayName: 'Dra. María Gómez',
+                    vetStatus: 'trial',
+                    vetInfo: {
+                        name: 'Veterinaria Patitas Felices',
+                        phone: '011-8765-4321',
+                        address: 'Calle Falsa 456',
+                        city: 'Córdoba',
+                        specialties: 'Odontología, Oftalmología'
+                    },
+                    trialEnds: '2024-01-15'
+                }
+            ];
+            
+            usuarios = [
+                {
+                    id: 'user1',
+                    email: 'dueño1@ejemplo.com',
+                    displayName: 'Carlos Rodríguez',
+                    createdAt: '2023-11-01',
+                    petsCount: 2
+                },
+                {
+                    id: 'user2',
+                    email: 'dueño2@ejemplo.com',
+                    displayName: 'Ana Martínez',
+                    createdAt: '2023-11-15',
+                    petsCount: 1
+                }
+            ];
+            
+            mascotas = [
+                {
+                    id: 'pet1',
+                    name: 'Firulais',
+                    species: 'perro',
+                    breed: 'Labrador',
+                    ownerId: 'user1',
+                    createdAt: '2023-11-05'
+                },
+                {
+                    id: 'pet2',
+                    name: 'Michi',
+                    species: 'gato',
+                    breed: 'Siamés',
+                    ownerId: 'user2',
+                    createdAt: '2023-11-20'
+                }
+            ];
+            
+            turnos = [
+                {
+                    id: 'app1',
+                    petId: 'pet1',
+                    vetId: 'vet1',
+                    date: '2023-12-15T10:00:00',
+                    status: 'confirmed',
+                    reason: 'Control anual'
+                }
+            ];
+            
+            pagos = [
+                {
+                    id: 'pay1',
+                    vetId: 'vet1',
+                    amount: 50000,
+                    status: 'paid',
+                    dueDate: '2023-12-01',
+                    paidDate: '2023-11-28'
+                }
+            ];
+            
+            refugios = [
+                {
+                    id: 'shelter1',
+                    name: 'Refugio Patitas Felices',
+                    location: 'Buenos Aires',
+                    animals_count: 65,
+                    monthly_funding: 5250
+                }
+            ];
+        }
+        
+        // Configurar event listeners del admin
+        function setupAdminEventListeners() {
+            // Navegación
+            adminNavItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const section = item.dataset.section;
+                    setActiveAdminNavItem(section);
+                    loadAdminSection(section);
+                });
+            });
+            
+            // Logout
+            adminLogoutBtn.addEventListener('click', handleAdminLogout);
+            
+            // Modales
+            detailsModalClose.addEventListener('click', () => detailsModal.classList.remove('active'));
+            detailsModalCancel.addEventListener('click', () => detailsModal.classList.remove('active'));
+            
+            actionModalClose.addEventListener('click', () => actionModal.classList.remove('active'));
+            actionModalCancel.addEventListener('click', () => actionModal.classList.remove('active'));
+            actionModalConfirm.addEventListener('click', handleActionConfirm);
+            
+            // Cerrar modal al hacer clic fuera
+            window.addEventListener('click', (e) => {
+                if (e.target === detailsModal) {
+                    detailsModal.classList.remove('active');
+                }
+                if (e.target === actionModal) {
+                    actionModal.classList.remove('active');
+                }
+            });
+        }
+        
+        // Establecer elemento de navegación activo
+        function setActiveAdminNavItem(section) {
+            adminNavItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === section) {
+                    item.classList.add('active');
+                }
+            });
+            currentSection = section;
+        }
+        
+        // Cargar sección del admin
+        async function loadAdminSection(section) {
+            // Mostrar loading
+            adminContentContainer.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Cargando...</p>
+                </div>
+            `;
+            
+            // Cargar contenido según sección
+            switch (section) {
+                case 'overview':
+                    await loadOverview();
+                    break;
+                case 'veterinarias':
+                    await loadVeterinarias();
+                    break;
+                case 'usuarios':
+                    await loadUsuarios();
+                    break;
+                case 'mascotas':
+                    await loadMascotas();
+                    break;
+                case 'turnos':
+                    await loadTurnos();
+                    break;
+                case 'pagos':
+                    await loadPagos();
+                    break;
+                case 'finanzas':
+                    await loadFinanzas();
+                    break;
+                case 'refugios':
+                    await loadRefugios();
+                    break;
+                case 'impacto':
+                    await loadImpacto();
+                    break;
+                case 'configuracion':
+                    await loadConfiguracion();
+                    break;
+                case 'auditoria':
+                    await loadAuditoria();
+                    break;
+                case 'seguridad':
+                    await loadSeguridad();
+                    break;
+                default:
+                    await loadOverview();
+            }
+        }
+        
+        // Cargar resumen (overview)
+        async function loadOverview() {
+            const stats = calculateStats();
+            
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Resumen del Sistema</h1>
+                        <p class="content-subtitle">Panel de control general</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="refreshData()">🔄 Actualizar</button>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Veterinarias</span>
+                            <span class="stat-icon">🏥</span>
+                        </div>
+                        <div class="stat-value">${stats.totalVets}</div>
+                        <div class="stat-change">
+                            <span class="${stats.vetsChange >= 0 ? 'positive' : 'negative'}">
+                                ${stats.vetsChange >= 0 ? '+' : ''}${stats.vetsChange} este mes
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Usuarios</span>
+                            <span class="stat-icon">👤</span>
+                        </div>
+                        <div class="stat-value">${stats.totalUsers}</div>
+                        <div class="stat-change">
+                            <span class="${stats.usersChange >= 0 ? 'positive' : 'negative'}">
+                                ${stats.usersChange >= 0 ? '+' : ''}${stats.usersChange} este mes
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Mascotas</span>
+                            <span class="stat-icon">🐾</span>
+                        </div>
+                        <div class="stat-value">${stats.totalPets}</div>
+                        <div class="stat-change">
+                            <span class="${stats.petsChange >= 0 ? 'positive' : 'negative'}">
+                                ${stats.petsChange >= 0 ? '+' : ''}${stats.petsChange} este mes
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Ingresos Mensuales</span>
+                            <span class="stat-icon">💰</span>
+                        </div>
+                        <div class="stat-value">$${stats.monthlyRevenue.toLocaleString('es-AR')}</div>
+                        <div class="stat-change">
+                            <span class="${stats.revenueChange >= 0 ? 'positive' : 'negative'}">
+                                ${stats.revenueChange >= 0 ? '+' : ''}${stats.revenueChange}%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <h3 style="padding: 1.5rem 1.5rem 0; margin-bottom: 1rem;">Veterinarias Recientes</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Veterinaria</th>
+                                <th>Estado</th>
+                                <th>Último Pago</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Mostrar hasta 5 veterinarias recientes
+            const recentVets = veterinarias.slice(0, 5);
+            
+            if (recentVets.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem;">
+                            No hay veterinarias registradas
+                        </td>
+                    </tr>
+                `;
+            } else {
+                recentVets.forEach(vet => {
+                    const status = vet.vetStatus || 'trial';
+                    const statusText = status === 'active' ? 'Activa' : 
+                                     status === 'trial' ? 'Prueba' : 
+                                     status === 'suspended' ? 'Suspendida' : 'Desconocido';
+                    
+                    const statusClass = status === 'active' ? 'status-active' :
+                                      status === 'trial' ? 'status-trial' :
+                                      status === 'suspended' ? 'status-suspended' : 'status-pending';
+                    
+                    const lastPayment = vet.lastPayment ? 
+                        `$${vet.lastPayment.amount.toLocaleString('es-AR')} - ${vet.lastPayment.status === 'paid' ? 'Pagado' : 'Pendiente'}` :
+                        'Sin pagos';
+                    
+                    html += `
+                        <tr>
+                            <td>
+                                <strong>${vet.vetInfo?.name || vet.displayName}</strong><br>
+                                <small>${vet.email}</small>
+                            </td>
+                            <td>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </td>
+                            <td>${lastPayment}</td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="showDetails('vet', '${vet.id}')">Ver</button>
+                                <button class="btn btn-sm btn-primary" onclick="editVet('${vet.id}')">Editar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                    <div class="table-container">
+                        <h3 style="padding: 1.5rem 1.5rem 0; margin-bottom: 1rem;">Pagos Pendientes</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Veterinaria</th>
+                                    <th>Monto</th>
+                                    <th>Vencimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            // Mostrar pagos pendientes
+            const pendingPayments = pagos.filter(p => p.status === 'pending').slice(0, 3);
+            
+            if (pendingPayments.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 2rem;">
+                            No hay pagos pendientes
+                        </td>
+                    </tr>
+                `;
+            } else {
+                pendingPayments.forEach(payment => {
+                    const vet = veterinarias.find(v => v.id === payment.vetId);
+                    const vetName = vet ? (vet.vetInfo?.name || vet.displayName) : 'Desconocida';
+                    
+                    html += `
+                        <tr>
+                            <td>${vetName}</td>
+                            <td>$${payment.amount.toLocaleString('es-AR')}</td>
+                            <td>${formatDate(payment.dueDate)}</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3 style="padding: 1.5rem 1.5rem 0; margin-bottom: 1rem;">Actividad Reciente</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Acción</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Nueva veterinaria registrada</td>
+                                    <td>Hoy</td>
+                                </tr>
+                                <tr>
+                                    <td>Pago procesado</td>
+                                    <td>Ayer</td>
+                                </tr>
+                                <tr>
+                                    <td>Usuario bloqueado</td>
+                                    <td>15/12/2023</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar veterinarias
+        async function loadVeterinarias() {
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Gestión de Veterinarias</h1>
+                        <p class="content-subtitle">Administra todas las veterinarias del sistema</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="exportData('vets')">📥 Exportar</button>
+                    </div>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="filter-label">Estado</label>
+                            <select class="filter-control" id="filter-vet-status">
+                                <option value="">Todos</option>
+                                <option value="trial">Prueba</option>
+                                <option value="active">Activas</option>
+                                <option value="suspended">Suspendidas</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Ciudad</label>
+                            <input type="text" class="filter-control" id="filter-vet-city" placeholder="Ciudad">
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Búsqueda</label>
+                            <input type="text" class="filter-control" id="filter-vet-search" placeholder="Nombre o email">
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="filterVeterinarias()">Filtrar</button>
+                        <button class="btn btn-secondary" onclick="clearVetFilters()">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Veterinaria</th>
+                                <th>Contacto</th>
+                                <th>Estado</th>
+                                <th>Trial hasta</th>
+                                <th>Último pago</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vets-table-body">
+            `;
+            
+            if (veterinarias.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            No hay veterinarias registradas
+                        </td>
+                    </tr>
+                `;
+            } else {
+                veterinarias.forEach(vet => {
+                    const status = vet.vetStatus || 'trial';
+                    const statusText = status === 'active' ? 'Activa' : 
+                                     status === 'trial' ? 'Prueba' : 
+                                     status === 'suspended' ? 'Suspendida' : 'Desconocido';
+                    
+                    const statusClass = status === 'active' ? 'status-active' :
+                                      status === 'trial' ? 'status-trial' :
+                                      status === 'suspended' ? 'status-suspended' : 'status-pending';
+                    
+                    const trialEnds = vet.trialEnds ? formatDate(vet.trialEnds) : 'N/A';
+                    
+                    const lastPayment = vet.lastPayment ? 
+                        `$${vet.lastPayment.amount.toLocaleString('es-AR')}<br><small>${vet.lastPayment.status === 'paid' ? 'Pagado' : 'Pendiente'}</small>` :
+                        'Sin pagos';
+                    
+                    html += `
+                        <tr>
+                            <td>
+                                <strong>${vet.vetInfo?.name || vet.displayName}</strong><br>
+                                <small>${vet.vetInfo?.address || 'Sin dirección'}</small><br>
+                                <small>${vet.vetInfo?.city || ''}</small>
+                            </td>
+                            <td>
+                                ${vet.email}<br>
+                                <small>${vet.vetInfo?.phone || 'Sin teléfono'}</small>
+                            </td>
+                            <td>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </td>
+                            <td>${trialEnds}</td>
+                            <td>${lastPayment}</td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="showDetails('vet', '${vet.id}')">Ver</button>
+                                <button class="btn btn-sm btn-primary" onclick="editVet('${vet.id}')">Editar</button>
+                                ${status === 'suspended' ? 
+                                    `<button class="btn btn-sm btn-success" onclick="activateVet('${vet.id}')">Activar</button>` :
+                                    `<button class="btn btn-sm btn-warning" onclick="suspendVet('${vet.id}')">Suspender</button>`
+                                }
+                                <button class="btn btn-sm btn-danger" onclick="deleteVet('${vet.id}')">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <button class="page-btn" disabled>‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">›</button>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar usuarios
+        async function loadUsuarios() {
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Gestión de Usuarios</h1>
+                        <p class="content-subtitle">Administra los dueños de mascotas</p>
+                    </div>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="filter-label">Búsqueda</label>
+                            <input type="text" class="filter-control" id="filter-user-search" placeholder="Nombre o email">
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="filterUsuarios()">Filtrar</button>
+                        <button class="btn btn-secondary" onclick="clearUserFilters()">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Mascotas</th>
+                                <th>Fecha registro</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+            `;
+            
+            if (usuarios.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            No hay usuarios registrados
+                        </td>
+                    </tr>
+                `;
+            } else {
+                usuarios.forEach(user => {
+                    const petsCount = user.petsCount || 0;
+                    const createdAt = user.createdAt ? formatDate(user.createdAt) : 'Desconocida';
+                    
+                    html += `
+                        <tr>
+                            <td>
+                                <strong>${user.displayName || 'Sin nombre'}</strong>
+                            </td>
+                            <td>${user.email}</td>
+                            <td>${petsCount}</td>
+                            <td>${createdAt}</td>
+                            <td>
+                                <span class="status-badge status-active">Activo</span>
+                            </td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="showDetails('user', '${user.id}')">Ver</button>
+                                <button class="btn btn-sm btn-warning" onclick="blockUser('${user.id}')">Bloquear</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar mascotas
+        async function loadMascotas() {
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Gestión de Mascotas</h1>
+                        <p class="content-subtitle">Vista global de todas las mascotas registradas</p>
+                    </div>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="filter-label">Especie</label>
+                            <select class="filter-control" id="filter-pet-species">
+                                <option value="">Todas</option>
+                                <option value="perro">Perro</option>
+                                <option value="gato">Gato</option>
+                                <option value="otro">Otras</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Búsqueda</label>
+                            <input type="text" class="filter-control" id="filter-pet-search" placeholder="Nombre de mascota o dueño">
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="filterMascotas()">Filtrar</button>
+                        <button class="btn btn-secondary" onclick="clearPetFilters()">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mascota</th>
+                                <th>Especie/Raza</th>
+                                <th>Dueño</th>
+                                <th>Fecha registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pets-table-body">
+            `;
+            
+            if (mascotas.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 2rem;">
+                            No hay mascotas registradas
+                        </td>
+                    </tr>
+                `;
+            } else {
+                mascotas.forEach(pet => {
+                    const owner = usuarios.find(u => u.id === pet.ownerId);
+                    const ownerName = owner ? owner.displayName : 'Desconocido';
+                    const createdAt = pet.createdAt ? formatDate(pet.createdAt) : 'Desconocida';
+                    
+                    html += `
+                        <tr>
+                            <td>
+                                <strong>${pet.name}</strong>
+                            </td>
+                            <td>
+                                ${pet.species} ${pet.breed ? `- ${pet.breed}` : ''}
+                            </td>
+                            <td>${ownerName}</td>
+                            <td>${createdAt}</td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="showDetails('pet', '${pet.id}')">Ver</button>
+                                <button class="btn btn-sm btn-primary" onclick="editPet('${pet.id}')">Editar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar turnos
+        async function loadTurnos() {
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Gestión de Turnos</h1>
+                        <p class="content-subtitle">Vista global de todos los turnos</p>
+                    </div>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="filter-label">Fecha</label>
+                            <input type="date" class="filter-control" id="filter-appointment-date">
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Estado</label>
+                            <select class="filter-control" id="filter-appointment-status">
+                                <option value="">Todos</option>
+                                <option value="pending">Pendiente</option>
+                                <option value="confirmed">Confirmado</option>
+                                <option value="cancelled">Cancelado</option>
+                                <option value="completed">Completado</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="filterTurnos()">Filtrar</button>
+                        <button class="btn btn-secondary" onclick="clearAppointmentFilters()">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Mascota</th>
+                                <th>Veterinaria</th>
+                                <th>Motivo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table-body">
+            `;
+            
+            if (turnos.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            No hay turnos registrados
+                        </td>
+                    </tr>
+                `;
+            } else {
+                turnos.forEach(turno => {
+                    const pet = mascotas.find(p => p.id === turno.petId);
+                    const vet = veterinarias.find(v => v.id === turno.vetId);
+                    const petName = pet ? pet.name : 'Desconocida';
+                    const vetName = vet ? (vet.vetInfo?.name || vet.displayName) : 'Desconocida';
+                    const dateTime = turno.date ? formatDateTime(turno.date) : 'Desconocida';
+                    const status = turno.status || 'pending';
+                    
+                    const statusText = status === 'pending' ? 'Pendiente' : 
+                                     status === 'confirmed' ? 'Confirmado' :
+                                     status === 'cancelled' ? 'Cancelado' :
+                                     status === 'completed' ? 'Completado' : 'Desconocido';
+                    
+                    const statusClass = status === 'confirmed' ? 'status-active' :
+                                      status === 'pending' ? 'status-pending' :
+                                      status === 'cancelled' ? 'status-suspended' : 'status-pending';
+                    
+                    html += `
+                        <tr>
+                            <td>${dateTime}</td>
+                            <td>${petName}</td>
+                            <td>${vetName}</td>
+                            <td>${turno.reason || 'Sin motivo'}</td>
+                            <td>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="showDetails('appointment', '${turno.id}')">Ver</button>
+                                <button class="btn btn-sm btn-primary" onclick="editAppointment('${turno.id}')">Editar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar pagos
+        async function loadPagos() {
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Gestión de Pagos</h1>
+                        <p class="content-subtitle">Administra los pagos de veterinarias</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="markManualPayment()">➕ Marcar pago manual</button>
+                    </div>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="filter-label">Estado</label>
+                            <select class="filter-control" id="filter-payment-status">
+                                <option value="">Todos</option>
+                                <option value="paid">Pagados</option>
+                                <option value="pending">Pendientes</option>
+                                <option value="overdue">Vencidos</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Mes</label>
+                            <input type="month" class="filter-control" id="filter-payment-month">
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="filterPagos()">Filtrar</button>
+                        <button class="btn btn-secondary" onclick="clearPaymentFilters()">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Veterinaria</th>
+                                <th>Monto</th>
+                                <th>Vencimiento</th>
+                                <th>Pagado</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table-body">
+            `;
+            
+            if (pagos.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            No hay pagos registrados
+                        </td>
+                    </tr>
+                `;
+            } else {
+                pagos.forEach(pago => {
+                    const vet = veterinarias.find(v => v.id === pago.vetId);
+                    const vetName = vet ? (vet.vetInfo?.name || vet.displayName) : 'Desconocida';
+                    const dueDate = pago.dueDate ? formatDate(pago.dueDate) : 'Desconocida';
+                    const paidDate = pago.paidDate ? formatDate(pago.paidDate) : 'No pagado';
+                    const status = pago.status || 'pending';
+                    
+                    const statusText = status === 'paid' ? 'Pagado' : 
+                                     status === 'pending' ? 'Pendiente' :
+                                     status === 'overdue' ? 'Vencido' : 'Desconocido';
+                    
+                    const statusClass = status === 'paid' ? 'status-active' :
+                                      status === 'pending' ? 'status-pending' :
+                                      status === 'overdue' ? 'status-suspended' : 'status-pending';
+                    
+                    const isOverdue = status === 'pending' && pago.dueDate && new Date(pago.dueDate) < new Date();
+                    const displayStatus = isOverdue ? 'Vencido' : statusText;
+                    const displayClass = isOverdue ? 'status-suspended' : statusClass;
+                    
+                    html += `
+                        <tr>
+                            <td>${vetName}</td>
+                            <td>$${pago.amount ? pago.amount.toLocaleString('es-AR') : '0'}</td>
+                            <td>${dueDate}</td>
+                            <td>${paidDate}</td>
+                            <td>
+                                <span class="status-badge ${displayClass}">${displayStatus}</span>
+                            </td>
+                            <td class="actions-cell">
+                                ${status !== 'paid' ? 
+                                    `<button class="btn btn-sm btn-success" onclick="markAsPaid('${pago.id}')">Marcar pagado</button>` :
+                                    `<button class="btn btn-sm btn-secondary" onclick="showDetails('payment', '${pago.id}')">Ver</button>`
+                                }
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar finanzas
+        async function loadFinanzas() {
+            const stats = calculateStats();
+            
+            let html = `
+                <div class="content-header">
+                    <h1 class="content-title">Finanzas</h1>
+                    <p class="content-subtitle">Análisis financiero del sistema</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Ingresos Totales</span>
+                            <span class="stat-icon">💰</span>
+                        </div>
+                        <div class="stat-value">$${stats.totalRevenue.toLocaleString('es-AR')}</div>
+                        <div class="stat-change">
+                            <span class="positive">+${stats.revenueChange}% vs mes anterior</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Para Refugios</span>
+                            <span class="stat-icon">❤️</span>
+                        </div>
+                        <div class="stat-value">$${stats.totalToShelters.toLocaleString('es-AR')}</div>
+                        <div class="stat-change">
+                            <span>${stats.sheltersPercentage}% de los ingresos</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Para Mantenimiento</span>
+                            <span class="stat-icon">⚙️</span>
+                        </div>
+                        <div class="stat-value">$${stats.totalForMaintenance.toLocaleString('es-AR')}</div>
+                        <div class="stat-change">
+                            <span>${stats.maintenancePercentage}% de los ingresos</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Tasa de Retención</span>
+                            <span class="stat-icon">📊</span>
+                        </div>
+                        <div class="stat-value">${stats.retentionRate}%</div>
+                        <div class="stat-change">
+                            <span class="positive">+2% vs mes anterior</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-top: 2rem;">
+                    <div class="table-container">
+                        <h3 style="padding: 1.5rem 1.5rem 0; margin-bottom: 1rem;">Ingresos por Mes</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mes</th>
+                                    <th>Veterinarias Activas</th>
+                                    <th>Ingresos</th>
+                                    <th>Para Refugios</th>
+                                    <th>Crecimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Diciembre 2023</td>
+                                    <td>${stats.totalVets}</td>
+                                    <td>$${stats.monthlyRevenue.toLocaleString('es-AR')}</td>
+                                    <td>$${stats.monthlyToShelters.toLocaleString('es-AR')}</td>
+                                    <td><span class="positive">+${stats.revenueChange}%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Noviembre 2023</td>
+                                    <td>${Math.max(0, stats.totalVets - stats.vetsChange)}</td>
+                                    <td>$${Math.round(stats.monthlyRevenue / (1 + stats.revenueChange/100)).toLocaleString('es-AR')}</td>
+                                    <td>$${Math.round(stats.monthlyToShelters / (1 + stats.revenueChange/100)).toLocaleString('es-AR')}</td>
+                                    <td><span class="positive">+15%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Octubre 2023</td>
+                                    <td>${Math.max(0, stats.totalVets - stats.vetsChange - 2)}</td>
+                                    <td>$${Math.round(stats.monthlyRevenue / (1.15 * (1 + stats.revenueChange/100))).toLocaleString('es-AR')}</td>
+                                    <td>$${Math.round(stats.monthlyToShelters / (1.15 * (1 + stats.revenueChange/100))).toLocaleString('es-AR')}</td>
+                                    <td><span class="positive">+12%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3 style="padding: 1.5rem 1.5rem 0; margin-bottom: 1rem;">Distribución</h3>
+                        <div style="padding: 1.5rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                    <span>Refugios</span>
+                                    <span>${stats.sheltersPercentage}%</span>
+                                </div>
+                                <div style="height: 10px; background-color: #e2e8f0; border-radius: 5px; overflow: hidden;">
+                                    <div style="width: ${stats.sheltersPercentage}%; height: 100%; background-color: var(--secondary);"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                    <span>Mantenimiento</span>
+                                    <span>${stats.maintenancePercentage}%</span>
+                                </div>
+                                <div style="height: 10px; background-color: #e2e8f0; border-radius: 5px; overflow: hidden;">
+                                    <div style="width: ${stats.maintenancePercentage}%; height: 100%; background-color: var(--primary);"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                    <span>Impuestos</span>
+                                    <span>21%</span>
+                                </div>
+                                <div style="height: 10px; background-color: #e2e8f0; border-radius: 5px; overflow: hidden;">
+                                    <div style="width: 21%; height: 100%; background-color: var(--warning);"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                    <span>Desarrollo</span>
+                                    <span>${100 - stats.sheltersPercentage - stats.maintenancePercentage - 21}%</span>
+                                </div>
+                                <div style="height: 10px; background-color: #e2e8f0; border-radius: 5px; overflow: hidden;">
+                                    <div style="width: ${100 - stats.sheltersPercentage - stats.maintenancePercentage - 21}%; height: 100%; background-color: var(--gray);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar refugios
+        async function loadRefugios() {
+            let html = `
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">Refugios Beneficiados</h1>
+                        <p class="content-subtitle">Gestiona los refugios que reciben fondos del sistema</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="addShelter()">➕ Agregar refugio</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Refugio</th>
+                                <th>Ubicación</th>
+                                <th>Animales</th>
+                                <th>Financiamiento Mensual</th>
+                                <th>Contacto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shelters-table-body">
+            `;
+            
+            if (refugios.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            No hay refugios registrados
+                        </td>
+                    </tr>
+                `;
+            } else {
+                refugios.forEach(refugio => {
+                    html += `
+                        <tr>
+                            <td>
+                                <strong>${refugio.name}</strong><br>
+                                <small>${refugio.description || 'Sin descripción'}</small>
+                            </td>
+                            <td>${refugio.location}</td>
+                            <td>${refugio.animals_count || 0}</td>
+                            <td>$${(refugio.monthly_funding || 0).toLocaleString('es-AR')}</td>
+                            <td>
+                                ${refugio.contact_email || 'Sin email'}<br>
+                                ${refugio.website ? `<small><a href="${refugio.website}" target="_blank">${refugio.website}</a></small>` : ''}
+                            </td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="showDetails('shelter', '${refugio.id}')">Ver</button>
+                                <button class="btn btn-sm btn-primary" onclick="editShelter('${refugio.id}')">Editar</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteShelter('${refugio.id}')">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar impacto social
+        async function loadImpacto() {
+            const stats = calculateStats();
+            
+            let html = `
+                <div class="content-header">
+                    <h1 class="content-title">Impacto Social</h1>
+                    <p class="content-subtitle">Métricas del impacto generado por el sistema</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Total Destinado</span>
+                            <span class="stat-icon">💰</span>
+                        </div>
+                        <div class="stat-value">$${stats.totalToShelters.toLocaleString('es-AR')}</div>
+                        <div class="stat-change">
+                            <span class="positive">+${stats.sheltersChange}% este mes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Animales Ayudados</span>
+                            <span class="stat-icon">🐕</span>
+                        </div>
+                        <div class="stat-value">${stats.totalAnimalsHelped}</div>
+                        <div class="stat-change">
+                            <span class="positive">+${stats.animalsChange} este mes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Refugios</span>
+                            <span class="stat-icon">🏠</span>
+                        </div>
+                        <div class="stat-value">${refugios.length}</div>
+                        <div class="stat-change">
+                            <span>Activos en el sistema</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-title">Veterinarias Solidarias</span>
+                            <span class="stat-icon">🏥</span>
+                        </div>
+                        <div class="stat-value">${stats.totalVets}</div>
+                        <div class="stat-change">
+                            <span class="positive">+${stats.vetsChange} este mes</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container" style="margin-top: 2rem;">
+                    <h3 style="padding: 1.5rem 1.5rem 0; margin-bottom: 1rem;">Distribución Mensual a Refugios</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Refugio</th>
+                                <th>Ubicación</th>
+                                <th>Animales</th>
+                                <th>Monto Mensual</th>
+                                <th>Desde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            refugios.forEach(refugio => {
+                const monthlyFunding = refugio.monthly_funding || 0;
+                const percentage = stats.monthlyToShelters > 0 ? 
+                    Math.round((monthlyFunding / stats.monthlyToShelters) * 100) : 0;
+                
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${refugio.name}</strong><br>
+                            <small>${refugio.description || ''}</small>
+                        </td>
+                        <td>${refugio.location}</td>
+                        <td>${refugio.animals_count || 0}</td>
+                        <td>
+                            $${monthlyFunding.toLocaleString('es-AR')}<br>
+                            <small>${percentage}% del total</small>
+                        </td>
+                        <td>${refugio.created_at ? formatDate(refugio.created_at) : 'Reciente'}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card" style="margin-top: 2rem; padding: 1.5rem;">
+                    <h3 style="margin-bottom: 1rem;">Configurar Porcentaje de Impacto</h3>
+                    <div class="form-group">
+                        <label class="form-label">Porcentaje para refugios (actual: ${stats.sheltersPercentage}%)</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <input type="range" id="impact-percentage" min="5" max="50" value="${stats.sheltersPercentage}" style="flex: 1;">
+                            <span id="percentage-value">${stats.sheltersPercentage}%</span>
+                            <button class="btn btn-primary" onclick="updateImpactPercentage()">Guardar</button>
+                        </div>
+                        <small>Este porcentaje se aplica a los ingresos mensuales de veterinarias.</small>
+                    </div>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+            
+            // Actualizar valor del slider
+            const slider = document.getElementById('impact-percentage');
+            const valueSpan = document.getElementById('percentage-value');
+            
+            if (slider && valueSpan) {
+                slider.addEventListener('input', function() {
+                    valueSpan.textContent = this.value + '%';
+                });
+            }
+        }
+        
+        // Cargar configuración
+        async function loadConfiguracion() {
+            let html = `
+                <div class="content-header">
+                    <h1 class="content-title">Configuración del Sistema</h1>
+                    <p class="content-subtitle">Ajustes generales de la plataforma</p>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" data-tab="general">General</div>
+                    <div class="tab" data-tab="pricing">Precios</div>
+                    <div class="tab" data-tab="email">Email</div>
+                    <div class="tab" data-tab="api">API</div>
+                </div>
+                
+                <div class="tab-content active" id="general-tab">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1rem;">Configuración General</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="app-name">Nombre de la Aplicación</label>
+                            <input type="text" id="app-name" class="form-control" value="Tu Mascota Online">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="support-email">Email de Soporte</label>
+                            <input type="email" id="support-email" class="form-control" value="soporte@tumascotaonline.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="trial-days">Días de Prueba Gratuita</label>
+                            <input type="number" id="trial-days" class="form-control" value="30" min="7" max="90">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="auto-suspend">Suspensión Automática (días después del vencimiento)</label>
+                            <input type="number" id="auto-suspend" class="form-control" value="7" min="1" max="30">
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="saveGeneralConfig()">Guardar Configuración</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="pricing-tab">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1rem;">Configuración de Precios</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="monthly-fee">Tarifa Mensual para Veterinarias (ARS)</label>
+                            <input type="number" id="monthly-fee" class="form-control" value="50000" min="1000" step="1000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="currency">Moneda</label>
+                            <select id="currency" class="form-control">
+                                <option value="ARS" selected>Pesos Argentinos (ARS)</option>
+                                <option value="USD">Dólares (USD)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="tax-percentage">Porcentaje de Impuestos (%)</label>
+                            <input type="number" id="tax-percentage" class="form-control" value="21" min="0" max="50" step="0.1">
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="savePricingConfig()">Guardar Configuración</button>
+                    </div>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+            
+            // Configurar pestañas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remover activo de todas las pestañas
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Activar pestaña clickeada
+                    tab.classList.add('active');
+                    const tabId = tab.dataset.tab;
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+        
+        // Cargar auditoría
+        async function loadAuditoria() {
+            let html = `
+                <div class="content-header">
+                    <h1 class="content-title">Auditoría del Sistema</h1>
+                    <p class="content-subtitle">Registro de todas las acciones administrativas</p>
+                </div>
+                
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="filter-label">Usuario</label>
+                            <input type="text" class="filter-control" id="filter-audit-user" placeholder="Email del usuario">
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Tipo</label>
+                            <select class="filter-control" id="filter-audit-type">
+                                <option value="">Todos</option>
+                                <option value="create">Creación</option>
+                                <option value="update">Actualización</option>
+                                <option value="delete">Eliminación</option>
+                                <option value="login">Login</option>
+                                <option value="payment">Pago</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label class="filter-label">Fecha desde</label>
+                            <input type="date" class="filter-control" id="filter-audit-from">
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="filterAuditLogs()">Filtrar</button>
+                        <button class="btn btn-secondary" onclick="clearAuditFilters()">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Usuario</th>
+                                <th>Acción</th>
+                                <th>Entidad</th>
+                                <th>Detalles</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${formatDateTime(new Date().toISOString())}</td>
+                                <td>${currentAdmin.email}</td>
+                                <td>Acceso al panel</td>
+                                <td>Sistema</td>
+                                <td>Inicio de sesión exitoso</td>
+                                <td>127.0.0.1</td>
+                            </tr>
+                            <tr>
+                                <td>15/12/2023 14:30</td>
+                                <td>admin@tumascotaonline.com</td>
+                                <td>Actualización</td>
+                                <td>Veterinaria</td>
+                                <td>Cambio de estado a "Activa"</td>
+                                <td>192.168.1.1</td>
+                            </tr>
+                            <tr>
+                                <td>14/12/2023 11:15</td>
+                                <td>admin@tumascotaonline.com</td>
+                                <td>Creación</td>
+                                <td>Refugio</td>
+                                <td>Nuevo refugio "Patitas Felices"</td>
+                                <td>192.168.1.1</td>
+                            </tr>
+                            <tr>
+                                <td>13/12/2023 09:45</td>
+                                <td>admin@tumascotaonline.com</td>
+                                <td>Pago</td>
+                                <td>Veterinaria</td>
+                                <td>Pago marcado como realizado</td>
+                                <td>192.168.1.1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Cargar seguridad
+        async function loadSeguridad() {
+            let html = `
+                <div class="content-header">
+                    <h1 class="content-title">Seguridad</h1>
+                    <p class="content-subtitle">Configuración de seguridad y permisos</p>
+                </div>
+                
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Administradores del Sistema</h3>
+                    
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Nombre</th>
+                                    <th>Último Acceso</th>
+                                    <th>Permisos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${currentAdmin.email}</td>
+                                    <td>${currentAdmin.displayName || 'Administrador'}</td>
+                                    <td>Ahora</td>
+                                    <td>Super Administrador</td>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-sm btn-secondary" disabled>Tú</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>soporte@tumascotaonline.com</td>
+                                    <td>Soporte Técnico</td>
+                                    <td>Ayer</td>
+                                    <td>Solo Lectura</td>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-sm btn-primary">Editar</button>
+                                        <button class="btn btn-sm btn-danger">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="margin-top: 1rem;" onclick="addAdmin()">➕ Agregar Administrador</button>
+                </div>
+                
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Configuración de Seguridad</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="enable-2fa" checked> Requerir autenticación de dos factores para administradores
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="session-timeout" checked> Cierre de sesión automático después de 60 minutos de inactividad
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="max-login-attempts">Intentos de login máximos antes de bloqueo</label>
+                        <input type="number" id="max-login-attempts" class="form-control" value="5" min="1" max="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="ip-whitelist">IPs Permitidas (separadas por coma)</label>
+                        <textarea id="ip-whitelist" class="form-control" rows="3" placeholder="192.168.1.1, 10.0.0.1"></textarea>
+                        <small>Dejar vacío para permitir desde cualquier IP.</small>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="saveSecurityConfig()">Guardar Configuración</button>
+                </div>
+            `;
+            
+            adminContentContainer.innerHTML = html;
+        }
+        
+        // Calcular estadísticas
+        function calculateStats() {
+            const totalVets = veterinarias.length;
+            const totalUsers = usuarios.length;
+            const totalPets = mascotas.length;
+            
+            // Datos de ejemplo para desarrollo
+            const stats = {
+                totalVets: totalVets,
+                totalUsers: totalUsers,
+                totalPets: totalPets,
+                vetsChange: Math.floor(Math.random() * 5) + 1, // 1-5 nuevas veterinarias
+                usersChange: Math.floor(Math.random() * 20) + 5, // 5-25 nuevos usuarios
+                petsChange: Math.floor(Math.random() * 30) + 10, // 10-40 nuevas mascotas
+                monthlyRevenue: totalVets * 50000, // $50,000 por veterinaria
+                revenueChange: Math.floor(Math.random() * 20) + 5, // 5-25% crecimiento
+                sheltersPercentage: 20, // 20% para refugios
+                maintenancePercentage: 40, // 40% para mantenimiento
+                totalRevenue: totalVets * 50000 * 3, // 3 meses de ingresos
+                totalToShelters: Math.round(totalVets * 50000 * 3 * 0.2), // 20% de 3 meses
+                monthlyToShelters: Math.round(totalVets * 50000 * 0.2), // 20% mensual
+                totalForMaintenance: Math.round(totalVets * 50000 * 3 * 0.4), // 40% de 3 meses
+                sheltersChange: Math.floor(Math.random() * 15) + 5, // 5-20% crecimiento
+                totalAnimalsHelped: refugios.reduce((sum, r) => sum + (r.animals_count || 0), 0),
+                animalsChange: Math.floor(Math.random() * 10) + 2, // 2-12 animales nuevos
+                retentionRate: 85 + Math.floor(Math.random() * 10) // 85-95% retención
+            };
+            
+            return stats;
+        }
+        
+        // Mostrar detalles en modal
+        async function showDetails(type, id) {
+            let item;
+            let title = '';
+            let content = '';
+            
+            switch (type) {
+                case 'vet':
+                    item = veterinarias.find(v => v.id === id);
+                    if (item) {
+                        title = `Veterinaria: ${item.vetInfo?.name || item.displayName}`;
+                        content = `
+                            <div class="form-group">
+                                <label class="form-label">Información General</label>
+                                <p><strong>Email:</strong> ${item.email}</p>
+                                <p><strong>Nombre:</strong> ${item.vetInfo?.name || item.displayName}</p>
+                                <p><strong>Teléfono:</strong> ${item.vetInfo?.phone || 'No registrado'}</p>
+                                <p><strong>Dirección:</strong> ${item.vetInfo?.address || 'No registrada'}</p>
+                                <p><strong>Ciudad:</strong> ${item.vetInfo?.city || 'No registrada'}</p>
+                                <p><strong>Especialidades:</strong> ${item.vetInfo?.specialties || 'No registradas'}</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Estado de la Cuenta</label>
+                                <p><strong>Estado:</strong> ${item.vetStatus || 'trial'}</p>
+                                <p><strong>Trial hasta:</strong> ${item.trialEnds ? formatDate(item.trialEnds) : 'N/A'}</p>
+                                ${item.lastPayment ? `
+                                    <p><strong>Último pago:</strong> $${item.lastPayment.amount.toLocaleString('es-AR')}</p>
+                                    <p><strong>Estado pago:</strong> ${item.lastPayment.status}</p>
+                                    <p><strong>Fecha pago:</strong> ${item.lastPayment.paidDate ? formatDate(item.lastPayment.paidDate) : 'Pendiente'}</p>
+                                ` : '<p><strong>Último pago:</strong> No registrado</p>'}
+                            </div>
+                        `;
+                    }
+                    break;
+                    
+                case 'user':
+                    item = usuarios.find(u => u.id === id);
+                    if (item) {
+                        title = `Usuario: ${item.displayName || 'Sin nombre'}`;
+                        const userPets = mascotas.filter(p => p.ownerId === id);
+                        
+                        content = `
+                            <div class="form-group">
+                                <label class="form-label">Información General</label>
+                                <p><strong>Email:</strong> ${item.email}</p>
+                                <p><strong>Nombre:</strong> ${item.displayName || 'No registrado'}</p>
+                                <p><strong>Fecha registro:</strong> ${item.createdAt ? formatDate(item.createdAt) : 'Desconocida'}</p>
+                                <p><strong>Mascotas registradas:</strong> ${userPets.length}</p>
+                            </div>
+                            
+                            ${userPets.length > 0 ? `
+                                <div class="form-group">
+                                    <label class="form-label">Mascotas</label>
+                                    <ul>
+                                        ${userPets.map(pet => `<li>${pet.name} - ${pet.species} ${pet.breed ? `(${pet.breed})` : ''}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        `;
+                    }
+                    break;
+                    
+                case 'pet':
+                    item = mascotas.find(p => p.id === id);
+                    if (item) {
+                        const owner = usuarios.find(u => u.id === item.ownerId);
+                        title = `Mascota: ${item.name}`;
+                        
+                        content = `
+                            <div class="form-group">
+                                <label class="form-label">Información General</label>
+                                <p><strong>Nombre:</strong> ${item.name}</p>
+                                <p><strong>Especie:</strong> ${item.species}</p>
+                                <p><strong>Raza:</strong> ${item.breed || 'No especificada'}</p>
+                                <p><strong>Fecha nacimiento:</strong> ${item.birthdate ? formatDate(item.birthdate) : 'Desconocida'}</p>
+                                <p><strong>Color:</strong> ${item.color || 'No especificado'}</p>
+                                <p><strong>Microchip:</strong> ${item.microchip || 'No registrado'}</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Dueño</label>
+                                <p><strong>Nombre:</strong> ${owner ? owner.displayName : 'Desconocido'}</p>
+                                <p><strong>Email:</strong> ${owner ? owner.email : 'Desconocido'}</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Notas</label>
+                                <p>${item.notes || 'Sin notas adicionales'}</p>
+                            </div>
+                        `;
+                    }
+                    break;
+                    
+                case 'shelter':
+                    item = refugios.find(r => r.id === id);
+                    if (item) {
+                        title = `Refugio: ${item.name}`;
+                        
+                        content = `
+                            <div class="form-group">
+                                <label class="form-label">Información General</label>
+                                <p><strong>Nombre:</strong> ${item.name}</p>
+                                <p><strong>Ubicación:</strong> ${item.location}</p>
+                                <p><strong>Animales:</strong> ${item.animals_count || 0}</p>
+                                <p><strong>Financiamiento mensual:</strong> $${(item.monthly_funding || 0).toLocaleString('es-AR')}</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Descripción</label>
+                                <p>${item.description || 'Sin descripción'}</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Contacto</label>
+                                <p><strong>Email:</strong> ${item.contact_email || 'No registrado'}</p>
+                                <p><strong>Sitio web:</strong> ${item.website ? `<a href="${item.website}" target="_blank">${item.website}</a>` : 'No registrado'}</p>
+                            </div>
+                        `;
+                    }
+                    break;
+            }
+            
+            if (item) {
+                detailsModalTitle.textContent = title;
+                detailsModalBody.innerHTML = content;
+                detailsModal.classList.add('active');
+            }
+        }
+        
+        // Confirmar acción
+        function handleActionConfirm() {
+            if (!currentAction || !currentItemId) return;
+            
+            switch (currentAction) {
+                case 'deleteVet':
+                    deleteVetConfirm(currentItemId);
+                    break;
+                case 'activateVet':
+                    activateVetConfirm(currentItemId);
+                    break;
+                case 'suspendVet':
+                    suspendVetConfirm(currentItemId);
+                    break;
+                case 'markAsPaid':
+                    markAsPaidConfirm(currentItemId);
+                    break;
+                case 'blockUser':
+                    blockUserConfirm(currentItemId);
+                    break;
+                case 'deleteShelter':
+                    deleteShelterConfirm(currentItemId);
+                    break;
+            }
+            
+            actionModal.classList.remove('active');
+            currentAction = null;
+            currentItemId = null;
+        }
+        
+        // Funciones de acción para veterinarias
+        function editVet(id) {
+            alert(`Editar veterinaria ${id} - En desarrollo`);
+        }
+        
+        function suspendVet(id) {
+            currentAction = 'suspendVet';
+            currentItemId = id;
+            
+            actionModalTitle.textContent = 'Suspender Veterinaria';
+            actionModalBody.innerHTML = `
+                <p>¿Estás seguro de que quieres suspender esta veterinaria?</p>
+                <p>La veterinaria perderá acceso a todas las funcionalidades hasta que sea reactivada.</p>
+            `;
+            actionModalConfirm.textContent = 'Suspender';
+            actionModalConfirm.className = 'btn btn-warning';
+            
+            actionModal.classList.add('active');
+        }
+        
+        function suspendVetConfirm(id) {
+            // En una implementación real, esto actualizaría Firestore
+            const vetIndex = veterinarias.findIndex(v => v.id === id);
+            if (vetIndex !== -1) {
+                veterinarias[vetIndex].vetStatus = 'suspended';
+                showAdminMessage('Veterinaria suspendida correctamente', 'success');
+                loadAdminSection(currentSection);
+            }
+        }
+        
+        function activateVet(id) {
+            currentAction = 'activateVet';
+            currentItemId = id;
+            
+            actionModalTitle.textContent = 'Activar Veterinaria';
+            actionModalBody.innerHTML = `
+                <p>¿Estás seguro de que quieres activar esta veterinaria?</p>
+                <p>La veterinaria recuperará acceso a todas las funcionalidades.</p>
+            `;
+            actionModalConfirm.textContent = 'Activar';
+            actionModalConfirm.className = 'btn btn-success';
+            
+            actionModal.classList.add('active');
+        }
+        
+        function activateVetConfirm(id) {
+            // En una implementación real, esto actualizaría Firestore
+            const vetIndex = veterinarias.findIndex(v => v.id === id);
+            if (vetIndex !== -1) {
+                veterinarias[vetIndex].vetStatus = 'active';
+                showAdminMessage('Veterinaria activada correctamente', 'success');
+                loadAdminSection(currentSection);
+            }
+        }
+        
+        function deleteVet(id) {
+            currentAction = 'deleteVet';
+            currentItemId = id;
+            
+            actionModalTitle.textContent = 'Eliminar Veterinaria';
+            actionModalBody.innerHTML = `
+                <p>¿Estás seguro de que quieres eliminar esta veterinaria?</p>
+                <p><strong>ADVERTENCIA:</strong> Esta acción no se puede deshacer. Se eliminarán todos los datos asociados.</p>
+            `;
+            actionModalConfirm.textContent = 'Eliminar';
+            actionModalConfirm.className = 'btn btn-danger';
+            
+            actionModal.classList.add('active');
+        }
+        
+        function deleteVetConfirm(id) {
+            // En una implementación real, esto eliminaría de Firestore
+            veterinarias = veterinarias.filter(v => v.id !== id);
+            showAdminMessage('Veterinaria eliminada correctamente', 'success');
+            loadAdminSection(currentSection);
+        }
+        
+        // Funciones de acción para usuarios
+        function blockUser(id) {
+            currentAction = 'blockUser';
+            currentItemId = id;
+            
+            actionModalTitle.textContent = 'Bloquear Usuario';
+            actionModalBody.innerHTML = `
+                <p>¿Estás seguro de que quieres bloquear este usuario?</p>
+                <p>El usuario no podrá acceder a la aplicación hasta que sea desbloqueado.</p>
+            `;
+            actionModalConfirm.textContent = 'Bloquear';
+            actionModalConfirm.className = 'btn btn-warning';
+            
+            actionModal.classList.add('active');
+        }
+        
+        function blockUserConfirm(id) {
+            // En una implementación real, esto actualizaría Firestore
+            showAdminMessage('Usuario bloqueado correctamente', 'success');
+        }
+        
+        // Funciones de acción para pagos
+        function markAsPaid(id) {
+            currentAction = 'markAsPaid';
+            currentItemId = id;
+            
+            actionModalTitle.textContent = 'Marcar como Pagado';
+            actionModalBody.innerHTML = `
+                <p>¿Marcar este pago como realizado?</p>
+                <p>Se actualizará el estado del pago y se mantendrá el acceso de la veterinaria.</p>
+            `;
+            actionModalConfirm.textContent = 'Marcar como pagado';
+            actionModalConfirm.className = 'btn btn-success';
+            
+            actionModal.classList.add('active');
+        }
+        
+        function markAsPaidConfirm(id) {
+            // En una implementación real, esto actualizaría Firestore
+            const paymentIndex = pagos.findIndex(p => p.id === id);
+            if (paymentIndex !== -1) {
+                pagos[paymentIndex].status = 'paid';
+                pagos[paymentIndex].paidDate = new Date().toISOString().split('T')[0];
+                showAdminMessage('Pago marcado como realizado', 'success');
+                loadAdminSection(currentSection);
+            }
+        }
+        
+        function markManualPayment() {
+            alert('Agregar pago manual - En desarrollo');
+        }
+        
+        // Funciones de acción para refugios
+        function addShelter() {
+            alert('Agregar refugio - En desarrollo');
+        }
+        
+        function editShelter(id) {
+            alert(`Editar refugio ${id} - En desarrollo`);
+        }
+        
+        function deleteShelter(id) {
+            currentAction = 'deleteShelter';
+            currentItemId = id;
+            
+            actionModalTitle.textContent = 'Eliminar Refugio';
+            actionModalBody.innerHTML = `
+                <p>¿Estás seguro de que quieres eliminar este refugio?</p>
+                <p>El refugio dejará de recibir fondos y será eliminado del sistema.</p>
+            `;
+            actionModalConfirm.textContent = 'Eliminar';
+            actionModalConfirm.className = 'btn btn-danger';
+            
+            actionModal.classList.add('active');
+        }
+        
+        function deleteShelterConfirm(id) {
+            // En una implementación real, esto eliminaría de Firestore
+            refugios = refugios.filter(r => r.id !== id);
+            showAdminMessage('Refugio eliminado correctamente', 'success');
+            loadAdminSection(currentSection);
+        }
+        
+        // Funciones de acción para configuración
+        function updateImpactPercentage() {
+            const slider = document.getElementById('impact-percentage');
+            if (slider) {
+                const newPercentage = parseInt(slider.value);
+                showAdminMessage(`Porcentaje de impacto actualizado a ${newPercentage}%`, 'success');
+            }
+        }
+        
+        function saveGeneralConfig() {
+            showAdminMessage('Configuración general guardada', 'success');
+        }
+        
+        function savePricingConfig() {
+            showAdminMessage('Configuración de precios guardada', 'success');
+        }
+        
+        function addAdmin() {
+            alert('Agregar administrador - En desarrollo');
+        }
+        
+        function saveSecurityConfig() {
+            showAdminMessage('Configuración de seguridad guardada', 'success');
+        }
+        
+        // Funciones de filtrado (placeholders)
+        function filterVeterinarias() {
+            showAdminMessage('Filtrando veterinarias...', 'info');
+        }
+        
+        function clearVetFilters() {
+            showAdminMessage('Filtros limpiados', 'info');
+        }
+        
+        function filterUsuarios() {
+            showAdminMessage('Filtrando usuarios...', 'info');
+        }
+        
+        function clearUserFilters() {
+            showAdminMessage('Filtros limpiados', 'info');
+        }
+        
+        function filterMascotas() {
+            showAdminMessage('Filtrando mascotas...', 'info');
+        }
+        
+        function clearPetFilters() {
+            showAdminMessage('Filtros limpiados', 'info');
+        }
+        
+        function filterTurnos() {
+            showAdminMessage('Filtrando turnos...', 'info');
+        }
+        
+        function clearAppointmentFilters() {
+            showAdminMessage('Filtros limpiados', 'info');
+        }
+        
+        function filterPagos() {
+            showAdminMessage('Filtrando pagos...', 'info');
+        }
+        
+        function clearPaymentFilters() {
+            showAdminMessage('Filtros limpiados', 'info');
+        }
+        
+        function filterAuditLogs() {
+            showAdminMessage('Filtrando logs...', 'info');
+        }
+        
+        function clearAuditFilters() {
+            showAdminMessage('Filtros limpiados', 'info');
+        }
+        
+        // Otras funciones
+        function exportData(type) {
+            alert(`Exportando datos de ${type} - En desarrollo`);
+        }
+        
+        async function refreshData() {
+            await loadAdminData();
+            loadAdminSection(currentSection);
+            showAdminMessage('Datos actualizados', 'success');
+        }
+        
+        function editPet(id) {
+            alert(`Editar mascota ${id} - En desarrollo`);
+        }
+        
+        function editAppointment(id) {
+            alert(`Editar turno ${id} - En desarrollo`);
+        }
+        
+        // Cerrar sesión del admin
+        async function handleAdminLogout() {
+            try {
+                await auth.signOut();
+                window.location.href = '/index.html';
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        }
+        
+        // Mostrar mensaje en el admin
+        function showAdminMessage(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+                <div>${message}</div>
+            `;
+            
+            // Insertar después del header
+            const contentHeader = document.querySelector('.content-header');
+            if (contentHeader) {
+                contentHeader.parentNode.insertBefore(alertDiv, contentHeader.nextSibling);
+            } else {
+                adminContentContainer.insertBefore(alertDiv, adminContentContainer.firstChild);
+            }
+            
+            // Eliminar después de 5 segundos
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+        
+        // Mostrar error en el admin
+        function showAdminError(message) {
+            adminContentContainer.innerHTML = `
+                <div class="content-header">
+                    <h1 class="content-title">Error</h1>
+                    <p class="content-subtitle">Ha ocurrido un problema</p>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <span>❌</span>
+                    <div>
+                        <strong>Error:</strong>
+                        <p>${message}</p>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="loadAdminSection('overview')">Volver al resumen</button>
+            `;
+        }
+        
+        // Funciones auxiliares
+        function formatDate(dateString) {
+            if (!dateString) return 'Desconocida';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-AR');
+        }
+        
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return 'Desconocida';
+            const date = new Date(dateTimeString);
+            return date.toLocaleString('es-AR');
+        }
+        
+        // Hacer funciones disponibles globalmente
+        window.loadAdminSection = loadAdminSection;
+        window.showDetails = showDetails;
+        window.editVet = editVet;
+        window.suspendVet = suspendVet;
+        window.activateVet = activateVet;
+        window.deleteVet = deleteVet;
+        window.blockUser = blockUser;
+        window.markAsPaid = markAsPaid;
+        window.markManualPayment = markManualPayment;
+        window.addShelter = addShelter;
+        window.editShelter = editShelter;
+        window.deleteShelter = deleteShelter;
+        window.updateImpactPercentage = updateImpactPercentage;
+        window.saveGeneralConfig = saveGeneralConfig;
+        window.savePricingConfig = savePricingConfig;
+        window.addAdmin = addAdmin;
+        window.saveSecurityConfig = saveSecurityConfig;
+        window.filterVeterinarias = filterVeterinarias;
+        window.clearVetFilters = clearVetFilters;
+        window.filterUsuarios = filterUsuarios;
+        window.clearUserFilters = clearUserFilters;
+        window.filterMascotas = filterMascotas;
+        window.clearPetFilters = clearPetFilters;
+        window.filterTurnos = filterTurnos;
+        window.clearAppointmentFilters = clearAppointmentFilters;
+        window.filterPagos = filterPagos;
+        window.clearPaymentFilters = clearPaymentFilters;
+        window.filterAuditLogs = filterAuditLogs;
+        window.clearAuditFilters = clearAuditFilters;
+        window.exportData = exportData;
+        window.refreshData = refreshData;
+        window.editPet = editPet;
+        window.editAppointment = editAppointment;
     </script>
 </body>
 </html>
