@@ -370,6 +370,41 @@
         .error-message.active {
             display: block;
         }
+        
+        .success-message {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .success-message.active {
+            display: block;
+        }
+        
+        /* List styling */
+        ul.custom-list {
+            list-style-type: none;
+            padding-left: 0;
+            text-align: left;
+            margin-top: 10px;
+        }
+        
+        ul.custom-list li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        ul.custom-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -453,6 +488,13 @@
                     
                     <div id="login-description">
                         <p><strong>Dueño de mascota:</strong> Acceso gratuito para registrar mascotas, gestionar historiales y autorizar veterinarias.</p>
+                        <ul class="custom-list">
+                            <li>Registrar tus mascotas</li>
+                            <li>Ver historial médico completo</li>
+                            <li>Autorizar veterinarias</li>
+                            <li>Agendar turnos</li>
+                            <li>Ver impacto social generado</li>
+                        </ul>
                     </div>
                     
                     <button id="google-login-btn" class="google-btn">
@@ -471,6 +513,7 @@
                     </div>
                     
                     <div class="error-message" id="login-error"></div>
+                    <div class="success-message" id="login-success"></div>
                     
                     <p class="login-note">
                         <strong>Importante:</strong> No permitimos emails temporales ni registros anónimos. Tu cuenta de Google debe ser verificada.
@@ -540,20 +583,25 @@
         </div>
     </footer>
 
-    <script>
-        // Configuración de Firebase (se completará en setup)
-        const firebaseConfig = {
-          apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
-          authDomain: "petpro-19db3.firebaseapp.com",
-          projectId: "petpro-19db3",
-          storageBucket: "petpro-19db3.firebasestorage.app",
-          messagingSenderId: "384847276656",
-          appId: "1:384847276656:web:ed6a128e5e09ce2e52a2b5"
-        };
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
+            authDomain: "petpro-19db3.firebaseapp.com",
+            projectId: "petpro-19db3",
+            storageBucket: "petpro-19db3.firebasestorage.app",
+            messagingSenderId: "384847276656",
+            appId: "1:384847276656:web:ed6a128e5e09ce2e52a2b5"
+        };
         
-        // Inicialización condicional de Firebase
+        // Inicialización de Firebase
         let auth, db;
+        let firebaseInitialized = false;
         
         // Elementos DOM
         const userTypeBtns = document.querySelectorAll('.user-type-btn');
@@ -561,21 +609,57 @@
         const loginDescription = document.getElementById('login-description');
         const loginLoading = document.getElementById('login-loading');
         const loginError = document.getElementById('login-error');
+        const loginSuccess = document.getElementById('login-success');
         const switchToVetLink = document.getElementById('switch-to-vet');
         
         // Variables de estado
         let userType = 'owner'; // 'owner' o 'vet'
         
-        // Manejar cambio de tipo de usuario
-        userTypeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                userTypeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                userType = btn.dataset.type;
+        // Función para inicializar Firebase
+        function initializeFirebase() {
+            try {
+                if (typeof firebase === 'undefined') {
+                    throw new Error('Firebase SDK no se cargó correctamente. Verifica tu conexión a internet.');
+                }
                 
-                updateLoginDescription();
-            });
-        });
+                // Inicializar Firebase solo si no está inicializado
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                    console.log('Firebase inicializado correctamente');
+                }
+                
+                auth = firebase.auth();
+                db = firebase.firestore();
+                firebaseInitialized = true;
+                
+                // Configurar persistencia de sesión
+                auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                    .catch(error => console.error('Error en persistencia:', error));
+                
+                return true;
+            } catch (error) {
+                console.error('Error al inicializar Firebase:', error);
+                showError('Error al inicializar la aplicación. Recarga la página.');
+                return false;
+            }
+        }
+        
+        // Mostrar error
+        function showError(message) {
+            loginError.textContent = message;
+            loginError.classList.add('active');
+            loginSuccess.classList.remove('active');
+            loginLoading.classList.remove('active');
+            googleLoginBtn.disabled = false;
+        }
+        
+        // Mostrar éxito
+        function showSuccess(message) {
+            loginSuccess.textContent = message;
+            loginSuccess.classList.add('active');
+            loginError.classList.remove('active');
+            loginLoading.classList.remove('active');
+        }
         
         // Actualizar descripción según tipo de usuario
         function updateLoginDescription() {
@@ -583,7 +667,7 @@
                 loginDescription.innerHTML = `
                     <p><strong>Dueño de mascota:</strong> Acceso gratuito para registrar mascotas, gestionar historiales y autorizar veterinarias.</p>
                     <p>Podrás:</p>
-                    <ul style="text-align: left; margin-top: 10px;">
+                    <ul class="custom-list">
                         <li>Registrar tus mascotas</li>
                         <li>Ver historial médico completo</li>
                         <li>Autorizar veterinarias</li>
@@ -595,7 +679,7 @@
                 loginDescription.innerHTML = `
                     <p><strong>Veterinaria:</strong> Acceso profesional con suscripción mensual. Primer mes gratis.</p>
                     <p>Podrás:</p>
-                    <ul style="text-align: left; margin-top: 10px;">
+                    <ul class="custom-list">
                         <li>Gestionar turnos de tu consultorio</li>
                         <li>Cargar historial médico</li>
                         <li>Buscar mascotas autorizadas</li>
@@ -607,27 +691,20 @@
         }
         
         // Manejar login con Google
-        googleLoginBtn.addEventListener('click', handleGoogleLogin);
-        
-        // Función de login con Google
         async function handleGoogleLogin() {
             try {
                 // Mostrar loading
                 loginLoading.classList.add('active');
                 loginError.classList.remove('active');
-                
-                // Verificar si Firebase está inicializado
-                if (typeof firebase === 'undefined') {
-                    throw new Error('Firebase no está cargado. Verifica la conexión a internet.');
-                }
+                loginSuccess.classList.remove('active');
+                googleLoginBtn.disabled = true;
                 
                 // Inicializar Firebase si no está inicializado
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
+                if (!firebaseInitialized) {
+                    if (!initializeFirebase()) {
+                        throw new Error('No se pudo inicializar Firebase');
+                    }
                 }
-                
-                auth = firebase.auth();
-                db = firebase.firestore();
                 
                 // Configurar proveedor de Google
                 const provider = new firebase.auth.GoogleAuthProvider();
@@ -644,14 +721,13 @@
                 const user = result.user;
                 
                 // Verificar que no sea email temporal
-                if (user.email && (user.email.includes('tempmail') || user.email.includes('temp-mail') || user.email.includes('guerrillamail'))) {
-                    await auth.signOut();
-                    throw new Error('No permitimos emails temporales. Usa una cuenta de Google personal o empresarial.');
-                }
+                const tempEmailDomains = ['tempmail', 'temp-mail', 'guerrillamail', 'mailinator', '10minutemail', 'yopmail'];
+                const userEmail = user.email.toLowerCase();
+                const isTempEmail = tempEmailDomains.some(domain => userEmail.includes(domain));
                 
-                // Verificar email verificado
-                if (!user.emailVerified) {
-                    console.warn('Email no verificado, pero permitimos el acceso');
+                if (isTempEmail) {
+                    await auth.signOut();
+                    throw new Error('No permitimos emails temporales. Usa una cuenta de Google personal o empresarial verificada.');
                 }
                 
                 // Guardar información del usuario en Firestore según tipo
@@ -662,7 +738,8 @@
                     photoURL: user.photoURL,
                     userType: userType,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                    emailVerified: user.emailVerified || false
                 };
                 
                 // Referencia al documento del usuario
@@ -676,48 +753,98 @@
                     if (userType === 'vet') {
                         userData.vetStatus = 'pending';
                         userData.trialEnds = null;
+                        userData.subscription = 'trial';
                     }
                     
                     await userRef.set(userData);
                     
-                    // Si es veterinaria, redirigir a setup
-                    if (userType === 'vet') {
-                        window.location.href = '/app.html?type=vet_setup';
-                    } else {
-                        window.location.href = '/app.html';
-                    }
+                    showSuccess(`¡Bienvenido${userType === 'vet' ? ', veterinaria' : ''}! Tu cuenta ha sido creada. Redirigiendo...`);
+                    
+                    // Redirigir después de 2 segundos
+                    setTimeout(() => {
+                        if (userType === 'vet') {
+                            window.location.href = 'app.html?type=vet_setup';
+                        } else {
+                            window.location.href = 'app.html';
+                        }
+                    }, 2000);
+                    
                 } else {
                     // Usuario existente - actualizar último login
-                    await userRef.update({
+                    const updateData = {
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    };
                     
-                    // Verificar tipo de usuario
-                    const existingUserType = userDoc.data().userType;
-                    
-                    // Si está intentando acceder como veterinaria pero es dueño, mostrar error
-                    if (userType === 'vet' && existingUserType !== 'vet') {
-                        await auth.signOut();
-                        throw new Error('Esta cuenta está registrada como dueño de mascota. Para acceder como veterinaria, crea una nueva cuenta o contacta a soporte.');
+                    // Si el usuario cambió de tipo, actualizar
+                    const existingUserData = userDoc.data();
+                    if (existingUserData.userType !== userType) {
+                        updateData.userType = userType;
+                        if (userType === 'vet' && !existingUserData.vetStatus) {
+                            updateData.vetStatus = 'pending';
+                        }
                     }
                     
-                    // Redirigir según tipo de usuario
-                    if (existingUserType === 'vet') {
-                        window.location.href = '/app.html?type=vet';
-                    } else {
-                        window.location.href = '/app.html';
+                    await userRef.update(updateData);
+                    
+                    // Verificar si hay conflicto de tipo de usuario
+                    if (userType === 'vet' && existingUserData.userType === 'owner') {
+                        showSuccess('Solicitud de acceso veterinario enviada. Contactaremos contigo pronto.');
+                        setTimeout(() => {
+                            window.location.href = 'app.html';
+                        }, 3000);
+                        return;
                     }
+                    
+                    showSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
+                    
+                    // Redirigir después de 2 segundos
+                    setTimeout(() => {
+                        const finalUserType = existingUserData.userType || userType;
+                        if (finalUserType === 'vet') {
+                            window.location.href = 'app.html?type=vet';
+                        } else {
+                            window.location.href = 'app.html';
+                        }
+                    }, 2000);
                 }
                 
             } catch (error) {
                 console.error('Error en login:', error);
-                loginError.textContent = error.message || 'Error al iniciar sesión. Intenta nuevamente.';
-                loginError.classList.add('active');
-                loginLoading.classList.remove('active');
+                
+                // Mensajes de error específicos
+                let errorMessage = 'Error al iniciar sesión. Intenta nuevamente.';
+                
+                if (error.code === 'auth/popup-blocked') {
+                    errorMessage = 'El popup de inicio de sesión fue bloqueado. Permite popups para este sitio.';
+                } else if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = 'Cerraste la ventana de inicio de sesión. Intenta nuevamente.';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    errorMessage = 'Dominio no autorizado. Contacta al administrador.';
+                } else if (error.message.includes('emails temporales')) {
+                    errorMessage = error.message;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                showError(errorMessage);
+                googleLoginBtn.disabled = false;
             }
         }
         
-        // Manejar enlace para veterinarias
+        // Event Listeners
+        userTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                userTypeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                userType = btn.dataset.type;
+                updateLoginDescription();
+            });
+        });
+        
+        googleLoginBtn.addEventListener('click', handleGoogleLogin);
+        
         switchToVetLink.addEventListener('click', (e) => {
             e.preventDefault();
             userTypeBtns.forEach(b => b.classList.remove('active'));
@@ -731,55 +858,58 @@
             });
         });
         
-        // Actualizar descripción inicial
-        updateLoginDescription();
-        
-        // Verificar si ya hay una sesión activa
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', () => {
             try {
-                // Cargar Firebase solo si está disponible
-                if (typeof firebase !== 'undefined') {
-                    // Inicializar Firebase si no está inicializado
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
-                    
-                    auth = firebase.auth();
-                    
-                    // Escuchar cambios en autenticación
+                // Inicializar Firebase
+                initializeFirebase();
+                
+                // Actualizar descripción inicial
+                updateLoginDescription();
+                
+                // Verificar si ya hay una sesión activa
+                if (firebaseInitialized) {
                     auth.onAuthStateChanged(async (user) => {
                         if (user) {
-                            // Usuario ya logueado, redirigir a app
-                            try {
-                                // Inicializar Firestore
-                                db = firebase.firestore();
+                            // Usuario ya logueado, redirigir a app después de un breve delay
+                            setTimeout(() => {
+                                // Mostrar mensaje
+                                showSuccess('Sesión activa detectada. Redirigiendo...');
                                 
-                                // Obtener tipo de usuario
-                                const userDoc = await db.collection('users').doc(user.uid).get();
-                                
-                                if (userDoc.exists) {
-                                    const userData = userDoc.data();
-                                    if (userData.userType === 'vet') {
-                                        window.location.href = '/app.html?type=vet';
-                                    } else {
-                                        window.location.href = '/app.html';
-                                    }
+                                // Intentar obtener tipo de usuario
+                                if (db) {
+                                    db.collection('users').doc(user.uid).get()
+                                        .then(userDoc => {
+                                            if (userDoc.exists) {
+                                                const userData = userDoc.data();
+                                                if (userData.userType === 'vet') {
+                                                    window.location.href = 'app.html?type=vet';
+                                                } else {
+                                                    window.location.href = 'app.html';
+                                                }
+                                            } else {
+                                                window.location.href = 'app.html';
+                                            }
+                                        })
+                                        .catch(() => {
+                                            window.location.href = 'app.html';
+                                        });
+                                } else {
+                                    window.location.href = 'app.html';
                                 }
-                            } catch (error) {
-                                console.error('Error al verificar usuario:', error);
-                            }
+                            }, 1000);
                         }
                     });
                 }
             } catch (error) {
-                console.error('Error al inicializar Firebase:', error);
+                console.error('Error al inicializar:', error);
+                // Continuar sin Firebase si hay error (modo demo)
+                googleLoginBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showError('Firebase no está disponible. Contacta al administrador.');
+                });
             }
         });
-        
-        // Verificar si estamos en localhost y mostrar advertencia
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log('Modo desarrollo local. Recuerda configurar Firebase en setup.html');
-        }
     </script>
 </body>
 </html>
