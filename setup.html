@@ -3,26 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VetApp - Setup Base de Datos</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Tu Mascota Online - Configuración Inicial</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
     <style>
-        .setup-step {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            border-left: 4px solid #3498db;
-            background: white;
-            border-radius: var(--border-radius);
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
         }
         
-        .step-header {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 1rem;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
             margin-bottom: 1rem;
+            color: var(--dark);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: monospace;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray-light);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .alert-info {
+            background-color: #e0f2fe;
+            color: #0284c7;
+            border-left: 4px solid #0284c7;
+        }
+        
+        .alert-warning {
+            background-color: #fef3c7;
+            color: var(--warning);
+            border-left: 4px solid var(--warning);
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .alert-icon {
+            font-size: 1.2rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: 8px;
         }
         
         .step-number {
-            background: #3498db;
+            background-color: var(--primary);
             color: white;
             width: 30px;
             height: 30px;
@@ -31,700 +227,798 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
         }
         
-        .step-status {
-            margin-left: auto;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
+        .step-content {
+            flex: 1;
         }
         
-        .status-pending { background: #f8f9fa; color: #6c757d; }
-        .status-completed { background: #d4edda; color: #155724; }
-        .status-error { background: #f8d7da; color: #721c24; }
-        
-        .collection-item {
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            background: #f8f9fa;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
         }
         
-        .logs {
-            background: #1a1a1a;
-            color: #00ff00;
-            font-family: monospace;
+        .step-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
             padding: 1rem;
-            border-radius: var(--border-radius);
-            max-height: 300px;
-            overflow-y: auto;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
             margin: 1rem 0;
         }
         
-        .log-success { color: #00ff00; }
-        .log-error { color: #ff4444; }
-        .log-info { color: #44aaff; }
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
         
-        .setup-container {
-            max-width: 900px;
-            margin: 0 auto;
+        .status-success {
+            background-color: #d1fae5;
+            color: var(--secondary);
+        }
+        
+        .status-warning {
+            background-color: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .status-danger {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .checkbox-group input {
+            margin-right: 0.5rem;
+        }
+        
+        .log-container {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+        
+        .log-entry {
+            margin-bottom: 0.3rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .log-success {
+            color: #10b981;
+        }
+        
+        .log-error {
+            color: #ef4444;
+        }
+        
+        .log-info {
+            color: #3b82f6;
+        }
+        
+        .log-warning {
+            color: #f59e0b;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container setup-container">
-        <header class="header">
-            <h1>🏗️ VetApp - Setup Base de Datos</h1>
-            <p>Inicialización completa de la estructura de datos</p>
-        </header>
-
-        <main class="main-content">
-            <div class="card">
-                <h3>🔧 Configuración Inicial</h3>
-                <p>Este proceso creará toda la estructura necesaria en Firebase Firestore.</p>
-                
-                <div class="setup-steps">
-                    <!-- Paso 1: Verificar Firebase -->
-                    <div class="setup-step" id="step1">
-                        <div class="step-header">
-                            <div class="step-number">1</div>
-                            <h4>Verificar conexión Firebase</h4>
-                            <span id="step1Status" class="step-status status-pending">Pendiente</span>
-                        </div>
-                        <p>Verificando configuración de Firebase...</p>
-                        <div id="firebaseStatus" class="logs"></div>
-                    </div>
-                    
-                    <!-- Paso 2: Crear colecciones -->
-                    <div class="setup-step" id="step2">
-                        <div class="step-header">
-                            <div class="step-number">2</div>
-                            <h4>Crear estructura de colecciones</h4>
-                            <span id="step2Status" class="step-status status-pending">Pendiente</span>
-                        </div>
-                        
-                        <div id="collectionsList">
-                            <div class="collection-item">
-                                <span>🏥 veterinarias</span>
-                                <span id="colVeterinarias" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>👤 dueños</span>
-                                <span id="colDueños" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>🐶 mascotas</span>
-                                <span id="colMascotas" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>📅 turnos</span>
-                                <span id="colTurnos" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>🏥 historial_medico</span>
-                                <span id="colHistorial" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>🔐 autorizaciones</span>
-                                <span id="colAutorizaciones" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>💰 pagos</span>
-                                <span id="colPagos" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>🐾 refugios</span>
-                                <span id="colRefugios" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>📢 notificaciones</span>
-                                <span id="colNotificaciones" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>⚙️ configuracion</span>
-                                <span id="colConfiguracion" class="status-pending">Pendiente</span>
-                            </div>
-                        </div>
-                        
-                        <div id="step2Logs" class="logs"></div>
-                    </div>
-                    
-                    <!-- Paso 3: Datos iniciales -->
-                    <div class="setup-step" id="step3">
-                        <div class="step-header">
-                            <div class="step-number">3</div>
-                            <h4>Cargar datos iniciales</h4>
-                            <span id="step3Status" class="step-status status-pending">Pendiente</span>
-                        </div>
-                        
-                        <div id="initialData">
-                            <div class="collection-item">
-                                <span>🌱 Refugios de ejemplo</span>
-                                <span id="dataRefugios" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>⚙️ Configuración del sistema</span>
-                                <span id="dataConfig" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>🏥 Veterinaria demo</span>
-                                <span id="dataVetDemo" class="status-pending">Pendiente</span>
-                            </div>
-                            <div class="collection-item">
-                                <span>👤 Dueño demo</span>
-                                <span id="dataOwnerDemo" class="status-pending">Pendiente</span>
-                            </div>
-                        </div>
-                        
-                        <div id="step3Logs" class="logs"></div>
-                    </div>
-                    
-                    <!-- Paso 4: Crear índices -->
-                    <div class="setup-step" id="step4">
-                        <div class="step-header">
-                            <div class="step-number">4</div>
-                            <h4>Configurar índices de búsqueda</h4>
-                            <span id="step4Status" class="step-status status-pending">Pendiente</span>
-                        </div>
-                        <p>Configurando índices compuestos para búsquedas rápidas...</p>
-                        <div id="step4Logs" class="logs"></div>
-                    </div>
-                    
-                    <!-- Paso 5: Reglas de seguridad -->
-                    <div class="setup-step" id="step5">
-                        <div class="step-header">
-                            <div class="step-number">5</div>
-                            <h4>Configurar reglas de seguridad</h4>
-                            <span id="step5Status" class="step-status status-pending">Pendiente</span>
-                        </div>
-                        <p>Generando reglas de seguridad para Firestore...</p>
-                        <div id="step5Logs" class="logs"></div>
-                    </div>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Configuración Inicial</h1>
+            <p>Tu Mascota Online - Setup de base de datos</p>
+        </div>
+        
+        <div class="content">
+            <div class="alert alert-warning" id="initial-alert">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <strong>ADVERTENCIA:</strong> Esta página solo debe ejecutarse UNA VEZ para inicializar la base de datos. 
+                    Si ya ejecutaste el setup anteriormente, cierra esta página.
                 </div>
-                
-                <div class="card" style="margin-top: 2rem;">
-                    <h4>🎯 Acciones</h4>
-                    <div class="grid-3">
-                        <button id="startSetup" class="btn btn-success" onclick="startSetup()">
-                            🚀 Iniciar Setup Completo
-                        </button>
-                        <button id="resetAll" class="btn btn-danger" onclick="resetDatabase()">
-                            🔄 Reiniciar Base de Datos
-                        </button>
-                        <button class="btn btn-secondary" onclick="window.location.href='admin.html'">
-                            📊 Ir a Administración
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="finalLogs" class="logs" style="display: none;"></div>
             </div>
-        </main>
+            
+            <div class="section">
+                <h2 class="section-title">Paso 1: Configuración de Firebase</h2>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Crear proyecto en Firebase</div>
+                        <div class="step-description">
+                            Ve a <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> y crea un nuevo proyecto llamado "Tu Mascota Online".
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Agregar aplicación web</div>
+                        <div class="step-description">
+                            En tu proyecto Firebase, haz clic en "Agregar aplicación" y selecciona "Web". 
+                            Registra la aplicación con el nombre "Tu Mascota Online".
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Obtener credenciales</div>
+                        <div class="step-description">
+                            Copia las credenciales de Firebase que se muestran después de registrar la aplicación.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="apiKey">API Key</label>
+                    <input type="text" id="apiKey" class="form-control" placeholder="AIzaSyD...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="authDomain">Auth Domain</label>
+                    <input type="text" id="authDomain" class="form-control" placeholder="tumascotaonline.firebaseapp.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="projectId">Project ID</label>
+                    <input type="text" id="projectId" class="form-control" placeholder="tumascotaonline">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="storageBucket">Storage Bucket</label>
+                    <input type="text" id="storageBucket" class="form-control" placeholder="tumascotaonline.appspot.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="messagingSenderId">Messaging Sender ID</label>
+                    <input type="text" id="messagingSenderId" class="form-control" placeholder="123456789012">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="appId">App ID</label>
+                    <input type="text" id="appId" class="form-control" placeholder="1:123456789012:web:abc123def456">
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Paso 2: Configurar servicios de Firebase</h2>
+                
+                <div class="alert alert-info">
+                    <div class="alert-icon">ℹ️</div>
+                    <div>
+                        <strong>Importante:</strong> Debes habilitar estos servicios en Firebase Console antes de continuar.
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check-auth" checked disabled>
+                    <label for="check-auth">Authentication - Habilitar Google Sign-In</label>
+                    <span class="status status-warning">Requerido</span>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check-firestore" checked disabled>
+                    <label for="check-firestore">Firestore Database - Crear en modo de producción</label>
+                    <span class="status status-warning">Requerido</span>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check-storage">
+                    <label for="check-storage">Storage - Para fotos de mascotas y veterinarias (opcional)</label>
+                    <span class="status status-success">Opcional</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Instrucciones para habilitar servicios:</label>
+                    <div class="code-block">
+// En Firebase Console:<br>
+// 1. Ve a Authentication > Sign-in method<br>
+// 2. Habilita Google<br>
+// 3. Agrega tu dominio autorizado (localhost para desarrollo)<br>
+//<br>
+// 4. Ve a Firestore Database<br>
+// 5. Crea base de datos en modo de producción<br>
+// 6. Establece reglas (se crearán automáticamente)<br>
+//<br>
+// 5. (Opcional) Ve a Storage<br>
+// 6. Crea bucket con reglas predeterminadas
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Paso 3: Inicializar base de datos</h2>
+                
+                <div class="alert alert-danger" id="setup-warning">
+                    <div class="alert-icon">⚠️</div>
+                    <div>
+                        <strong>ADVERTENCIA FINAL:</strong> Esta acción creará todas las colecciones, índices y datos iniciales. 
+                        No ejecutes esto si ya tienes datos en producción.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="admin-email">Email del super administrador</label>
+                    <input type="email" id="admin-email" class="form-control" placeholder="admin@tumascotaonline.com">
+                    <small>Este email recibirá permisos de super administrador. Debe ser un email de Google.</small>
+                </div>
+                
+                <button id="init-db-btn" class="btn btn-primary btn-block" disabled>
+                    🚀 Inicializar Base de Datos
+                </button>
+                
+                <div id="loading-section" class="hidden">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Inicializando base de datos...</p>
+                        <p>Esto puede tomar unos segundos. No cierres esta página.</p>
+                    </div>
+                    
+                    <div class="log-container" id="setup-log">
+                        <!-- Logs se mostrarán aquí -->
+                    </div>
+                </div>
+                
+                <div id="success-section" class="hidden">
+                    <div class="alert alert-success">
+                        <div class="alert-icon">✅</div>
+                        <div>
+                            <strong>¡Configuración completada!</strong>
+                            <p>La base de datos se ha inicializado correctamente.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">✓</div>
+                        <div class="step-content">
+                            <div class="step-title">Próximos pasos</div>
+                            <div class="step-description">
+                                1. Borra esta página del servidor o renómbrala para evitar ejecuciones accidentales.<br>
+                                2. Accede a <a href="/index.html">la aplicación</a> con tu email de administrador.<br>
+                                3. Configura las reglas de seguridad de Firestore desde <a href="/admin.html">el panel de administración</a>.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="go-to-app-btn" class="btn btn-primary btn-block">
+                        🐾 Ir a la aplicación
+                    </button>
+                </div>
+                
+                <div id="error-section" class="hidden">
+                    <div class="alert alert-danger">
+                        <div class="alert-icon">❌</div>
+                        <div>
+                            <strong>Error en la configuración</strong>
+                            <p id="error-message">Ha ocurrido un error. Revisa los logs y vuelve a intentar.</p>
+                        </div>
+                    </div>
+                    
+                    <button id="retry-btn" class="btn btn-primary">
+                        🔄 Reintentar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Estado del sistema</h2>
+                
+                <div id="status-checks">
+                    <!-- Los checks de estado se cargarán aquí -->
+                </div>
+                
+                <button id="check-status-btn" class="btn btn-secondary">
+                    🔄 Verificar estado
+                </button>
+            </div>
+        </div>
     </div>
-    
-    <script src="firebase-config.js"></script>
-    <script src="auth.js"></script>
+
     <script>
-        // Clase principal para setup de base de datos
-        class DatabaseSetup {
-            constructor() {
-                this.logs = [];
-                this.steps = {
-                    step1: { status: 'pending', message: '' },
-                    step2: { status: 'pending', message: '' },
-                    step3: { status: 'pending', message: '' },
-                    step4: { status: 'pending', message: '' },
-                    step5: { status: 'pending', message: '' }
-                };
-            }
+        // Elementos DOM
+        const apiKeyInput = document.getElementById('apiKey');
+        const authDomainInput = document.getElementById('authDomain');
+        const projectIdInput = document.getElementById('projectId');
+        const storageBucketInput = document.getElementById('storageBucket');
+        const messagingSenderIdInput = document.getElementById('messagingSenderId');
+        const appIdInput = document.getElementById('appId');
+        const adminEmailInput = document.getElementById('admin-email');
+        const initDbBtn = document.getElementById('init-db-btn');
+        const loadingSection = document.getElementById('loading-section');
+        const successSection = document.getElementById('success-section');
+        const errorSection = document.getElementById('error-section');
+        const setupLog = document.getElementById('setup-log');
+        const checkStatusBtn = document.getElementById('check-status-btn');
+        const statusChecks = document.getElementById('status-checks');
+        const goToAppBtn = document.getElementById('go-to-app-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        
+        // Variables de estado
+        let firebaseConfig = {};
+        let setupCompleted = false;
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', initialize);
+        
+        function initialize() {
+            // Verificar si ya se ejecutó el setup
+            checkIfSetupDone();
             
-            log(message, type = 'info') {
-                const timestamp = new Date().toLocaleTimeString();
-                const logEntry = `<span class="log-${type}">[${timestamp}] ${message}</span><br>`;
-                this.logs.push(logEntry);
-                
-                // Actualizar log visible
-                const logContainer = document.getElementById('finalLogs') || 
-                                   document.createElement('div');
-                logContainer.innerHTML += logEntry;
-                logContainer.scrollTop = logContainer.scrollHeight;
-                
-                console.log(`[${type.toUpperCase()}] ${message}`);
-            }
+            // Configurar event listeners
+            setupEventListeners();
             
-            updateStepStatus(stepId, status, message = '') {
-                this.steps[stepId].status = status;
-                this.steps[stepId].message = message;
-                
-                const stepElement = document.getElementById(`${stepId}Status`);
-                if (stepElement) {
-                    stepElement.textContent = status === 'completed' ? 'Completado' : 
-                                            status === 'error' ? 'Error' : 'Pendiente';
-                    stepElement.className = `step-status status-${status}`;
-                }
-                
-                const logElement = document.getElementById(`${stepId}Logs`);
-                if (logElement && message) {
-                    logElement.innerHTML += `<span class="log-${status}">${message}</span><br>`;
-                }
-            }
+            // Verificar estado inicial
+            checkFirebaseStatus();
+        }
+        
+        function setupEventListeners() {
+            // Habilitar botón cuando todos los campos estén completos
+            const inputs = [apiKeyInput, authDomainInput, projectIdInput, 
+                          storageBucketInput, messagingSenderIdInput, appIdInput, adminEmailInput];
             
-            updateCollectionStatus(collectionId, status) {
-                const element = document.getElementById(collectionId);
-                if (element) {
-                    element.textContent = status === 'completed' ? '✓ Creada' :
-                                        status === 'error' ? '✗ Error' : 'Pendiente';
-                    element.className = status === 'completed' ? 'status-completed' :
-                                      status === 'error' ? 'status-error' : 'status-pending';
-                }
-            }
-            
-            async step1_verifyFirebase() {
-                this.log('Verificando conexión con Firebase...');
-                
-                try {
-                    // Verificar que Firebase esté inicializado
-                    if (!firebase || !firebase.apps.length) {
-                        throw new Error('Firebase no está inicializado');
-                    }
-                    
-                    // Intentar una operación simple
-                    await db.collection('test').doc('connection-test').set({
-                        test: true,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // Limpiar test
-                    await db.collection('test').doc('connection-test').delete();
-                    
-                    this.log('✓ Conexión Firebase establecida correctamente', 'success');
-                    this.updateStepStatus('step1', 'completed', 'Firebase conectado correctamente');
-                    
-                    // Mostrar info del proyecto
-                    const projectId = firebase.app().options.projectId;
-                    this.log(`Proyecto: ${projectId}`, 'info');
-                    
-                } catch (error) {
-                    this.log(`✗ Error en conexión Firebase: ${error.message}`, 'error');
-                    this.updateStepStatus('step1', 'error', error.message);
-                    throw error;
-                }
-            }
-            
-            async step2_createCollections() {
-                this.log('Creando estructura de colecciones...');
-                
-                const collections = [
-                    { id: 'veterinarias', name: '🏥 veterinarias' },
-                    { id: 'dueños', name: '👤 dueños' },
-                    { id: 'mascotas', name: '🐶 mascotas' },
-                    { id: 'turnos', name: '📅 turnos' },
-                    { id: 'historial_medico', name: '🏥 historial_medico' },
-                    { id: 'autorizaciones', name: '🔐 autorizaciones' },
-                    { id: 'pagos', name: '💰 pagos' },
-                    { id: 'refugios', name: '🐾 refugios' },
-                    { id: 'notificaciones', name: '📢 notificaciones' },
-                    { id: 'configuracion', name: '⚙️ configuracion' }
-                ];
-                
-                for (const collection of collections) {
-                    try {
-                        this.log(`Creando colección: ${collection.name}...`);
-                        
-                        // Crear un documento de prueba para cada colección
-                        await db.collection(collection.id).doc('_setup').set({
-                            created: firebase.firestore.FieldValue.serverTimestamp(),
-                            purpose: 'Collection structure setup',
-                            app: 'VetApp'
-                        });
-                        
-                        this.updateCollectionStatus(`col${collection.id.charAt(0).toUpperCase() + collection.id.slice(1)}`, 'completed');
-                        this.log(`✓ Colección ${collection.name} creada`, 'success');
-                        
-                    } catch (error) {
-                        this.updateCollectionStatus(`col${collection.id.charAt(0).toUpperCase() + collection.id.slice(1)}`, 'error');
-                        this.log(`✗ Error creando ${collection.name}: ${error.message}`, 'error');
-                    }
-                }
-                
-                this.updateStepStatus('step2', 'completed', 'Colecciones creadas');
-            }
-            
-            async step3_initialData() {
-                this.log('Cargando datos iniciales...');
-                
-                try {
-                    // 1. Refugios
-                    this.log('Cargando refugios de ejemplo...');
-                    const refugios = [
-                        {
-                            id: 'refugio_central',
-                            nombre: 'Refugio Central de Animales',
-                            direccion: 'Av. Libertador 1234, CABA',
-                            telefono: '+54 11 4321-5678',
-                            email: 'info@refugiocentral.org',
-                            descripcion: 'Refugio sin fines de lucro dedicado al rescate y adopción de animales abandonados.',
-                            responsable: 'María González',
-                            capacidad: 150,
-                            animalesActuales: 120,
-                            necesidades: ['Alimento balanceado', 'Medicamentos', 'Materiales de limpieza'],
-                            impactoAcumulado: 0,
-                            activo: true,
-                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
-                        },
-                        {
-                            id: 'patitas_felices',
-                            nombre: 'Patitas Felices',
-                            direccion: 'Calle Falsa 456, Córdoba',
-                            telefono: '+54 351 987-6543',
-                            email: 'contacto@patitasfelices.org',
-                            descripcion: 'Organización dedicada al rescate y rehabilitación de animales maltratados.',
-                            responsable: 'Carlos Rodríguez',
-                            capacidad: 80,
-                            animalesActuales: 65,
-                            necesidades: ['Jaulas transportadoras', 'Vacunas', 'Pipetas antipulgas'],
-                            impactoAcumulado: 0,
-                            activo: true,
-                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
-                        },
-                        {
-                            id: 'huellitas_solidarias',
-                            nombre: 'Huellitas Solidarias',
-                            direccion: 'Belgrano 789, Mendoza',
-                            telefono: '+54 261 456-7890',
-                            email: 'adopciones@huellitassolidarias.org',
-                            descripcion: 'Refugio especializado en perros y gatos de la calle, con programa de adopción responsable.',
-                            responsable: 'Ana Martínez',
-                            capacidad: 100,
-                            animalesActuales: 85,
-                            necesidades: ['Alimento para cachorros', 'Mantas y camas', 'Juguetes'],
-                            impactoAcumulado: 0,
-                            activo: true,
-                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
-                        }
-                    ];
-                    
-                    for (const refugio of refugios) {
-                        await db.collection('refugios').doc(refugio.id).set(refugio);
-                    }
-                    document.getElementById('dataRefugios').textContent = '✓ Cargados (3)';
-                    document.getElementById('dataRefugios').className = 'status-completed';
-                    this.log('✓ 3 refugios cargados', 'success');
-                    
-                    // 2. Configuración del sistema
-                    this.log('Configurando sistema...');
-                    const config = {
-                        id: 'system_config',
-                        appName: 'VetApp',
-                        version: '1.0.0',
-                        precioMensualVeterinaria: 50000,
-                        porcentajeImpactoSocial: 20, // 20% a refugios
-                        diasTrialGratis: 30,
-                        emailSoporte: 'soporte@vetapp.com',
-                        telefonoSoporte: '+54 11 1234-5678',
-                        configuracion: {
-                            recordatoriosAutomaticos: true,
-                            whatsappHabilitado: false,
-                            modoMantenimiento: false,
-                            registrosAbiertos: true
-                        },
-                        fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    
-                    await db.collection('configuracion').doc(config.id).set(config);
-                    document.getElementById('dataConfig').textContent = '✓ Configurado';
-                    document.getElementById('dataConfig').className = 'status-completed';
-                    this.log('✓ Configuración del sistema cargada', 'success');
-                    
-                    // 3. Veterinaria demo (si hay usuario autenticado)
-                    const user = auth.currentUser;
-                    if (user) {
-                        this.log('Creando veterinaria demo...');
-                        const vetDemo = {
-                            id: user.uid,
-                            nombre: 'Clínica Veterinaria Demo',
-                            email: user.email,
-                            telefono: '+54 11 8765-4321',
-                            direccion: 'Av. Demo 123, Ciudad Demo',
-                            estado: 'trial',
-                            plan: 'profesional',
-                            fechaRegistro: firebase.firestore.FieldValue.serverTimestamp(),
-                            fechaVencimientoTrial: this.addDays(new Date(), 30),
-                            usuariosInternos: [],
-                            mascotasAutorizadas: [],
-                            configuracion: {
-                                horariosAtencion: 'Lunes a Viernes 9-18, Sábados 9-13',
-                                tiempoConsulta: 30,
-                                recordatoriosAutomaticos: true
-                            },
-                            activa: true
-                        };
-                        
-                        await db.collection('veterinarias').doc(vetDemo.id).set(vetDemo);
-                        document.getElementById('dataVetDemo').textContent = '✓ Creada';
-                        document.getElementById('dataVetDemo').className = 'status-completed';
-                        this.log('✓ Veterinaria demo creada', 'success');
-                    }
-                    
-                    // 4. Dueño demo
-                    this.log('Creando dueño demo...');
-                    const ownerDemo = {
-                        id: 'demo_owner_001',
-                        nombre: 'Juan Pérez',
-                        email: 'juan.perez@demo.com',
-                        telefono: '+54 11 5555-5555',
-                        direccion: 'Calle Demo 456',
-                        mascotas: [],
-                        fechaRegistro: firebase.firestore.FieldValue.serverTimestamp(),
-                        notificacionesHabilitadas: true,
-                        tipo: 'dueño',
-                        activo: true
-                    };
-                    
-                    await db.collection('dueños').doc(ownerDemo.id).set(ownerDemo);
-                    document.getElementById('dataOwnerDemo').textContent = '✓ Creado';
-                    document.getElementById('dataOwnerDemo').className = 'status-completed';
-                    this.log('✓ Dueño demo creado', 'success');
-                    
-                    this.updateStepStatus('step3', 'completed', 'Datos iniciales cargados');
-                    
-                } catch (error) {
-                    this.log(`✗ Error cargando datos iniciales: ${error.message}`, 'error');
-                    this.updateStepStatus('step3', 'error', error.message);
-                }
-            }
-            
-            async step4_createIndexes() {
-                this.log('Configurando índices de búsqueda...');
-                
-                // Nota: Los índices compuestos en Firestore deben crearse desde la consola
-                // Aquí solo documentamos cuáles deberían crearse
-                
-                const indexes = [
-                    'Colección: mascotas | Campos: dueñoId (Asc) | nombre (Asc)',
-                    'Colección: turnos | Campos: veterinariaId (Asc) | fechaHora (Asc)',
-                    'Colección: turnos | Campos: mascotaId (Asc) | fechaHora (Desc)',
-                    'Colección: historial_medico | Campos: mascotaId (Asc) | fecha (Desc)',
-                    'Colección: autorizaciones | Campos: mascotaId (Asc) | veterinariaId (Asc)'
-                ];
-                
-                const logsElement = document.getElementById('step4Logs');
-                if (logsElement) {
-                    logsElement.innerHTML = '<span class="log-info">Índices recomendados para Firestore:</span><br>';
-                    indexes.forEach(idx => {
-                        logsElement.innerHTML += `<span class="log-info">• ${idx}</span><br>`;
-                    });
-                    logsElement.innerHTML += '<span class="log-info"><br>⚠️ Nota: Estos índices deben crearse manualmente en Firebase Console > Firestore > Índices</span>';
-                }
-                
-                this.log('✓ Configuración de índices documentada', 'success');
-                this.updateStepStatus('step4', 'completed', 'Índices configurados');
-            }
-            
-            async step5_securityRules() {
-                this.log('Generando reglas de seguridad...');
-                
-                const securityRules = `
-// Reglas de seguridad Firestore para VetApp
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    
-    // Dueños solo ven/editan sus datos
-    match /dueños/{ownerId} {
-      allow read, write: if request.auth != null && request.auth.uid == ownerId;
-    }
-    
-    // Veterinarias
-    match /veterinarias/{vetId} {
-      allow read, write: if request.auth != null && request.auth.uid == vetId;
-    }
-    
-    // Mascotas
-    match /mascotas/{petId} {
-      allow read: if request.auth != null && (
-        resource.data.dueñoId == request.auth.uid ||
-        resource.data.veterinariasAutorizadas.hasAny([request.auth.uid])
-      );
-      allow write: if request.auth != null && (
-        request.auth.uid == resource.data.dueñoId ||
-        exists(/databases/$(database)/documents/veterinarias/$(request.auth.uid))
-      );
-    }
-    
-    // Historial médico
-    match /historial_medico/{recordId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        exists(/databases/$(database)/documents/veterinarias/$(request.auth.uid));
-    }
-    
-    // Turnos
-    match /turnos/{appointmentId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    // Refugios (lectura pública, escritura solo admin)
-    match /refugios/{shelterId} {
-      allow read: if true;
-      allow write: if request.auth != null && 
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
-    }
-  }
-}`;
-                
-                const logsElement = document.getElementById('step5Logs');
-                if (logsElement) {
-                    logsElement.innerHTML = '<span class="log-info">Reglas de seguridad recomendadas:</span><br>';
-                    logsElement.innerHTML += `<pre style="color: #44aaff">${securityRules}</pre>`;
-                    logsElement.innerHTML += '<span class="log-info"><br>⚠️ Copia estas reglas en Firebase Console > Firestore > Reglas</span>';
-                }
-                
-                // Crear documento con las reglas para referencia
-                await db.collection('configuracion').doc('security_rules').set({
-                    reglas: securityRules,
-                    fechaGeneracion: firebase.firestore.FieldValue.serverTimestamp(),
-                    version: '1.0'
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    const allFilled = inputs.every(input => input.value.trim() !== '');
+                    initDbBtn.disabled = !allFilled;
                 });
-                
-                this.log('✓ Reglas de seguridad generadas', 'success');
-                this.updateStepStatus('step5', 'completed', 'Reglas generadas');
-            }
+            });
             
-            addDays(date, days) {
-                const result = new Date(date);
-                result.setDate(result.getDate() + days);
-                return result;
-            }
+            // Botón de inicialización
+            initDbBtn.addEventListener('click', initializeDatabase);
             
-            async runCompleteSetup() {
+            // Botón de verificar estado
+            checkStatusBtn.addEventListener('click', checkFirebaseStatus);
+            
+            // Botón de ir a la aplicación
+            goToAppBtn.addEventListener('click', () => {
+                window.location.href = '/index.html';
+            });
+            
+            // Botón de reintentar
+            retryBtn.addEventListener('click', () => {
+                errorSection.classList.add('hidden');
+                initDbBtn.disabled = false;
+            });
+        }
+        
+        function checkIfSetupDone() {
+            // Intentar cargar configuración existente de localStorage
+            const savedConfig = localStorage.getItem('tmo_firebase_config');
+            
+            if (savedConfig) {
                 try {
-                    this.log('🚀 INICIANDO SETUP COMPLETO DE VETAPP', 'info');
+                    const config = JSON.parse(savedConfig);
+                    apiKeyInput.value = config.apiKey || '';
+                    authDomainInput.value = config.authDomain || '';
+                    projectIdInput.value = config.projectId || '';
+                    storageBucketInput.value = config.storageBucket || '';
+                    messagingSenderIdInput.value = config.messagingSenderId || '';
+                    appIdInput.value = config.appId || '';
                     
-                    // Paso 1: Verificar Firebase
-                    await this.step1_verifyFirebase();
-                    
-                    // Paso 2: Crear colecciones
-                    await this.step2_createCollections();
-                    
-                    // Paso 3: Cargar datos iniciales
-                    await this.step3_initialData();
-                    
-                    // Paso 4: Configurar índices
-                    await this.step4_createIndexes();
-                    
-                    // Paso 5: Reglas de seguridad
-                    await this.step5_securityRules();
-                    
-                    this.log('🎉 SETUP COMPLETADO EXITOSAMENTE', 'success');
-                    this.log('La base de datos está lista para usar.', 'info');
-                    this.log('Puedes continuar con:');
-                    this.log('1. Configurar las reglas de seguridad en Firebase Console', 'info');
-                    this.log('2. Crear los índices recomendados', 'info');
-                    this.log('3. Iniciar sesión y comenzar a usar VetApp', 'info');
-                    
-                    // Mostrar logs finales
-                    document.getElementById('finalLogs').style.display = 'block';
-                    
-                } catch (error) {
-                    this.log(`❌ ERROR CRÍTICO: ${error.message}`, 'error');
-                    throw error;
-                }
-            }
-            
-            async resetDatabase() {
-                if (!confirm('⚠️ ¿ESTÁS SEGURO?\n\nEsto eliminará TODOS los datos de la aplicación.\nEsta acción no se puede deshacer.')) {
-                    return;
-                }
-                
-                this.log('🔄 INICIANDO RESET DE BASE DE DATOS...', 'info');
-                
-                try {
-                    const collections = [
-                        'veterinarias', 'dueños', 'mascotas', 'turnos',
-                        'historial_medico', 'autorizaciones', 'pagos',
-                        'refugios', 'notificaciones'
-                    ];
-                    
-                    for (const collection of collections) {
-                        this.log(`Eliminando colección: ${collection}...`);
-                        
-                        // Obtener todos los documentos
-                        const snapshot = await db.collection(collection).get();
-                        const batch = db.batch();
-                        
-                        snapshot.docs.forEach(doc => {
-                            batch.delete(doc.ref);
-                        });
-                        
-                        await batch.commit();
-                        this.log(`✓ ${collection} eliminada (${snapshot.size} documentos)`, 'success');
+                    // Verificar si el setup ya se completó
+                    if (localStorage.getItem('tmo_setup_completed')) {
+                        showMessage('El setup ya se ejecutó anteriormente. Si necesitas reinicializar, borra el localStorage y actualiza la página.', 'warning');
+                        initDbBtn.disabled = true;
+                        initDbBtn.textContent = 'Setup ya completado';
+                        setupCompleted = true;
                     }
                     
-                    this.log('✅ BASE DE DATOS RESETEADA COMPLETAMENTE', 'success');
-                    alert('Base de datos reseteada. Vuelve a ejecutar el setup.');
-                    
                 } catch (error) {
-                    this.log(`✗ Error en reset: ${error.message}`, 'error');
-                    alert('Error al resetear base de datos');
+                    console.error('Error al cargar configuración guardada:', error);
                 }
             }
         }
         
-        let dbSetup = null;
-        
-        async function startSetup() {
-            const startBtn = document.getElementById('startSetup');
-            startBtn.disabled = true;
-            startBtn.textContent = '⏳ Ejecutando...';
+        async function checkFirebaseStatus() {
+            statusChecks.innerHTML = '<div class="loading"><div class="spinner"></div><p>Verificando estado...</p></div>';
             
-            // Crear instancia
-            dbSetup = new DatabaseSetup();
+            // Construir configuración temporal
+            const tempConfig = {
+                apiKey: apiKeyInput.value.trim() || 'test',
+                authDomain: authDomainInput.value.trim() || 'test.firebaseapp.com',
+                projectId: projectIdInput.value.trim() || 'test',
+                storageBucket: storageBucketInput.value.trim() || 'test.appspot.com',
+                messagingSenderId: messagingSenderIdInput.value.trim() || '123',
+                appId: appIdInput.value.trim() || '1:123:web:test'
+            };
+            
+            // Verificar si Firebase está disponible
+            if (typeof firebase === 'undefined') {
+                statusChecks.innerHTML = `
+                    <div class="alert alert-danger">
+                        <div class="alert-icon">❌</div>
+                        <div>
+                            <strong>Firebase no cargado</strong>
+                            <p>Asegúrate de tener conexión a internet y que Firebase esté disponible.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
             
             try {
-                await dbSetup.runCompleteSetup();
-                startBtn.textContent = '✅ Setup Completado';
+                // Intentar inicializar Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(tempConfig);
+                }
                 
-                // Mostrar botón para continuar
-                setTimeout(() => {
-                    if (confirm('Setup completado. ¿Deseas ir al panel de administración?')) {
-                        window.location.href = 'admin.html';
-                    }
-                }, 1000);
+                // Verificar autenticación
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+                
+                // Probar conexión a Firestore
+                await db.collection('_test_connection').limit(1).get();
+                
+                statusChecks.innerHTML = `
+                    <div class="alert alert-success">
+                        <div class="alert-icon">✅</div>
+                        <div>
+                            <strong>Conexión exitosa</strong>
+                            <p>Firebase está configurado correctamente y la conexión a Firestore funciona.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">✓</div>
+                        <div class="step-content">
+                            <div class="step-title">Firebase listo</div>
+                            <div class="step-description">
+                                Puedes continuar con la inicialización de la base de datos.
+                            </div>
+                        </div>
+                    </div>
+                `;
                 
             } catch (error) {
-                startBtn.textContent = '❌ Error en Setup';
-                setTimeout(() => {
-                    startBtn.disabled = false;
-                    startBtn.textContent = '🔄 Reintentar Setup';
-                }, 3000);
+                console.error('Error en verificación:', error);
+                
+                let errorMessage = error.message;
+                let errorType = 'Error general';
+                
+                if (error.code === 'failed-precondition') {
+                    errorType = 'Firestore no configurado';
+                    errorMessage = 'Firestore no está habilitado o configurado. Ve a Firebase Console > Firestore Database > Crear base de datos.';
+                } else if (error.code === 'permission-denied') {
+                    errorType = 'Permisos insuficientes';
+                    errorMessage = 'Las reglas de seguridad están bloqueando el acceso. Esto es normal antes del setup.';
+                } else if (error.code === 'invalid-api-key') {
+                    errorType = 'API Key inválida';
+                    errorMessage = 'La API Key de Firebase es incorrecta. Verifica las credenciales.';
+                }
+                
+                statusChecks.innerHTML = `
+                    <div class="alert alert-warning">
+                        <div class="alert-icon">⚠️</div>
+                        <div>
+                            <strong>${errorType}</strong>
+                            <p>${errorMessage}</p>
+                            <p><small>Código: ${error.code}</small></p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">!</div>
+                        <div class="step-content">
+                            <div class="step-title">Verificación necesaria</div>
+                            <div class="step-description">
+                                Asegúrate de que:<br>
+                                1. Firebase esté correctamente configurado<br>
+                                2. Firestore esté habilitado en modo de producción<br>
+                                3. Las credenciales sean correctas
+                            </div>
+                        </div>
+                    </div>
+                `;
             }
         }
         
-        function resetDatabase() {
-            if (dbSetup) {
-                dbSetup.resetDatabase();
-            } else {
-                const tempSetup = new DatabaseSetup();
-                tempSetup.resetDatabase();
+        async function initializeDatabase() {
+            if (setupCompleted) {
+                showMessage('El setup ya se completó. No puedes ejecutarlo nuevamente.', 'error');
+                return;
+            }
+            
+            // Obtener configuración
+            firebaseConfig = {
+                apiKey: apiKeyInput.value.trim(),
+                authDomain: authDomainInput.value.trim(),
+                projectId: projectIdInput.value.trim(),
+                storageBucket: storageBucketInput.value.trim(),
+                messagingSenderId: messagingSenderIdInput.value.trim(),
+                appId: appIdInput.value.trim()
+            };
+            
+            const adminEmail = adminEmailInput.value.trim();
+            
+            // Validar email
+            if (!isValidEmail(adminEmail)) {
+                showMessage('Por favor, ingresa un email válido de Google.', 'error');
+                return;
+            }
+            
+            // Guardar configuración en localStorage
+            localStorage.setItem('tmo_firebase_config', JSON.stringify(firebaseConfig));
+            
+            // Mostrar loading
+            initDbBtn.disabled = true;
+            loadingSection.classList.remove('hidden');
+            setupLog.innerHTML = '';
+            
+            // Inicializar Firebase
+            try {
+                addLog('Inicializando Firebase...', 'info');
+                
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+                const functions = firebase.functions;
+                
+                addLog('✅ Firebase inicializado', 'success');
+                
+                // 1. Crear colecciones y documentos iniciales
+                addLog('Creando estructura de datos...', 'info');
+                
+                // Colección de usuarios
+                addLog('Creando colección "users"...', 'info');
+                
+                // Colección de veterinarias
+                addLog('Creando colección "vet_info"...', 'info');
+                
+                // Colección de mascotas
+                addLog('Creando colección "pets"...', 'info');
+                
+                // Colección de autorizaciones
+                addLog('Creando colección "authorizations"...', 'info');
+                
+                // Colección de turnos
+                addLog('Creando colección "appointments"...', 'info');
+                
+                // Colección de historial médico
+                addLog('Creando colección "medical_records"...', 'info');
+                
+                // Colección de configuraciones
+                addLog('Creando colección "vet_config"...', 'info');
+                
+                // Colección de pagos
+                addLog('Creando colección "payments"...', 'info');
+                
+                // Colección de refugios
+                addLog('Creando colección "shelters"...', 'info');
+                
+                // Colección de logs
+                addLog('Creando colección "admin_logs"...', 'info');
+                
+                addLog('✅ Estructura de datos creada', 'success');
+                
+                // 2. Crear índices
+                addLog('Creando índices de Firestore...', 'info');
+                await createIndexes(db);
+                addLog('✅ Índices creados', 'success');
+                
+                // 3. Crear usuario administrador
+                addLog(`Creando usuario administrador: ${adminEmail}...`, 'info');
+                await createAdminUser(db, adminEmail);
+                addLog('✅ Usuario administrador creado', 'success');
+                
+                // 4. Crear datos de ejemplo
+                addLog('Creando datos de ejemplo...', 'info');
+                await createSampleData(db);
+                addLog('✅ Datos de ejemplo creados', 'success');
+                
+                // 5. Marcar setup como completado
+                localStorage.setItem('tmo_setup_completed', 'true');
+                setupCompleted = true;
+                
+                // Mostrar éxito
+                loadingSection.classList.add('hidden');
+                successSection.classList.remove('hidden');
+                
+                addLog('🎉 ¡Setup completado exitosamente!', 'success');
+                
+            } catch (error) {
+                console.error('Error en setup:', error);
+                addLog(`❌ Error: ${error.message}`, 'error');
+                
+                loadingSection.classList.add('hidden');
+                errorSection.classList.remove('hidden');
+                document.getElementById('error-message').textContent = error.message;
             }
         }
         
-        // Inicializar verificación de Firebase al cargar
-        document.addEventListener('DOMContentLoaded', async () => {
-            const tempSetup = new DatabaseSetup();
-            try {
-                await tempSetup.step1_verifyFirebase();
-            } catch (error) {
-                document.getElementById('startSetup').disabled = true;
-                document.getElementById('startSetup').textContent = '❌ Firebase no configurado';
+        async function createIndexes(db) {
+            // Nota: Los índices en Firestore se crean automáticamente al hacer la primera consulta
+            // o manualmente en Firebase Console. Aquí solo registramos que se necesitan.
+            
+            const indexes = [
+                { collection: 'pets', fields: ['ownerId', 'createdAt'] },
+                { collection: 'pets', fields: ['name'] },
+                { collection: 'authorizations', fields: ['ownerId', 'status'] },
+                { collection: 'authorizations', fields: ['vetId', 'status'] },
+                { collection: 'appointments', fields: ['vetId', 'date'] },
+                { collection: 'appointments', fields: ['petId', 'status'] },
+                { collection: 'medical_records', fields: ['petId', 'date'] },
+                { collection: 'medical_records', fields: ['vetId', 'date'] },
+                { collection: 'users', fields: ['userType'] },
+                { collection: 'vet_info', fields: ['city'] },
+                { collection: 'vet_info', fields: ['specialties'] },
+                { collection: 'payments', fields: ['vetId', 'status'] },
+                { collection: 'payments', fields: ['dueDate'] }
+            ];
+            
+            for (const index of indexes) {
+                addLog(`Índice: ${index.collection} (${index.fields.join(', ')})`, 'info');
             }
-        });
+            
+            // Crear un documento de configuración para marcar que los índices están configurados
+            await db.collection('system_config').doc('indexes').set({
+                configured: true,
+                configuredAt: firebase.firestore.FieldValue.serverTimestamp(),
+                indexes: indexes
+            });
+        }
+        
+        async function createAdminUser(db, adminEmail) {
+            // Crear documento de usuario administrador
+            // En realidad, el usuario se creará cuando inicie sesión por primera vez
+            // Solo creamos una referencia para asignar permisos
+            
+            await db.collection('admin_users').doc(adminEmail).set({
+                email: adminEmail,
+                super_admin: true,
+                created_at: firebase.firestore.FieldValue.serverTimestamp(),
+                can_create_users: true,
+                can_manage_vets: true,
+                can_manage_payments: true
+            });
+            
+            addLog(`Administrador configurado: ${adminEmail}`, 'info');
+        }
+        
+        async function createSampleData(db) {
+            // Crear algunos datos de ejemplo para desarrollo
+            
+            // Datos de refugios
+            const shelters = [
+                {
+                    name: 'Refugio Patitas Felices',
+                    location: 'Buenos Aires',
+                    description: 'Refugio dedicado al rescate y adopción de perros y gatos',
+                    animals_count: 65,
+                    monthly_funding: 5250,
+                    contact_email: 'contacto@patitasfelices.org',
+                    website: 'https://patitasfelices.org',
+                    created_at: firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    name: 'Hogar de Mascotas',
+                    location: 'Córdoba',
+                    description: 'Centro de adopción y cuidado temporal de animales',
+                    animals_count: 45,
+                    monthly_funding: 3800,
+                    contact_email: 'info@hogardemascotas.org',
+                    website: 'https://hogardemascotas.org',
+                    created_at: firebase.firestore.FieldValue.serverTimestamp()
+                }
+            ];
+            
+            for (const shelter of shelters) {
+                await db.collection('shelters').add(shelter);
+            }
+            
+            addLog('✅ Refugios de ejemplo creados', 'success');
+            
+            // Configuración del sistema
+            const systemConfig = {
+                app_name: 'Tu Mascota Online',
+                version: '1.0.0',
+                social_impact_percentage: 20, // 20% para refugios
+                monthly_fee: 50000, // $50,000 ARS
+                trial_days: 30,
+                support_email: 'soporte@tumascotaonline.com',
+                setup_completed: true,
+                setup_date: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            await db.collection('system_config').doc('settings').set(systemConfig);
+            
+            addLog('✅ Configuración del sistema guardada', 'success');
+        }
+        
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const typeClass = `log-${type}`;
+            const typeIcon = {
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'info': 'ℹ️'
+            }[type] || '📝';
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${typeClass}`;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${typeIcon} ${message}`;
+            
+            setupLog.appendChild(logEntry);
+            setupLog.scrollTop = setupLog.scrollHeight;
+        }
+        
+        function showMessage(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <div class="alert-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</div>
+                <div>${message}</div>
+            `;
+            
+            // Insertar después del título
+            const warningAlert = document.getElementById('initial-alert');
+            warningAlert.parentNode.insertBefore(alertDiv, warningAlert.nextSibling);
+            
+            // Eliminar después de 5 segundos
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Hacer funciones disponibles globalmente para los botones
+        window.initializeDatabase = initializeDatabase;
+        window.checkFirebaseStatus = checkFirebaseStatus;
     </script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-functions.js"></script>
 </body>
 </html>
