@@ -15,33 +15,51 @@ let allVets = [];
 let currentSection = 'dashboard';
 
 // ==================== ELEMENTOS DOM ====================
-const contentContainer = document.getElementById('content-container');
-const navItems = document.querySelectorAll('.nav-item');
-const ownerNav = document.getElementById('owner-nav');
-const vetNav = document.getElementById('vet-nav');
-const adminNav = document.getElementById('admin-nav');
-const userName = document.getElementById('user-name');
-const userAvatar = document.getElementById('user-avatar');
-const userRole = document.getElementById('user-role');
-const logoutBtn = document.getElementById('logout-btn');
+let contentContainer;
+let navItems;
+let ownerNav;
+let vetNav;
+let adminNav;
+let userName;
+let userAvatar;
+let userRole;
+let logoutBtn;
 
 // Modales
-const petModal = document.getElementById('pet-modal');
-const authVetModal = document.getElementById('auth-vet-modal');
-const medicalRecordModal = document.getElementById('medical-record-modal');
-const appointmentModal = document.getElementById('appointment-modal');
-const vetDetailsModal = document.getElementById('vet-details-modal');
-const qrModal = document.getElementById('qr-modal');
+let petModal;
+let authVetModal;
+let medicalRecordModal;
+let appointmentModal;
+let vetDetailsModal;
+let qrModal;
 
 // ==================== INICIALIZACIÓN ====================
-document.addEventListener('DOMContentLoaded', initializeApp);
 
 // Función para inicializar la aplicación
 async function initializeApp() {
     try {
         console.log('Inicializando aplicación...');
         
-        // Inicializar Firebase si no está inicializado
+        // Obtener referencias a elementos DOM
+        contentContainer = document.getElementById('content-container');
+        navItems = document.querySelectorAll('.nav-item');
+        ownerNav = document.getElementById('owner-nav');
+        vetNav = document.getElementById('vet-nav');
+        adminNav = document.getElementById('admin-nav');
+        userName = document.getElementById('user-name');
+        userAvatar = document.getElementById('user-avatar');
+        userRole = document.getElementById('user-role');
+        logoutBtn = document.getElementById('logout-btn');
+        
+        // Obtener referencias a modales
+        petModal = document.getElementById('pet-modal');
+        authVetModal = document.getElementById('auth-vet-modal');
+        medicalRecordModal = document.getElementById('medical-record-modal');
+        appointmentModal = document.getElementById('appointment-modal');
+        vetDetailsModal = document.getElementById('vet-details-modal');
+        qrModal = document.getElementById('qr-modal');
+        
+        // Inicializar Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
             console.log('Firebase inicializado');
