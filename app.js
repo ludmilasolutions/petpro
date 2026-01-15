@@ -1,15 +1,6 @@
 // app.js - Código JavaScript completo para Tu Mascota Online
 
-// ==================== CONFIGURACIÓN FIREBASE ====================
-// Esta configuración debe coincidir con tu proyecto Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
-  authDomain: "petpro-19db3.firebaseapp.com",
-  projectId: "petpro-19db3",
-  storageBucket: "petpro-19db3.firebasestorage.app",
-  messagingSenderId: "384847276656",
-  appId: "1:384847276656:web:ed6a128e5e09ce2e52a2b5"
-};
+
 
 // ==================== VARIABLES GLOBALES ====================
 let auth;
