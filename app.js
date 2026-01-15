@@ -1,5 +1,16 @@
 // app.js - Código JavaScript completo para Tu Mascota Online
 
+// ==================== CONFIGURACIÓN FIREBASE ====================
+// Esta configuración debe coincidir con tu proyecto Firebase
+const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROYECTO.firebaseapp.com",
+    projectId: "TU_PROYECTO",
+    storageBucket: "TU_PROYECTO.appspot.com",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+};
+
 // ==================== VARIABLES GLOBALES ====================
 let auth;
 let db;
@@ -1754,33 +1765,112 @@ async function loadAdminDashboard() {
 
 // ==================== FUNCIONES AUXILIARES ====================
 
-// Cargar todas las veterinarias
+// Cargar todas las veterinarias (VERSIÓN CORREGIDA)
 async function loadAllVets() {
     try {
         console.log('Cargando todas las veterinarias...');
-        const vetsSnapshot = await db.collection('users')
-            .where('userType', '==', 'vet')
-            .get();
+        
+        // Intentamos cargar de varias formas:
+        // 1. Primero desde vet_info (que siempre existe para veterinarias)
+        const vetInfoSnapshot = await db.collection('vet_info').get();
         
         allVets = [];
-        for (const doc of vetsSnapshot.docs) {
-            const vetData = doc.data();
-            const vetInfoDoc = await db.collection('vet_info').doc(doc.id).get();
-            
-            if (vetInfoDoc.exists) {
-                vetData.vetInfo = vetInfoDoc.data();
+        
+        for (const doc of vetInfoSnapshot.docs) {
+            try {
+                const vetInfo = doc.data();
+                const vetId = doc.id;
+                
+                // Obtener datos del usuario
+                const userDoc = await db.collection('users').doc(vetId).get();
+                let userData = {};
+                
+                if (userDoc.exists) {
+                    userData = userDoc.data();
+                } else {
+                    // Si no existe en users, crear datos básicos
+                    userData = {
+                        displayName: vetInfo.name || 'Veterinaria',
+                        email: vetInfo.email || 'sin-email@ejemplo.com',
+                        userType: 'vet'
+                    };
+                }
+                
+                // Obtener configuración
+                const vetConfigDoc = await db.collection('vet_config').doc(vetId).get();
+                let vetConfig = {};
+                
+                if (vetConfigDoc.exists) {
+                    vetConfig = vetConfigDoc.data();
+                } else {
+                    vetConfig = {
+                        appointmentsEnabled: false,
+                        appointmentDuration: 30,
+                        workDays: [1, 2, 3, 4, 5],
+                        workStart: '09:00',
+                        workEnd: '18:00'
+                    };
+                }
+                
+                // Añadir a la lista
+                allVets.push({
+                    uid: vetId,
+                    ...userData,
+                    vetInfo: vetInfo,
+                    vetConfig: vetConfig,
+                    vetStatus: vetInfo.status || 'active'
+                });
+                
+            } catch (error) {
+                console.error('Error procesando veterinaria:', doc.id, error);
             }
-            
-            const vetConfigDoc = await db.collection('vet_config').doc(doc.id).get();
-            if (vetConfigDoc.exists) {
-                vetData.vetConfig = vetConfigDoc.data();
-            }
-            
-            vetData.uid = doc.id;
-            allVets.push(vetData);
         }
         
-        console.log(`${allVets.length} veterinarias cargadas`);
+        console.log(`${allVets.length} veterinarias cargadas desde vet_info`);
+        
+        // 2. También cargar desde users donde userType = 'vet' (por si acaso)
+        try {
+            const vetsSnapshot = await db.collection('users')
+                .where('userType', '==', 'vet')
+                .get();
+            
+            for (const doc of vetsSnapshot.docs) {
+                const vetId = doc.id;
+                const userData = doc.data();
+                
+                // Verificar si ya está en la lista
+                const alreadyInList = allVets.some(vet => vet.uid === vetId);
+                if (!alreadyInList) {
+                    // Obtener información de veterinaria
+                    let vetInfo = {};
+                    const vetInfoDoc = await db.collection('vet_info').doc(vetId).get();
+                    if (vetInfoDoc.exists) {
+                        vetInfo = vetInfoDoc.data();
+                    }
+                    
+                    // Obtener configuración
+                    let vetConfig = {};
+                    const vetConfigDoc = await db.collection('vet_config').doc(vetId).get();
+                    if (vetConfigDoc.exists) {
+                        vetConfig = vetConfigDoc.data();
+                    }
+                    
+                    allVets.push({
+                        uid: vetId,
+                        ...userData,
+                        vetInfo: vetInfo,
+                        vetConfig: vetConfig,
+                        vetStatus: userData.vetStatus || 'active'
+                    });
+                }
+            }
+            console.log(`${allVets.length} veterinarias en total después de combinar`);
+            
+        } catch (error) {
+            console.error('Error cargando veterinarias desde users:', error);
+        }
+        
+        // Renderizar la lista
         renderVetsList(allVets);
         
     } catch (error) {
@@ -1791,14 +1881,15 @@ async function loadAllVets() {
                 <div class="empty-state">
                     <div class="empty-icon">🏥</div>
                     <h3>Error al cargar veterinarias</h3>
-                    <p>Intenta recargar la página.</p>
+                    <p>${error.message}</p>
+                    <button onclick="loadAllVets()" class="btn btn-primary" style="margin-top: 1rem;">Reintentar</button>
                 </div>
             `;
         }
     }
 }
 
-// Renderizar lista de veterinarias
+// Renderizar lista de veterinarias (VERSIÓN CORREGIDA)
 function renderVetsList(vets) {
     const container = document.getElementById('vets-list-container');
     if (!container) {
@@ -1811,7 +1902,8 @@ function renderVetsList(vets) {
             <div class="empty-state">
                 <div class="empty-icon">🏥</div>
                 <h3>No se encontraron veterinarias</h3>
-                <p>Intenta con otros filtros de búsqueda.</p>
+                <p>No hay veterinarias registradas en el sistema o no se pudieron cargar.</p>
+                <button onclick="loadAllVets()" class="btn btn-primary" style="margin-top: 1rem;">Reintentar carga</button>
             </div>
         `;
         return;
@@ -1823,29 +1915,36 @@ function renderVetsList(vets) {
     
     vets.forEach(vet => {
         const isAuthorized = authorizedVets.some(authVet => authVet.uid === vet.uid);
+        const vetName = vet.vetInfo?.name || vet.displayName || 'Veterinaria';
+        const vetAddress = vet.vetInfo?.address || 'Sin dirección';
+        const vetPhone = vet.vetInfo?.phone || 'Sin teléfono';
+        const vetCity = vet.vetInfo?.city || '';
+        const vetSpecialties = vet.vetInfo?.specialties || '';
+        const appointmentsEnabled = vet.vetConfig?.appointmentsEnabled;
+        const vetStatus = vet.vetStatus || 'active';
         
         html += `
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">${vet.vetInfo?.name || vet.displayName || 'Veterinaria'}</h3>
-                    <span class="status-badge ${vet.vetStatus === 'trial' ? 'status-trial' : 'status-active'}">
-                        ${vet.vetStatus === 'trial' ? 'Prueba' : 'Activa'}
+                    <h3 class="card-title">${vetName}</h3>
+                    <span class="status-badge ${vetStatus === 'trial' ? 'status-trial' : 'status-active'}">
+                        ${vetStatus === 'trial' ? 'Prueba' : 'Activa'}
                     </span>
                 </div>
                 
-                <p><strong>📞 ${vet.vetInfo?.phone || 'Sin teléfono'}</strong></p>
-                <p>${vet.vetInfo?.address || 'Sin dirección'}</p>
-                ${vet.vetInfo?.city ? `<p>${vet.vetInfo.city}</p>` : ''}
+                <p><strong>📞 ${vetPhone}</strong></p>
+                <p>${vetAddress}</p>
+                ${vetCity ? `<p>${vetCity}</p>` : ''}
                 
-                ${vet.vetInfo?.specialties ? `
+                ${vetSpecialties ? `
                     <div style="margin-top: 0.5rem;">
                         <strong>Especialidades:</strong>
-                        <p>${vet.vetInfo.specialties}</p>
+                        <p>${vetSpecialties}</p>
                     </div>
                 ` : ''}
                 
                 <div style="margin-top: 1rem;">
-                    <p><strong>Turnos:</strong> ${vet.vetConfig?.appointmentsEnabled ? '✅ Disponibles' : '❌ No disponibles'}</p>
+                    <p><strong>Turnos:</strong> ${appointmentsEnabled ? '✅ Disponibles' : '❌ No disponibles'}</p>
                 </div>
                 
                 <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
@@ -1861,6 +1960,111 @@ function renderVetsList(vets) {
     
     html += `</div>`;
     container.innerHTML = html;
+}
+
+// Mostrar modal de autorización veterinaria (VERSIÓN CORREGIDA)
+async function showAuthVetModal() {
+    try {
+        // Cargar veterinarias si no están cargadas
+        if (allVets.length === 0) {
+            await loadAllVets();
+        }
+        
+        // Verificar que hay veterinarias
+        if (allVets.length === 0) {
+            const vetSearchResults = document.getElementById('vet-search-results');
+            if (vetSearchResults) {
+                vetSearchResults.innerHTML = `
+                    <div class="empty-state" style="padding: 2rem;">
+                        <div class="empty-icon">🏥</div>
+                        <h3>No hay veterinarias registradas</h3>
+                        <p>Actualmente no hay veterinarias disponibles para autorizar.</p>
+                        <button onclick="loadAllVets()" class="btn btn-primary" style="margin-top: 1rem;">Buscar veterinarias</button>
+                    </div>
+                `;
+            }
+            authVetModal.classList.add('active');
+            return;
+        }
+        
+        // Filtrar veterinarias no autorizadas
+        const unauthorizedVets = allVets.filter(vet => 
+            !authorizedVets.some(authVet => authVet.uid === vet.uid)
+        );
+        
+        const vetSearchResults = document.getElementById('vet-search-results');
+        if (!vetSearchResults) return;
+        
+        let html = '';
+        
+        if (unauthorizedVets.length === 0) {
+            html = `
+                <div class="empty-state" style="padding: 2rem;">
+                    <div class="empty-icon">🏥</div>
+                    <h3>Todas las veterinarias ya están autorizadas</h3>
+                    <p>Has autorizado acceso a todas las veterinarias disponibles.</p>
+                    <button onclick="loadSection('vets-list')" class="btn btn-primary" style="margin-top: 1rem;">Ver todas las veterinarias</button>
+                </div>
+            `;
+        } else {
+            html = `
+                <div style="display: grid; gap: 1rem;">
+                    <div class="alert alert-info">
+                        <span>ℹ️</span>
+                        <div>
+                            <strong>${unauthorizedVets.length} veterinaria${unauthorizedVets.length !== 1 ? 's' : ''} disponible${unauthorizedVets.length !== 1 ? 's' : ''}</strong>
+                            <p>Selecciona una veterinaria para autorizar el acceso al historial de tus mascotas.</p>
+                        </div>
+                    </div>
+            `;
+            
+            unauthorizedVets.forEach(vet => {
+                const vetName = vet.vetInfo?.name || vet.displayName || 'Veterinaria';
+                const vetAddress = vet.vetInfo?.address || 'Sin dirección';
+                const vetPhone = vet.vetInfo?.phone || 'Sin teléfono';
+                const vetCity = vet.vetInfo?.city || '';
+                
+                html += `
+                    <div class="card" style="margin: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="flex: 1;">
+                                <h4 style="margin-bottom: 0.3rem;">${vetName}</h4>
+                                <p style="margin-bottom: 0.3rem; color: var(--gray); font-size: 0.9rem;">${vetAddress}</p>
+                                ${vetCity ? `<p style="margin-bottom: 0.3rem; color: var(--gray); font-size: 0.9rem;">📍 ${vetCity}</p>` : ''}
+                                <p style="margin-bottom: 0.3rem; color: var(--gray); font-size: 0.9rem;">📞 ${vetPhone}</p>
+                                <p style="margin-bottom: 0.3rem; color: var(--gray); font-size: 0.9rem;">
+                                    ${vet.vetConfig?.appointmentsEnabled ? '✅ Turnos disponibles' : '❌ Turnos no disponibles'}
+                                </p>
+                            </div>
+                            <button class="btn btn-primary" onclick="authorizeVet('${vet.uid}')" style="margin-left: 1rem;">Autorizar</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+        
+        vetSearchResults.innerHTML = html;
+        authVetModal.classList.add('active');
+        
+    } catch (error) {
+        console.error('Error al mostrar modal de autorización:', error);
+        const vetSearchResults = document.getElementById('vet-search-results');
+        if (vetSearchResults) {
+            vetSearchResults.innerHTML = `
+                <div class="alert alert-danger">
+                    <span>❌</span>
+                    <div>
+                        <strong>Error al cargar veterinarias</strong>
+                        <p>${error.message}</p>
+                        <button onclick="showAuthVetModal()" class="btn btn-primary" style="margin-top: 1rem;">Reintentar</button>
+                    </div>
+                </div>
+            `;
+        }
+        authVetModal.classList.add('active');
+    }
 }
 
 // ==================== FUNCIONES DE MASCOTAS ====================
@@ -2039,58 +2243,6 @@ async function viewPetDetails(petId) {
 }
 
 // ==================== FUNCIONES DE VETERINARIAS ====================
-
-// Mostrar modal de autorización veterinaria
-async function showAuthVetModal() {
-    // Cargar veterinarias si no están cargadas
-    if (allVets.length === 0) {
-        await loadAllVets();
-    }
-    
-    // Filtrar veterinarias no autorizadas
-    const unauthorizedVets = allVets.filter(vet => 
-        !authorizedVets.some(authVet => authVet.uid === vet.uid)
-    );
-    
-    const vetSearchResults = document.getElementById('vet-search-results');
-    if (!vetSearchResults) return;
-    
-    let html = '';
-    
-    if (unauthorizedVets.length === 0) {
-        html = `
-            <div class="empty-state" style="padding: 2rem;">
-                <div class="empty-icon">🏥</div>
-                <h3>No hay veterinarias disponibles</h3>
-                <p>Todas las veterinarias están autorizadas o no hay veterinarias registradas.</p>
-            </div>
-        `;
-    } else {
-        html = `
-            <div style="display: grid; gap: 1rem;">
-        `;
-        
-        unauthorizedVets.forEach(vet => {
-            html += `
-                <div class="card" style="margin: 0;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h4 style="margin-bottom: 0.3rem;">${vet.vetInfo?.name || vet.displayName || 'Veterinaria'}</h4>
-                            <p style="margin-bottom: 0.3rem; color: var(--gray); font-size: 0.9rem;">${vet.vetInfo?.address || 'Sin dirección'}</p>
-                            <p style="margin-bottom: 0.3rem; color: var(--gray); font-size: 0.9rem;">📞 ${vet.vetInfo?.phone || 'Sin teléfono'}</p>
-                        </div>
-                        <button class="btn btn-primary" onclick="authorizeVet('${vet.uid}')">Autorizar</button>
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += `</div>`;
-    }
-    
-    vetSearchResults.innerHTML = html;
-    authVetModal.classList.add('active');
-}
 
 // Autorizar veterinaria
 async function authorizeVet(vetId) {
