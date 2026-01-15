@@ -375,10 +375,10 @@
     </div>
 
     <script>
-        // Este script maneja la inicialización básica y referencias globales
-        // El resto del código JavaScript está en app.js
+        // Este script solo maneja la configuración inicial de Firebase
+        // y la llamada a la función de inicialización
         
-        // Configuración de Firebase
+        // Configuración de Firebase - solo se define aquí
         const firebaseConfig = {
           apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
           authDomain: "petpro-19db3.firebaseapp.com",
@@ -388,51 +388,32 @@
           appId: "1:384847276656:web:ed6a128e5e09ce2e52a2b5"
         };
         
-        // Inicialización de Firebase
-        let auth, db;
-        let currentUser = null;
-        let userData = null;
-        
-        // Elementos DOM globales
-        const contentContainer = document.getElementById('content-container');
-        const navItems = document.querySelectorAll('.nav-item');
-        const ownerNav = document.getElementById('owner-nav');
-        const vetNav = document.getElementById('vet-nav');
-        const adminNav = document.getElementById('admin-nav');
-        const userName = document.getElementById('user-name');
-        const userRole = document.getElementById('user-role');
-        const userAvatar = document.getElementById('user-avatar');
-        const logoutBtn = document.getElementById('logout-btn');
-        
-        // Variables de estado globales
-        let currentSection = 'dashboard';
-        let pets = [];
-        let authorizedVets = [];
-        let allVets = [];
-        let medicalRecords = [];
-        let appointments = [];
-        let vetAppointments = [];
-        let vetAuthorizedPets = [];
-        
-        // Referencias a modales
-        const petModal = document.getElementById('pet-modal');
-        const authVetModal = document.getElementById('auth-vet-modal');
-        const medicalRecordModal = document.getElementById('medical-record-modal');
-        const appointmentModal = document.getElementById('appointment-modal');
-        const vetDetailsModal = document.getElementById('vet-details-modal');
-        const qrModal = document.getElementById('qr-modal');
-        
-        // Función para inicializar la aplicación
+        // Inicialización de la aplicación cuando el DOM esté cargado
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM cargado, inicializando aplicación...');
+            console.log('DOM cargado, esperando app.js...');
             
-            // Verificar si el archivo app.js se cargó correctamente
-            if (typeof initializeApp === 'function') {
-                initializeApp();
-            } else {
-                console.error('Error: initializeApp no está definido en app.js');
-                showError('Error al cargar la aplicación. Recarga la página.');
-            }
+            // Pequeño retardo para asegurar que app.js se haya cargado
+            setTimeout(() => {
+                if (typeof initializeApp === 'function') {
+                    initializeApp();
+                } else {
+                    console.error('Error: initializeApp no está definido en app.js');
+                    // Mostrar un error básico si no se cargó app.js
+                    document.getElementById('content-container').innerHTML = `
+                        <div class="content-header">
+                            <h1 class="content-title">Error</h1>
+                            <p class="content-subtitle">Ha ocurrido un problema</p>
+                        </div>
+                        <div class="alert alert-danger">
+                            <span>❌</span>
+                            <div>
+                                <strong>Error:</strong>
+                                <p>No se pudo cargar la aplicación. Por favor, recarga la página.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }, 100);
         });
     </script>
 </body>
