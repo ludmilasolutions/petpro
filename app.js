@@ -59,6 +59,13 @@ async function initializeApp() {
         vetDetailsModal = document.getElementById('vet-details-modal');
         qrModal = document.getElementById('qr-modal');
         
+        // Verificar que todos los elementos existan
+        if (!contentContainer || !navItems || !ownerNav || !vetNav || !adminNav) {
+            console.error('Error: No se encontraron elementos DOM necesarios');
+            showError('Error al cargar la aplicación. Por favor, recarga la página.');
+            return;
+        }
+        
         // Inicializar Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
@@ -376,6 +383,8 @@ async function loadAppointmentsForVet(vetId) {
 
 // Actualizar UI del usuario
 function updateUserUI() {
+    if (!userName || !userAvatar || !userRole) return;
+    
     userName.textContent = userData.displayName || currentUser.email;
     userAvatar.src = userData.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userData.displayName || currentUser.email) + '&background=4f46e5&color=fff';
     
@@ -405,20 +414,20 @@ function updateUserUI() {
 // Mostrar navegación según tipo de usuario
 function showNavigation() {
     // Ocultar todos primero
-    ownerNav.style.display = 'none';
-    vetNav.style.display = 'none';
-    adminNav.style.display = 'none';
+    if (ownerNav) ownerNav.style.display = 'none';
+    if (vetNav) vetNav.style.display = 'none';
+    if (adminNav) adminNav.style.display = 'none';
     
     // Mostrar los correspondientes
     switch (userData.userType) {
         case 'owner':
-            ownerNav.style.display = 'block';
+            if (ownerNav) ownerNav.style.display = 'block';
             break;
         case 'vet':
-            vetNav.style.display = 'block';
+            if (vetNav) vetNav.style.display = 'block';
             break;
         case 'super_admin':
-            adminNav.style.display = 'block';
+            if (adminNav) adminNav.style.display = 'block';
             break;
     }
     console.log('Navegación actualizada para tipo:', userData.userType);
@@ -431,49 +440,95 @@ function setupEventListeners() {
     console.log('Configurando event listeners...');
     
     // Navegación
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const section = item.dataset.section;
-            setActiveNavItem(section);
-            loadSection(section);
+    if (navItems) {
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+                setActiveNavItem(section);
+                loadSection(section);
+            });
         });
-    });
+    }
     
     // Logout
-    logoutBtn.addEventListener('click', handleLogout);
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
     
     // Modal de mascotas
-    document.getElementById('pet-modal-close').addEventListener('click', () => petModal.classList.remove('active'));
-    document.getElementById('pet-modal-cancel').addEventListener('click', () => petModal.classList.remove('active'));
-    document.getElementById('pet-modal-save').addEventListener('click', handleSavePet);
+    const petModalClose = document.getElementById('pet-modal-close');
+    if (petModalClose) {
+        petModalClose.addEventListener('click', () => petModal.classList.remove('active'));
+    }
+    
+    const petModalCancel = document.getElementById('pet-modal-cancel');
+    if (petModalCancel) {
+        petModalCancel.addEventListener('click', () => petModal.classList.remove('active'));
+    }
+    
+    const petModalSave = document.getElementById('pet-modal-save');
+    if (petModalSave) {
+        petModalSave.addEventListener('click', handleSavePet);
+    }
     
     // Modal de autorización veterinaria
-    document.getElementById('auth-vet-modal-close').addEventListener('click', () => authVetModal.classList.remove('active'));
+    const authVetModalClose = document.getElementById('auth-vet-modal-close');
+    if (authVetModalClose) {
+        authVetModalClose.addEventListener('click', () => authVetModal.classList.remove('active'));
+    }
     
     // Modal de historial médico
-    document.getElementById('medical-record-modal-close').addEventListener('click', () => medicalRecordModal.classList.remove('active'));
-    document.getElementById('medical-record-modal-cancel').addEventListener('click', () => medicalRecordModal.classList.remove('active'));
-    document.getElementById('medical-record-modal-save').addEventListener('click', handleSaveMedicalRecord);
+    const medicalRecordModalClose = document.getElementById('medical-record-modal-close');
+    if (medicalRecordModalClose) {
+        medicalRecordModalClose.addEventListener('click', () => medicalRecordModal.classList.remove('active'));
+    }
+    
+    const medicalRecordModalCancel = document.getElementById('medical-record-modal-cancel');
+    if (medicalRecordModalCancel) {
+        medicalRecordModalCancel.addEventListener('click', () => medicalRecordModal.classList.remove('active'));
+    }
+    
+    const medicalRecordModalSave = document.getElementById('medical-record-modal-save');
+    if (medicalRecordModalSave) {
+        medicalRecordModalSave.addEventListener('click', handleSaveMedicalRecord);
+    }
     
     // Modal de turnos
-    document.getElementById('appointment-modal-close').addEventListener('click', () => appointmentModal.classList.remove('active'));
-    document.getElementById('appointment-modal-cancel').addEventListener('click', () => appointmentModal.classList.remove('active'));
-    document.getElementById('appointment-modal-save').addEventListener('click', handleSaveAppointment);
+    const appointmentModalClose = document.getElementById('appointment-modal-close');
+    if (appointmentModalClose) {
+        appointmentModalClose.addEventListener('click', () => appointmentModal.classList.remove('active'));
+    }
+    
+    const appointmentModalCancel = document.getElementById('appointment-modal-cancel');
+    if (appointmentModalCancel) {
+        appointmentModalCancel.addEventListener('click', () => appointmentModal.classList.remove('active'));
+    }
+    
+    const appointmentModalSave = document.getElementById('appointment-modal-save');
+    if (appointmentModalSave) {
+        appointmentModalSave.addEventListener('click', handleSaveAppointment);
+    }
     
     // Modal de detalles de veterinaria
-    document.getElementById('vet-details-modal-close').addEventListener('click', () => vetDetailsModal.classList.remove('active'));
+    const vetDetailsModalClose = document.getElementById('vet-details-modal-close');
+    if (vetDetailsModalClose) {
+        vetDetailsModalClose.addEventListener('click', () => vetDetailsModal.classList.remove('active'));
+    }
     
     // Modal de QR
-    document.getElementById('qr-modal-close').addEventListener('click', () => qrModal.classList.remove('active'));
+    const qrModalClose = document.getElementById('qr-modal-close');
+    if (qrModalClose) {
+        qrModalClose.addEventListener('click', () => qrModal.classList.remove('active'));
+    }
     
     // Cerrar modal al hacer clic fuera
     window.addEventListener('click', (e) => {
-        if (e.target === petModal) petModal.classList.remove('active');
-        if (e.target === authVetModal) authVetModal.classList.remove('active');
-        if (e.target === medicalRecordModal) medicalRecordModal.classList.remove('active');
-        if (e.target === appointmentModal) appointmentModal.classList.remove('active');
-        if (e.target === vetDetailsModal) vetDetailsModal.classList.remove('active');
-        if (e.target === qrModal) qrModal.classList.remove('active');
+        if (petModal && e.target === petModal) petModal.classList.remove('active');
+        if (authVetModal && e.target === authVetModal) authVetModal.classList.remove('active');
+        if (medicalRecordModal && e.target === medicalRecordModal) medicalRecordModal.classList.remove('active');
+        if (appointmentModal && e.target === appointmentModal) appointmentModal.classList.remove('active');
+        if (vetDetailsModal && e.target === vetDetailsModal) vetDetailsModal.classList.remove('active');
+        if (qrModal && e.target === qrModal) qrModal.classList.remove('active');
     });
     
     console.log('Event listeners configurados');
@@ -481,6 +536,8 @@ function setupEventListeners() {
 
 // Establecer elemento de navegación activo
 function setActiveNavItem(section) {
+    if (!navItems) return;
+    
     navItems.forEach(item => {
         item.classList.remove('active');
         if (item.dataset.section === section) {
@@ -496,6 +553,11 @@ function setActiveNavItem(section) {
 async function loadSection(section) {
     console.log('Cargando sección:', section);
     
+    if (!contentContainer) {
+        console.error('Error: contentContainer no encontrado');
+        return;
+    }
+    
     // Mostrar loading
     contentContainer.innerHTML = `
         <div class="loading">
@@ -505,51 +567,56 @@ async function loadSection(section) {
     `;
     
     // Cargar contenido según sección
-    switch (section) {
-        case 'dashboard':
-            await loadDashboard();
-            break;
-        case 'pets':
-            await loadPets();
-            break;
-        case 'add-pet':
-            await loadAddPet();
-            break;
-        case 'authorized-vets':
-            await loadAuthorizedVets();
-            break;
-        case 'appointments':
-            await loadOwnerAppointments();
-            break;
-        case 'medical-history':
-            await loadMedicalHistory();
-            break;
-        case 'vet-dashboard':
-            await loadVetDashboard();
-            break;
-        case 'vet-appointments':
-            await loadVetAppointments();
-            break;
-        case 'search-pets':
-            await loadSearchPets();
-            break;
-        case 'vet-pets':
-            await loadVetPets();
-            break;
-        case 'vet-settings':
-            await loadVetSettings();
-            break;
-        case 'vets-list':
-            await loadVetsList();
-            break;
-        case 'social-impact':
-            await loadSocialImpact();
-            break;
-        case 'admin-dashboard':
-            await loadAdminDashboard();
-            break;
-        default:
-            await loadDashboard();
+    try {
+        switch (section) {
+            case 'dashboard':
+                await loadDashboard();
+                break;
+            case 'pets':
+                await loadPets();
+                break;
+            case 'add-pet':
+                await loadAddPet();
+                break;
+            case 'authorized-vets':
+                await loadAuthorizedVets();
+                break;
+            case 'appointments':
+                await loadOwnerAppointments();
+                break;
+            case 'medical-history':
+                await loadMedicalHistory();
+                break;
+            case 'vet-dashboard':
+                await loadVetDashboard();
+                break;
+            case 'vet-appointments':
+                await loadVetAppointments();
+                break;
+            case 'search-pets':
+                await loadSearchPets();
+                break;
+            case 'vet-pets':
+                await loadVetPets();
+                break;
+            case 'vet-settings':
+                await loadVetSettings();
+                break;
+            case 'vets-list':
+                await loadVetsList();
+                break;
+            case 'social-impact':
+                await loadSocialImpact();
+                break;
+            case 'admin-dashboard':
+                await loadAdminDashboard();
+                break;
+            default:
+                await loadDashboard();
+        }
+    } catch (error) {
+        console.error('Error al cargar sección:', error);
+        showError('Error al cargar la sección');
     }
 }
 
@@ -707,7 +774,7 @@ async function loadDashboard() {
                         <span class="nav-icon">🐾</span>
                     </div>
                     <p>Vista global de todas las mascotas</p>
-                    <button class="btn btn-primary" style="margin-top: 1rem;" onclick="window.location.href='/admin.html#pets'">Ver mascotas</button>
+                    <button class="btn btn-primary" style="margin-top: 1rem;" onclick="window.location.href='/admin.html#pets')">Ver mascotas</button>
                 </div>
             </div>
         `;
@@ -1489,7 +1556,8 @@ async function loadVetSettings() {
             // Activar pestaña clickeada
             tab.classList.add('active');
             const tabId = tab.dataset.tab;
-            document.getElementById(`${tabId}-tab`).classList.add('active');
+            const tabContent = document.getElementById(`${tabId}-tab`);
+            if (tabContent) tabContent.classList.add('active');
         });
     });
     
@@ -1497,7 +1565,10 @@ async function loadVetSettings() {
     const enableAppointments = document.getElementById('enable-appointments');
     if (enableAppointments) {
         enableAppointments.addEventListener('change', function() {
-            document.getElementById('appointments-settings').style.display = this.checked ? 'block' : 'none';
+            const appointmentsSettings = document.getElementById('appointments-settings');
+            if (appointmentsSettings) {
+                appointmentsSettings.style.display = this.checked ? 'block' : 'none';
+            }
         });
     }
 }
@@ -1714,19 +1785,26 @@ async function loadAllVets() {
         
     } catch (error) {
         console.error('Error al cargar veterinarias:', error);
-        document.getElementById('vets-list-container').innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">🏥</div>
-                <h3>Error al cargar veterinarias</h3>
-                <p>Intenta recargar la página.</p>
-            </div>
-        `;
+        const container = document.getElementById('vets-list-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🏥</div>
+                    <h3>Error al cargar veterinarias</h3>
+                    <p>Intenta recargar la página.</p>
+                </div>
+            `;
+        }
     }
 }
 
 // Renderizar lista de veterinarias
 function renderVetsList(vets) {
     const container = document.getElementById('vets-list-container');
+    if (!container) {
+        console.error('No se encontró el contenedor vets-list-container');
+        return;
+    }
     
     if (vets.length === 0) {
         container.innerHTML = `
@@ -1974,6 +2052,9 @@ async function showAuthVetModal() {
         !authorizedVets.some(authVet => authVet.uid === vet.uid)
     );
     
+    const vetSearchResults = document.getElementById('vet-search-results');
+    if (!vetSearchResults) return;
+    
     let html = '';
     
     if (unauthorizedVets.length === 0) {
@@ -2007,7 +2088,7 @@ async function showAuthVetModal() {
         html += `</div>`;
     }
     
-    document.getElementById('vet-search-results').innerHTML = html;
+    vetSearchResults.innerHTML = html;
     authVetModal.classList.add('active');
 }
 
@@ -2236,23 +2317,28 @@ async function showNewAppointmentModal() {
     
     // Cargar mascotas del dueño
     const petSelect = document.getElementById('appointment-pet');
-    petSelect.innerHTML = '<option value="">Seleccionar mascota</option>';
-    pets.forEach(pet => {
-        petSelect.innerHTML += `<option value="${pet.id}">${pet.name} (${pet.species})</option>`;
-    });
+    if (petSelect) {
+        petSelect.innerHTML = '<option value="">Seleccionar mascota</option>';
+        pets.forEach(pet => {
+            petSelect.innerHTML += `<option value="${pet.id}">${pet.name} (${pet.species})</option>`;
+        });
+    }
     
     // Cargar veterinarias autorizadas
     const vetSelect = document.getElementById('appointment-vet');
-    vetSelect.innerHTML = '<option value="">Seleccionar veterinaria</option>';
-    authorizedVets.forEach(vet => {
-        if (vet.vetConfig?.appointmentsEnabled !== false) {
-            vetSelect.innerHTML += `<option value="${vet.uid}">${vet.vetInfo?.name || vet.displayName}</option>`;
-        }
-    });
+    if (vetSelect) {
+        vetSelect.innerHTML = '<option value="">Seleccionar veterinaria</option>';
+        authorizedVets.forEach(vet => {
+            if (vet.vetConfig?.appointmentsEnabled !== false) {
+                vetSelect.innerHTML += `<option value="${vet.uid}">${vet.vetInfo?.name || vet.displayName}</option>`;
+            }
+        });
+    }
     
     // Establecer fecha mínima (hoy)
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('appointment-date').min = today;
+    const dateInput = document.getElementById('appointment-date');
+    if (dateInput) dateInput.min = today;
     
     appointmentModal.classList.add('active');
 }
@@ -2496,6 +2582,8 @@ async function showNewMedicalRecordModal(petId = null) {
     
     // Cargar mascotas
     const petSelect = document.getElementById('medical-record-pet');
+    if (!petSelect) return;
+    
     petSelect.innerHTML = '<option value="">Seleccionar mascota</option>';
     
     if (userData.userType === 'vet') {
@@ -2677,20 +2765,20 @@ async function searchPets() {
     const ownerPhone = document.getElementById('search-owner-phone').value.toLowerCase();
     
     if (!petName && !ownerName && !ownerPhone) {
-        document.getElementById('search-results').innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">🔍</div>
-                <h3>Ingresa criterios de búsqueda</h3>
-                <p>Busca por nombre de mascota, dueño o teléfono.</p>
-            </div>
-        `;
+        const searchResults = document.getElementById('search-results');
+        if (searchResults) {
+            searchResults.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <h3>Ingresa criterios de búsqueda</h3>
+                    <p>Busca por nombre de mascota, dueño o teléfono.</p>
+                </div>
+            `;
+        }
         return;
     }
     
     try {
-        let query = db.collection('pets');
-        
-        // TODO: Implementar búsqueda más avanzada
         // Por ahora buscamos en mascotas autorizadas
         const results = vetAuthorizedPets.filter(pet => {
             const matchesName = !petName || pet.name.toLowerCase().includes(petName);
@@ -2699,6 +2787,9 @@ async function searchPets() {
             
             return matchesName || matchesOwner || matchesPhone;
         });
+        
+        const searchResults = document.getElementById('search-results');
+        if (!searchResults) return;
         
         let html = '';
         
@@ -2743,19 +2834,22 @@ async function searchPets() {
             html += `</div>`;
         }
         
-        document.getElementById('search-results').innerHTML = html;
+        searchResults.innerHTML = html;
         
     } catch (error) {
         console.error('Error en búsqueda:', error);
-        document.getElementById('search-results').innerHTML = `
-            <div class="alert alert-danger">
-                <span>❌</span>
-                <div>
-                    <strong>Error en la búsqueda</strong>
-                    <p>${error.message}</p>
+        const searchResults = document.getElementById('search-results');
+        if (searchResults) {
+            searchResults.innerHTML = `
+                <div class="alert alert-danger">
+                    <span>❌</span>
+                    <div>
+                        <strong>Error en la búsqueda</strong>
+                        <p>${error.message}</p>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     }
 }
 
@@ -2764,13 +2858,16 @@ function clearSearch() {
     document.getElementById('search-pet-name').value = '';
     document.getElementById('search-owner-name').value = '';
     document.getElementById('search-owner-phone').value = '';
-    document.getElementById('search-results').innerHTML = `
-        <div class="empty-state">
-            <div class="empty-icon">🔍</div>
-            <h3>Realiza una búsqueda</h3>
-            <p>Busca mascotas por nombre, dueño o teléfono para ver su historial médico (si estás autorizado) o solicitar acceso.</p>
-        </div>
-    `;
+    const searchResults = document.getElementById('search-results');
+    if (searchResults) {
+        searchResults.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <h3>Realiza una búsqueda</h3>
+                <p>Busca mascotas por nombre, dueño o teléfono para ver su historial médico (si estás autorizado) o solicitar acceso.</p>
+            </div>
+        `;
+    }
 }
 
 // Filtrar veterinarias
@@ -2814,14 +2911,11 @@ async function showPetQR(petId) {
             <h3 style="margin-bottom: 1rem;">${pet.name}</h3>
             <p style="color: var(--gray); margin-bottom: 2rem;">Escanea este código para acceder al perfil de la mascota</p>
             
-            <div class="qr-code" style="margin: 0 auto 2rem;">
-                <!-- QR Code placeholder - usar una librería como qrcode.js en producción -->
-                <div style="font-size: 5rem;">🐾</div>
-                <p><small>ID: ${petId}</small></p>
-            </div>
+            <div id="qrcode-container" style="margin: 0 auto 2rem; width: 256px; height: 256px;"></div>
+            <p><small>ID: ${petId}</small></p>
             
             <div style="margin-top: 2rem;">
-                <button class="btn btn-primary" onclick="downloadQR()">Descargar QR</button>
+                <button class="btn btn-primary" onclick="downloadQR('${petId}')">Descargar QR</button>
                 <button class="btn btn-secondary" onclick="sharePet('${petId}')">Compartir</button>
             </div>
         </div>
@@ -2829,16 +2923,65 @@ async function showPetQR(petId) {
     
     document.getElementById('qr-content').innerHTML = html;
     qrModal.classList.add('active');
+    
+    // Generar QR usando QRCode.js
+    new QRCode(document.getElementById("qrcode-container"), {
+        text: qrUrl,
+        width: 256,
+        height: 256,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
 }
 
-// Descargar QR (placeholder)
-function downloadQR() {
-    showMessage('Funcionalidad de descarga de QR en desarrollo', 'info');
+// Descargar QR
+function downloadQR(petId) {
+    const canvas = document.querySelector('#qrcode-container canvas');
+    if (canvas) {
+        const link = document.createElement('a');
+        link.download = `qr-mascota-${petId}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+        showMessage('QR descargado correctamente', 'success');
+    } else {
+        showMessage('No se pudo generar el código QR', 'error');
+    }
 }
 
-// Compartir mascota (placeholder)
-function sharePet(petId) {
-    showMessage('Funcionalidad de compartir en desarrollo', 'info');
+// Compartir mascota
+async function sharePet(petId) {
+    const pet = pets.find(p => p.id === petId);
+    if (!pet) return;
+    
+    const shareUrl = `${window.location.origin}/pet/${petId}`;
+    const shareText = `Perfil de ${pet.name} en Tu Mascota Online`;
+    
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: pet.name,
+                text: shareText,
+                url: shareUrl,
+            });
+            showMessage('Compartido correctamente', 'success');
+        } catch (error) {
+            console.error('Error al compartir:', error);
+            copyToClipboard(shareUrl);
+        }
+    } else {
+        copyToClipboard(shareUrl);
+    }
+}
+
+// Copiar al portapapeles
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showMessage('Enlace copiado al portapapeles', 'success');
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+        showMessage('Error al copiar el enlace', 'error');
+    });
 }
 
 // ==================== FUNCIONES DE UTILIDAD ====================
@@ -3017,5 +3160,8 @@ window.viewPetMedicalHistory = viewPetMedicalHistory;
 window.viewAppointmentDetails = viewAppointmentDetails;
 window.downloadQR = downloadQR;
 window.sharePet = sharePet;
+
+// Inicializar aplicación cuando el DOM esté cargado
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 console.log('app.js cargado correctamente');
