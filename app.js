@@ -1,6 +1,40 @@
-// app.js - Código JavaScript separado para Tu Mascota Online
+// app.js - Código JavaScript completo para Tu Mascota Online
+
+// ==================== VARIABLES GLOBALES ====================
+let auth;
+let db;
+let currentUser;
+let userData = {};
+let pets = [];
+let authorizedVets = [];
+let vetAuthorizedPets = [];
+let medicalRecords = [];
+let appointments = [];
+let vetAppointments = [];
+let allVets = [];
+let currentSection = 'dashboard';
+
+// ==================== ELEMENTOS DOM ====================
+const contentContainer = document.getElementById('content-container');
+const navItems = document.querySelectorAll('.nav-item');
+const ownerNav = document.getElementById('owner-nav');
+const vetNav = document.getElementById('vet-nav');
+const adminNav = document.getElementById('admin-nav');
+const userName = document.getElementById('user-name');
+const userAvatar = document.getElementById('user-avatar');
+const userRole = document.getElementById('user-role');
+const logoutBtn = document.getElementById('logout-btn');
+
+// Modales
+const petModal = document.getElementById('pet-modal');
+const authVetModal = document.getElementById('auth-vet-modal');
+const medicalRecordModal = document.getElementById('medical-record-modal');
+const appointmentModal = document.getElementById('appointment-modal');
+const vetDetailsModal = document.getElementById('vet-details-modal');
+const qrModal = document.getElementById('qr-modal');
 
 // ==================== INICIALIZACIÓN ====================
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 // Función para inicializar la aplicación
 async function initializeApp() {
@@ -130,6 +164,7 @@ async function loadOwnerData(uid) {
             if (vetDoc.exists) {
                 authorizedVets.push({
                     authId: doc.id,
+                    uid: authData.vetId,
                     ...vetDoc.data()
                 });
             }
@@ -511,6 +546,8 @@ async function loadDashboard() {
     `;
     
     if (userData.userType === 'owner') {
+        const pendingAppointments = appointments.filter(a => a.status === 'scheduled' || a.status === 'confirmed');
+        
         html += `
             <div class="cards-grid">
                 <div class="card">
@@ -536,7 +573,7 @@ async function loadDashboard() {
                         <h3 class="card-title">Próximos Turnos</h3>
                         <span class="card-icon">📅</span>
                     </div>
-                    <p>${appointments.filter(a => a.status === 'scheduled' || a.status === 'confirmed').length} turno${appointments.filter(a => a.status === 'scheduled' || a.status === 'confirmed').length !== 1 ? 's' : ''} pendiente${appointments.filter(a => a.status === 'scheduled' || a.status === 'confirmed').length !== 1 ? 's' : ''}</p>
+                    <p>${pendingAppointments.length} turno${pendingAppointments.length !== 1 ? 's' : ''} pendiente${pendingAppointments.length !== 1 ? 's' : ''}</p>
                     <button class="btn btn-primary" style="margin-top: 1rem;" onclick="loadSection('appointments')">Ver turnos</button>
                 </div>
             </div>
@@ -577,6 +614,8 @@ async function loadDashboard() {
             ` : ''}
         `;
     } else if (userData.userType === 'vet') {
+        const todayAppointments = vetAppointments.filter(a => isToday(new Date(a.dateTime)));
+        
         html += `
             <div class="alert alert-info">
                 <span>🏥</span>
@@ -601,7 +640,7 @@ async function loadDashboard() {
                         <h3 class="card-title">Turnos de hoy</h3>
                         <span class="card-icon">📅</span>
                     </div>
-                    <p>${vetAppointments.filter(a => isToday(new Date(a.dateTime))).length} turno${vetAppointments.filter(a => isToday(new Date(a.dateTime))).length !== 1 ? 's' : ''} programado${vetAppointments.filter(a => isToday(new Date(a.dateTime))).length !== 1 ? 's' : ''}</p>
+                    <p>${todayAppointments.length} turno${todayAppointments.length !== 1 ? 's' : ''} programado${todayAppointments.length !== 1 ? 's' : ''}</p>
                     <button class="btn btn-primary" style="margin-top: 1rem;" onclick="loadSection('vet-appointments')">Ver turnos</button>
                 </div>
                 
@@ -723,11 +762,6 @@ async function loadPets() {
 
 // ==================== AGREGAR MASCOTA ====================
 async function loadAddPet() {
-    // Resetear formulario
-    document.getElementById('pet-form').reset();
-    document.getElementById('pet-id').value = '';
-    document.getElementById('pet-modal-title').textContent = 'Nueva Mascota';
-    
     let html = `
         <div class="content-header">
             <h1 class="content-title">Agregar Mascota</h1>
@@ -1024,7 +1058,7 @@ async function loadMedicalHistory() {
         medicalRecords.forEach(record => {
             if (!recordsByPet[record.petId]) {
                 recordsByPet[record.petId] = {
-                    pet: pets.find(p => p.id === record.petId),
+                    pet: pets.find(p => p.id === record.petId) || vetAuthorizedPets.find(p => p.petId === record.petId),
                     records: []
                 };
             }
@@ -1033,6 +1067,8 @@ async function loadMedicalHistory() {
         
         // Mostrar timeline para cada mascota
         Object.values(recordsByPet).forEach(petData => {
+            if (!petData.pet) return;
+            
             html += `
                 <div class="card" style="margin-bottom: 2rem;">
                     <div class="card-header">
@@ -1646,6 +1682,11 @@ async function loadAllVets() {
                 vetData.vetInfo = vetInfoDoc.data();
             }
             
+            const vetConfigDoc = await db.collection('vet_config').doc(doc.id).get();
+            if (vetConfigDoc.exists) {
+                vetData.vetConfig = vetConfigDoc.data();
+            }
+            
             vetData.uid = doc.id;
             allVets.push(vetData);
         }
@@ -1743,6 +1784,11 @@ async function savePetFromForm() {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     
+    if (!petData.name || !petData.species) {
+        showMessage('Nombre y especie son requeridos', 'error');
+        return;
+    }
+    
     try {
         console.log('Guardando mascota...', petData);
         await db.collection('pets').add(petData);
@@ -1791,6 +1837,11 @@ async function handleSavePet() {
         notes: document.getElementById('pet-notes').value,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
+    
+    if (!petData.name || !petData.species) {
+        showMessage('Nombre y especie son requeridos', 'error');
+        return;
+    }
     
     try {
         if (petId) {
@@ -1859,7 +1910,9 @@ async function viewPetDetails(petId) {
         <div style="margin-top: 2rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3>Registros Médicos</h3>
-                <button class="btn btn-primary" onclick="showNewMedicalRecordModal('${petId}')">➕ Nuevo registro</button>
+                ${userData.userType === 'vet' ? `
+                    <button class="btn btn-primary" onclick="showNewMedicalRecordModal('${petId}')">➕ Nuevo registro</button>
+                ` : ''}
             </div>
             
             ${petMedicalRecords.length > 0 ? `
@@ -1965,9 +2018,13 @@ async function authorizeVet(vetId) {
         const vetDoc = await db.collection('users').doc(vetId).get();
         if (vetDoc.exists) {
             const vetData = vetDoc.data();
+            const vetInfoDoc = await db.collection('vet_info').doc(vetId).get();
+            
             authorizedVets.push({
                 authId: 'temp',
-                ...vetData
+                uid: vetId,
+                ...vetData,
+                vetInfo: vetInfoDoc.exists ? vetInfoDoc.data() : {}
             });
         }
         
@@ -2078,6 +2135,11 @@ async function saveVetInfo() {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     
+    if (!vetInfo.name || !vetInfo.phone) {
+        showMessage('Nombre y teléfono son requeridos', 'error');
+        return;
+    }
+    
     try {
         console.log('Guardando información de veterinaria:', vetInfo);
         await db.collection('vet_info').doc(currentUser.uid).set(vetInfo, { merge: true });
@@ -2185,6 +2247,11 @@ async function handleSaveAppointment() {
     const date = document.getElementById('appointment-date').value;
     const time = document.getElementById('appointment-time').value;
     const dateTime = new Date(`${date}T${time}`);
+    
+    if (!petId || !vetId || !date || !time) {
+        showMessage('Todos los campos son requeridos', 'error');
+        return;
+    }
     
     const appointmentData = {
         petId: petId,
@@ -2345,6 +2412,60 @@ async function completeAppointment(appointmentId) {
     }
 }
 
+// Ver detalles de turno
+async function viewAppointmentDetails(appointmentId) {
+    const appointment = userData.userType === 'owner' 
+        ? appointments.find(a => a.id === appointmentId)
+        : vetAppointments.find(a => a.id === appointmentId);
+    
+    if (!appointment) return;
+    
+    let html = `
+        <div class="content-header">
+            <h1 class="content-title">Detalles del Turno</h1>
+            <p class="content-subtitle">${formatDateTime(appointment.dateTime)}</p>
+        </div>
+        
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                <div>
+                    <h3>${appointment.pet?.name || 'Mascota'}</h3>
+                    <p>${appointment.vet?.vetInfo?.name || appointment.vet?.displayName || 'Veterinaria'}</p>
+                </div>
+                <span class="appointment-status appointment-${appointment.status}">
+                    ${getAppointmentStatusText(appointment.status)}
+                </span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <h4>Información del Turno</h4>
+                    <p><strong>Fecha:</strong> ${formatDateTime(appointment.dateTime)}</p>
+                    <p><strong>Tipo:</strong> ${getAppointmentTypeText(appointment.type)}</p>
+                    ${appointment.reason ? `<p><strong>Motivo:</strong> ${appointment.reason}</p>` : ''}
+                    ${appointment.notes ? `<p><strong>Notas:</strong> ${appointment.notes}</p>` : ''}
+                </div>
+                
+                <div>
+                    <h4>Información de la Mascota</h4>
+                    <p><strong>Nombre:</strong> ${appointment.pet?.name || 'No disponible'}</p>
+                    <p><strong>Especie:</strong> ${appointment.pet?.species || 'No disponible'}</p>
+                    <p><strong>Raza:</strong> ${appointment.pet?.breed || 'No disponible'}</p>
+                </div>
+                
+                <div>
+                    <h4>Información del Veterinario</h4>
+                    <p><strong>Nombre:</strong> ${appointment.vet?.vetInfo?.name || appointment.vet?.displayName || 'No disponible'}</p>
+                    <p><strong>Teléfono:</strong> ${appointment.vet?.vetInfo?.phone || 'No disponible'}</p>
+                    <p><strong>Dirección:</strong> ${appointment.vet?.vetInfo?.address || 'No disponible'}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    contentContainer.innerHTML = html;
+}
+
 // ==================== FUNCIONES DE HISTORIAL MÉDICO ====================
 
 // Mostrar modal para nuevo registro médico
@@ -2353,6 +2474,7 @@ async function showNewMedicalRecordModal(petId = null) {
     document.getElementById('medical-record-form').reset();
     document.getElementById('medical-record-id').value = '';
     document.getElementById('medical-record-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('medical-record-modal-title').textContent = 'Nuevo Registro Médico';
     
     // Cargar mascotas
     const petSelect = document.getElementById('medical-record-pet');
@@ -2364,10 +2486,12 @@ async function showNewMedicalRecordModal(petId = null) {
             petSelect.innerHTML += `<option value="${pet.petId}" ${petId === pet.petId ? 'selected' : ''}>${pet.name} (${pet.species}) - Dueño: ${pet.owner?.displayName || 'No disponible'}</option>`;
         });
     } else {
-        // Para dueño: mostrar todas sus mascotas
+        // Para dueño: mostrar todas sus mascotas (pero dueños no pueden crear registros)
         pets.forEach(pet => {
             petSelect.innerHTML += `<option value="${pet.id}" ${petId === pet.id ? 'selected' : ''}>${pet.name} (${pet.species})</option>`;
         });
+        showMessage('Solo las veterinarias pueden crear registros médicos', 'error');
+        return;
     }
     
     medicalRecordModal.classList.add('active');
@@ -2377,14 +2501,21 @@ async function showNewMedicalRecordModal(petId = null) {
 async function handleSaveMedicalRecord() {
     const recordId = document.getElementById('medical-record-id').value;
     const petId = document.getElementById('medical-record-pet').value;
+    const title = document.getElementById('medical-record-title').value;
+    const description = document.getElementById('medical-record-description').value;
+    
+    if (!petId || !title || !description) {
+        showMessage('Mascota, título y descripción son requeridos', 'error');
+        return;
+    }
     
     const recordData = {
         petId: petId,
         vetId: currentUser.uid,
-        title: document.getElementById('medical-record-title').value,
+        title: title,
         date: document.getElementById('medical-record-date').value,
         type: document.getElementById('medical-record-type').value,
-        description: document.getElementById('medical-record-description').value,
+        description: description,
         prescription: document.getElementById('medical-record-prescription').value || null,
         nextVisit: document.getElementById('medical-record-next-visit').value || null,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2405,10 +2536,15 @@ async function handleSaveMedicalRecord() {
         }
         
         // Recargar datos
-        await loadMedicalRecordsForOwner(currentUser.uid);
-        loadSection('medical-history');
+        if (userData.userType === 'owner') {
+            await loadMedicalRecordsForOwner(currentUser.uid);
+        } else {
+            // Para veterinarios, recargar datos de veterinaria
+            await loadAuthorizedPetsForVet(currentUser.uid);
+        }
         
         medicalRecordModal.classList.remove('active');
+        loadSection('medical-history');
         
     } catch (error) {
         console.error('Error al guardar registro médico:', error);
@@ -2430,6 +2566,7 @@ async function editMedicalRecord(recordId) {
     document.getElementById('medical-record-prescription').value = record.prescription || '';
     document.getElementById('medical-record-next-visit').value = record.nextVisit || '';
     document.getElementById('medical-record-id').value = recordId;
+    document.getElementById('medical-record-modal-title').textContent = 'Editar Registro Médico';
     
     medicalRecordModal.classList.add('active');
 }
@@ -2532,17 +2669,76 @@ async function searchPets() {
         return;
     }
     
-    // TODO: Implementar búsqueda real en Firestore
-    // Por ahora mostramos un mensaje informativo
-    
-    document.getElementById('search-results').innerHTML = `
-        <div class="empty-state">
-            <div class="empty-icon">🔍</div>
-            <h3>Búsqueda en desarrollo</h3>
-            <p>Esta funcionalidad estará disponible próximamente.</p>
-            <p><small>Podrás buscar mascotas por nombre, dueño o teléfono.</small></p>
-        </div>
-    `;
+    try {
+        let query = db.collection('pets');
+        
+        // TODO: Implementar búsqueda más avanzada
+        // Por ahora buscamos en mascotas autorizadas
+        const results = vetAuthorizedPets.filter(pet => {
+            const matchesName = !petName || pet.name.toLowerCase().includes(petName);
+            const matchesOwner = !ownerName || (pet.owner?.displayName && pet.owner.displayName.toLowerCase().includes(ownerName));
+            const matchesPhone = !ownerPhone || (pet.owner?.phone && pet.owner.phone.includes(ownerPhone));
+            
+            return matchesName || matchesOwner || matchesPhone;
+        });
+        
+        let html = '';
+        
+        if (results.length === 0) {
+            html = `
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <h3>No se encontraron mascotas</h3>
+                    <p>Intenta con otros términos de búsqueda.</p>
+                </div>
+            `;
+        } else {
+            html = `
+                <h3 style="margin-bottom: 1rem;">${results.length} mascota${results.length !== 1 ? 's' : ''} encontrada${results.length !== 1 ? 's' : ''}</h3>
+                <div style="display: grid; gap: 1rem;">
+            `;
+            
+            results.forEach(pet => {
+                html += `
+                    <div class="pet-profile">
+                        <div class="pet-avatar">
+                            ${getPetEmoji(pet.species)}
+                        </div>
+                        <div class="pet-info" style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h3>${pet.name}</h3>
+                                    <p>${pet.species} ${pet.breed ? `- ${pet.breed}` : ''}</p>
+                                    <p>Dueño: ${pet.owner?.displayName || 'No disponible'}</p>
+                                    <p>Teléfono: ${pet.owner?.phone || 'No disponible'}</p>
+                                </div>
+                                <div style="display: flex; gap: 0.3rem;">
+                                    <button class="btn btn-primary" onclick="showNewMedicalRecordModal('${pet.petId}')" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">Cargar historial</button>
+                                    <button class="btn btn-secondary" onclick="viewPetMedicalHistory('${pet.petId}')" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">Ver historial</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        }
+        
+        document.getElementById('search-results').innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error en búsqueda:', error);
+        document.getElementById('search-results').innerHTML = `
+            <div class="alert alert-danger">
+                <span>❌</span>
+                <div>
+                    <strong>Error en la búsqueda</strong>
+                    <p>${error.message}</p>
+                </div>
+            </div>
+        `;
+    }
 }
 
 // Limpiar búsqueda
@@ -2601,12 +2797,10 @@ async function showPetQR(petId) {
             <p style="color: var(--gray); margin-bottom: 2rem;">Escanea este código para acceder al perfil de la mascota</p>
             
             <div class="qr-code" style="margin: 0 auto 2rem;">
-                <!-- En una implementación real, aquí iría un código QR generado -->
+                <!-- QR Code placeholder - usar una librería como qrcode.js en producción -->
                 <div style="font-size: 5rem;">🐾</div>
+                <p><small>ID: ${petId}</small></p>
             </div>
-            
-            <p style="color: var(--gray); font-size: 0.9rem;">ID: ${petId}</p>
-            <p style="color: var(--gray); font-size: 0.9rem;">URL: ${qrUrl}</p>
             
             <div style="margin-top: 2rem;">
                 <button class="btn btn-primary" onclick="downloadQR()">Descargar QR</button>
@@ -2617,6 +2811,16 @@ async function showPetQR(petId) {
     
     document.getElementById('qr-content').innerHTML = html;
     qrModal.classList.add('active');
+}
+
+// Descargar QR (placeholder)
+function downloadQR() {
+    showMessage('Funcionalidad de descarga de QR en desarrollo', 'info');
+}
+
+// Compartir mascota (placeholder)
+function sharePet(petId) {
+    showMessage('Funcionalidad de compartir en desarrollo', 'info');
 }
 
 // ==================== FUNCIONES DE UTILIDAD ====================
@@ -2675,6 +2879,7 @@ async function handleLogout() {
         window.location.href = '/index.html';
     } catch (error) {
         console.error('Error al cerrar sesión:', error);
+        showMessage('Error al cerrar sesión', 'error');
     }
 }
 
@@ -2791,18 +2996,8 @@ window.cancelAppointment = cancelAppointment;
 window.completeAppointment = completeAppointment;
 window.editMedicalRecord = editMedicalRecord;
 window.viewPetMedicalHistory = viewPetMedicalHistory;
-
-// Funciones placeholder para futura implementación
-window.viewAppointmentDetails = (appointmentId) => {
-    alert(`Ver detalles de turno ${appointmentId} - En desarrollo`);
-};
-
-window.downloadQR = () => {
-    alert('Descargar QR - En desarrollo');
-};
-
-window.sharePet = (petId) => {
-    alert(`Compartir mascota ${petId} - En desarrollo`);
-};
+window.viewAppointmentDetails = viewAppointmentDetails;
+window.downloadQR = downloadQR;
+window.sharePet = sharePet;
 
 console.log('app.js cargado correctamente');
