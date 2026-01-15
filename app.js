@@ -3,12 +3,12 @@
 // ==================== CONFIGURACIÓN FIREBASE ====================
 // Esta configuración debe coincidir con tu proyecto Firebase
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_PROYECTO.firebaseapp.com",
-    projectId: "TU_PROYECTO",
-    storageBucket: "TU_PROYECTO.appspot.com",
-    messagingSenderId: "TU_SENDER_ID",
-    appId: "TU_APP_ID"
+  apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
+  authDomain: "petpro-19db3.firebaseapp.com",
+  projectId: "petpro-19db3",
+  storageBucket: "petpro-19db3.firebasestorage.app",
+  messagingSenderId: "384847276656",
+  appId: "1:384847276656:web:ed6a128e5e09ce2e52a2b5"
 };
 
 // ==================== VARIABLES GLOBALES ====================
