@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,7 +16,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     
     <!-- Script de la aplicación -->
     <script src="app.js" defer></script>
@@ -72,9 +72,9 @@
                         <span class="nav-icon">📅</span>
                         <span>Mis Turnos</span>
                     </li>
-                    <li class="nav-item" data-section="medical-history-enhanced">
+                    <li class="nav-item" data-section="medical-history">
                         <span class="nav-icon">🏥</span>
-                        <span>Historial Médico Mejorado</span>
+                        <span>Historial Médico</span>
                     </li>
                 </ul>
             </div>
@@ -101,10 +101,6 @@
                     <li class="nav-item" data-section="vet-settings">
                         <span class="nav-icon">⚙️</span>
                         <span>Configuración</span>
-                    </li>
-                    <li class="nav-item" data-section="medical-history-enhanced">
-                        <span class="nav-icon">📊</span>
-                        <span>Historial Mejorado</span>
                     </li>
                 </ul>
             </div>
@@ -379,40 +375,10 @@
         </div>
     </div>
 
-    <!-- Nuevos modales para Historial Médico Mejorado -->
-    
-    <!-- Modal para subir archivos -->
-    <div id="upload-file-modal" class="modal">
-        <!-- Contenido dinámico se cargará aquí -->
-    </div>
-
-    <!-- Modal para agregar medicamento -->
-    <div id="add-medication-modal" class="modal">
-        <!-- Contenido dinámico se cargará aquí -->
-    </div>
-
-    <!-- Modal para agregar vacuna -->
-    <div id="add-vaccine-modal" class="modal">
-        <!-- Contenido dinámico se cargará aquí -->
-    </div>
-
-    <!-- Modal para agregar peso -->
-    <div id="add-weight-modal" class="modal">
-        <!-- Contenido dinámico se cargará aquí -->
-    </div>
-
-    <!-- Modal para certificado de vacunación -->
-    <div id="vaccine-certificate-modal" class="modal">
-        <!-- Contenido dinámico se cargará aquí -->
-    </div>
-
-    <!-- Scripts para las nuevas funcionalidades -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-
     <script>
+        // Este script solo maneja la configuración inicial de Firebase
+        // y la llamada a la función de inicialización
+        
         // Configuración de Firebase - solo se define aquí
         const firebaseConfig = {
           apiKey: "AIzaSyAOIvnH9_2X75StDWX4Rnh9tRfD9lSIv3E",
